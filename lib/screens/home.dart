@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
@@ -8,15 +10,48 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 class Home extends StatelessWidget{
 
   final nameController = TextEditingController();
-  final idController = TextEditingController();
+  final iloscController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
-  onItemPressed(Produkt produkt) {}
+  onItemPressed(Produkt produkt) {
+    nameController.text = produkt.nazwa;
+    iloscController.text = produkt.ilosc.toString();
+
+    produktController.setSelected(produkt);
+  }
+
+  onAddPressed() {
+    Produkt produkt = new Produkt(
+        nazwa: nameController.text,
+        ilosc: int.parse(iloscController.text)
+    );
+    onClearPressed();
+    produktController.addProdukt(produkt);
+  }
+
+  onDeletePressed(String id) {
+    onClearPressed();
+    produktController.deleteProdukt(id);
+  }
+
+  onUpdatePressed(String id) {
+    Produkt produkt = new Produkt(
+        nazwa: nameController.text,
+        ilosc: int.parse(iloscController.text)
+    );
+
+
+    onClearPressed();
+
+    produktController.updateProdukt(id, produkt);
+  }
 
   onClearPressed() {
     nameController.clear();
-    idController.clear();
+    iloscController.clear();
+
+    produktController.clearSelected();
   }
 
   @override
@@ -28,32 +63,68 @@ class Home extends StatelessWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Selected item goes here'),
+
+
+
+
+
+
+            GetBuilder<ProduktController>(
+                builder: (produktController) =>
+                    Text(
+                        produktController.selectedProduct == null
+                            ? ''
+                            : produktController.selectedProduct.id,
+                    )
+
+            ),
+
+
+
+
+
+
+
             TextField(
               controller: nameController,
-              decoration: InputDecoration(hintText: "Name"),
+              decoration: InputDecoration(hintText: "nazwa"),
             ),
             TextField(
-              controller: idController,
-              decoration: InputDecoration(hintText: "ID"),
+              controller: iloscController,
+              decoration: InputDecoration(hintText: "ilosc"),
             ),
+
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CustomButton(
-                  onPressed: () => {},
-                  text: "Add",
+
+              GetBuilder<ProduktController>(
+                builder: (produktController) =>
+                  CustomButton(
+                    onPressed: produktController.selectedProduct == null
+                        ? () => onAddPressed()
+                        : null,
+                    text: "Add",
+                  ),
                 ),
-                CustomButton(
-                  onPressed: () => {},
-                  text: "Update",
+                GetBuilder<ProduktController>(builder: (produktController) =>
+                  CustomButton(
+                   onPressed: produktController.selectedProduct == null
+                       ? null
+                       : () => onUpdatePressed(produktController.selectedProduct.id),
+                   text: "Update",
+                  ),
                 ),
-                CustomButton(
-                  onPressed: () => onClearPressed(),
-                  text: "Clear",
-                ),
+
+                  CustomButton(
+                    onPressed: () => onClearPressed(),
+                   text: "Clear",
+                  ),
+
               ],
+
+
             ),
           SizedBox(height: 16),
 
@@ -78,7 +149,7 @@ class Home extends StatelessWidget{
                             SizedBox(height: 8),
                             Text(produktController.produkty[index].nazwa),
                             SizedBox(height: 4),
-                            Text(produktController.produkty[index].id.toString()),
+                            Text(produktController.produkty[index].ilosc.toString()),
                             SizedBox(height: 8),
                           ],
                         ),
@@ -86,7 +157,7 @@ class Home extends StatelessWidget{
                     ),
                     IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => {},
+                      onPressed: () => onDeletePressed(produktController.produkty[index].id),
                     ),
                   ],
                 ),

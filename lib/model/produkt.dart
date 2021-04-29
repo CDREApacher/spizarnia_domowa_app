@@ -1,20 +1,24 @@
 class Produkt {
-  int id;
+  String id;
   String nazwa;
+  int ilosc;
 
   Produkt({
     this.id,
-    this.nazwa
+    this.nazwa,
+    this.ilosc
   });
 
   Produkt.fromJson(Map<String, dynamic> json){
-    id = json['ID'];
-    nazwa = json['Nazwa'];
+    id = json['objectId'];
+    nazwa = json['nazwa'];
+    ilosc = json['ilosc'];
   }
 
   Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Nazwa': nazwa,
+    'objectId': id,
+    'nazwa': nazwa,
+    'ilosc' : ilosc,
   };
 
 }// class Produkt

@@ -1,2 +1,2 @@
-String queryUrl = "https://eu-api.backendless.com/71B8ECD6-DE06-442E-A421-B94928F17A94";
-String restAPIKey = "5FB8C2A4-E10E-49AA-8110-15F7A7CD84EF";
+String queryUrl = "https://eu-api.backendless.com/221079BD-6595-4C63-B485-1476EC4B5123";
+String restAPIKey = "4683DA39-31A6-4EAA-AFEA-45C2E17F23EC";

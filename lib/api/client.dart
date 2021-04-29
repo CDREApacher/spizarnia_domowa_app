@@ -8,7 +8,7 @@ Dio client (){
   Dio dio = new Dio();
 
   dio.options.baseUrl = "$queryUrl/$restAPIKey";
-  dio.options.receiveTimeout = 10000;
+  dio.options.receiveTimeout = 20000;
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (RequestOptions options) => requestInterceptors(options),
