@@ -5,7 +5,7 @@ Cześć dedykowanej aplikacji mobilnej
 
 ## Zespół
 
-Zofia Bączyk
-Witold Borowiak
-Marek Gulawski
-Monika Kuczkowska
+Zofia Bączyk  
+Witold Borowiak  
+Marek Gulawski  
+Monika Kuczkowska  
