@@ -6,6 +6,9 @@ import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
+import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
+import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
+
 
 class Home extends StatelessWidget{
 
@@ -57,18 +60,32 @@ class Home extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Test połączenia z backendem')),
+
+
+
+      appBar: AppBar(title: Text('Debug Spiżarnia Domowa')),
+
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddProdukt()),
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: Container(
         padding: EdgeInsets.all(24),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
 
 
 
-
-
-
+            /*
             GetBuilder<ProduktController>(
                 builder: (produktController) =>
                     Text(
@@ -79,42 +96,44 @@ class Home extends StatelessWidget{
 
             ),
 
-
-
-
-
-
-
             TextField(
               controller: nameController,
               decoration: InputDecoration(hintText: "nazwa"),
             ),
+
             TextField(
               controller: iloscController,
               decoration: InputDecoration(hintText: "ilosc"),
             ),
 
             SizedBox(height: 16),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
 
               GetBuilder<ProduktController>(
                 builder: (produktController) =>
+
                   CustomButton(
                     onPressed: produktController.selectedProduct == null
                         ? () => onAddPressed()
                         : null,
                     text: "Add",
                   ),
+
                 ),
-                GetBuilder<ProduktController>(builder: (produktController) =>
+
+                GetBuilder<ProduktController>(
+                  builder: (produktController) =>
+
                   CustomButton(
                    onPressed: produktController.selectedProduct == null
                        ? null
                        : () => onUpdatePressed(produktController.selectedProduct.id),
                    text: "Update",
                   ),
+
                 ),
 
                   CustomButton(
@@ -124,52 +143,80 @@ class Home extends StatelessWidget{
 
               ],
 
-
             ),
+
           SizedBox(height: 16),
+            */
 
 
 
+            GetBuilder<ProduktController>(
+              builder: (produktController) =>
 
-            GetBuilder<ProduktController>(builder: (produktController) =>
+              Expanded(
 
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width:200,
-                      child: InkWell(
-                        onTap: () =>
-                            onItemPressed(produktController.produkty[index]),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                child: ListView.separated(
+                  itemBuilder: (context, index) => Row(
+
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      SizedBox(
+                       width:200,
+
+                        child: InkWell(
+                          onTap: () {
+                            
+                            Navigator.push(
+                                context, MaterialPageRoute(
+                                builder: (context) => ProduktDetail(chosen_produkt: produktController.produkty[index])
+                            )
+                            );//Navigator
+                            
+                            
+                          },
+
+
+                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+
                             SizedBox(height: 8),
+
                             Text(produktController.produkty[index].nazwa),
+
                             SizedBox(height: 4),
+
                             Text(produktController.produkty[index].ilosc.toString()),
+
                             SizedBox(height: 8),
                           ],
                         ),
+
                       ),
+
                     ),
+
                     IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () => onDeletePressed(produktController.produkty[index].id),
                     ),
+
                   ],
+
                 ),
+
                   separatorBuilder: (context, index) =>
                       Divider(color: Colors.black),
                   itemCount: produktController.produkty.length),
-              ),
 
               ),
+
+            ),
 
 
             ],
+
           ),
         ),
       );

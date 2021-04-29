@@ -16,6 +16,11 @@ class ProduktController extends GetxController {
     update();
   }
 
+  refreshAllProdukts() async {
+    produkty = await produktRepository.fetchAllProdukts();
+    update();
+  }
+
   /*
   Future<List<Produkt>> fetchProdukt(String id) async {
    return await produktRepository.fetchProdukt(id);
