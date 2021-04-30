@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_spinbox/material.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -57,12 +58,25 @@ class ProduktDetail extends StatelessWidget {
               ),
             ),
 
-            Text("Ilość produktu: "),
+            Text("Ilość " + chosen_produkt.rodzaj + " produktu:"),
 
+
+            SpinBox(
+              value: double.parse(iloscController.text),
+              onChanged: (value)  {
+                print(value);
+                int val = value.toInt();
+                iloscController.text = val.toString();
+                },
+            ),
+
+            /*
             TextField(
               controller: iloscController,
               decoration: InputDecoration(hintText: "ilość"),
             ),
+            */
+
 
             Row(
 

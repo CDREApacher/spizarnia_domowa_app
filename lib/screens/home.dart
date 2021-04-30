@@ -57,13 +57,33 @@ class Home extends StatelessWidget{
     produktController.clearSelected();
   }
 
+  onRefreshPressed() {
+    produktController.refreshAllProdukts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
 
 
-      appBar: AppBar(title: Text('Debug Spiżarnia Domowa')),
+      appBar: AppBar(
+
+          title: Text('Spiżarnia Domowa'),
+
+
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.refresh),
+                tooltip: "Odśwież listę",
+                onPressed: () => onRefreshPressed(),
+            ),
+        ],
+
+      ),
+
+
+
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -75,6 +95,8 @@ class Home extends StatelessWidget{
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+
 
       body: Container(
         padding: EdgeInsets.all(24),
@@ -183,11 +205,16 @@ class Home extends StatelessWidget{
 
                             SizedBox(height: 8),
 
-                            Text(produktController.produkty[index].nazwa),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
 
-                            SizedBox(height: 4),
+                                Text(produktController.produkty[index].nazwa),
 
-                            Text(produktController.produkty[index].ilosc.toString()),
+                                Text(produktController.produkty[index].ilosc.toString() + ' ' + produktController.produkty[index].rodzaj),
+
+                              ],
+                            ),
 
                             SizedBox(height: 8),
                           ],
