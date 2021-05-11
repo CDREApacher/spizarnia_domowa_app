@@ -188,15 +188,21 @@ class Home extends StatelessWidget{
 
                         child: InkWell(
                           onTap: () {
-                            
-                            Navigator.push(
+
+
+
+                            Navigator
+                                .push(
                                 context, MaterialPageRoute(
                                 builder: (context) => ProduktDetail(chosen_produkt: produktController.produkty[index])
-                            )
+                                )
+                                ) // push
+                                .then(
+                                    (value) => onRefreshPressed()
                             );//Navigator
-                            
-                            
-                          },
+                          }, //onTap
+
+
 
 
                          child: Column(

@@ -26,4 +26,6 @@ class Produkt {
     'rodzaj_ilosc' : rodzaj,
   };
 
+
+
 }// class Produkt

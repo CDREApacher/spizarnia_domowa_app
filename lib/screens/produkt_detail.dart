@@ -18,7 +18,8 @@ class ProduktDetail extends StatelessWidget {
   onUpdatePressed(String id) {
     Produkt produkt = new Produkt(
         nazwa: chosen_produkt.nazwa,
-        ilosc: int.parse(iloscController.text)
+        ilosc: int.parse(iloscController.text),
+        rodzaj: chosen_produkt.rodzaj
     );
     
     produktController.updateProdukt(id, produkt);
@@ -63,6 +64,8 @@ class ProduktDetail extends StatelessWidget {
 
             SpinBox(
               value: double.parse(iloscController.text),
+              min: 0,
+              max: 2048,
               onChanged: (value)  {
                 print(value);
                 int val = value.toInt();
@@ -91,10 +94,14 @@ class ProduktDetail extends StatelessWidget {
                     onUpdatePressed(chosen_produkt.id); // nie aktualizuje listy na głównym ekranie !!
 
 
+
+                    /*
                     Navigator.push(
                       context,
                       MaterialPageRoute( builder: (context) => Home() ),
                     );
+                    */
+                     Navigator.pop(context);
 
 
 
@@ -121,6 +128,35 @@ class ProduktDetail extends StatelessWidget {
               ],
 
             ),
+            SizedBox(height: 22),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+
+                Text(
+                    "Twoje atrybuty",
+                  style: TextStyle(fontSize: 22),
+                ),
+                SizedBox(height: 18),
+                Text(
+                  "Twoje atrybuty",
+                  style: TextStyle(fontSize: 22),
+                ),
+                SizedBox(height: 18),
+                Text(
+                  "Twoje atrybuty",
+                  style: TextStyle(fontSize: 22),
+                ),
+                SizedBox(height: 18),
+                Text(
+                  "Twoje atrybuty",
+                  style: TextStyle(fontSize: 22),
+                ),
+                SizedBox(height: 18),
+
+              ],
+            ),
             /*
             Text(
               'Ilość produktu: ' + chosen_produkt.ilosc.toString(),
@@ -129,9 +165,6 @@ class ProduktDetail extends StatelessWidget {
               ),
             ),
             */
-
-
-
             //CustomButton(), //Add custom button to save edit
 
           ],

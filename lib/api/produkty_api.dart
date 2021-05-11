@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 
-Future<Response> fetchAll(Dio dio){
-  return dio.get("/data/Test");
+Future<Response> fetchAll(Dio dio, int pgOffset){
+  return dio.get("/data/Test", queryParameters: {'pageSize' : 100, 'offset' : pgOffset});
+}
+
+Future<Response> getCount(Dio dio){
+  return dio.get("/data/Test", queryParameters: {'property' : 'Count(nazwa)'});
 }
 
 Future<Response> fetch(Dio dio, String objectId){

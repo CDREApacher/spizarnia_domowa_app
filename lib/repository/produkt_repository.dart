@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spizarnia_domowa_app/api/client.dart';
 import 'package:spizarnia_domowa_app/api/produkty_api.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
+import 'package:spizarnia_domowa_app/model/item_count.dart';
 
 
 class ProduktRepository{
@@ -16,10 +17,33 @@ class ProduktRepository{
   }
 
   Future<List<Produkt>> fetchAllProdukts() async {
-    Response response = await fetchAll(apiClient);
+    /*Response response = await fetchAll(apiClient);
 
     return List<Produkt>.from(
-        (response.data).map((json) => Produkt.fromJson(json)),
+      (response.data).map((json) => Produkt.fromJson(json)),*/ // Old method that didn't include paging
+
+    List<Produkt> listaP = [];
+    List<ItemCount> itemCountList = await fetchItemCount(apiClient);
+
+    Response response;
+    int pgOffset = 0;
+
+    do {
+      response = await fetchAll(apiClient, pgOffset);
+      listaP += List<Produkt>.from(
+          (response.data).map((json) => Produkt.fromJson(json))
+      );
+      pgOffset += 100;
+    } while (pgOffset < itemCountList.first.counted);
+
+    return listaP;
+  }
+
+  Future<List<ItemCount>> fetchItemCount(apiClient) async {
+    Response response = await getCount(apiClient);
+
+    return List<ItemCount>.from(
+        (response.data).map((json) => ItemCount.fromJson(json)),
     );
   }
 

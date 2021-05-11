@@ -9,9 +9,11 @@ import 'package:spizarnia_domowa_app/screens/home.dart';
 
 class AddProdukt extends StatelessWidget {
 
+  String rod = "sztuk";
 
   final nameController = TextEditingController();
   final iloscController = TextEditingController();
+  final typController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
@@ -19,7 +21,8 @@ class AddProdukt extends StatelessWidget {
   onConfirmPressed() {
     Produkt produkt = new Produkt(
         nazwa: nameController.text,
-        ilosc: int.parse(iloscController.text)
+        ilosc: int.parse(iloscController.text),
+        rodzaj: rod
     );
 
     produktController.addProdukt(produkt);
@@ -56,6 +59,11 @@ class AddProdukt extends StatelessWidget {
               controller: iloscController,
               decoration: InputDecoration(hintText: "ilosc"),
             ),
+
+            /*TextField(
+              controller: typController,
+              decoration: InputDecoration(hintText: "typ"),
+            ),*/
 
             SizedBox(height: 16),
 
