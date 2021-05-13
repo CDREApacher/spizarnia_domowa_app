@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
+import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
@@ -11,21 +12,49 @@ class ProduktDetail extends StatelessWidget {
 
   final Produkt chosen_produkt;
 
-  final iloscController = TextEditingController();
+
+  final nameController = TextEditingController();//
+  final iloscController = TextEditingController();//
+  final miaraController = TextEditingController();//
+  final kategoriaProduktyController = TextEditingController();
+  final kategoriaZakupyController = TextEditingController();
+
+  final atrybutController = TextEditingController();
+
+
 
   final ProduktController produktController = ProduktController.to;
 
   onUpdatePressed(String id) {
+
     Produkt produkt = new Produkt(
-        nazwaProduktu: chosen_produkt.nazwaProduktu,
-        ilosc: int.parse(iloscController.text),
-        miara: chosen_produkt.miara
+      autoZakup: chosen_produkt.autoZakup,
+      progAutoZakupu: chosen_produkt.progAutoZakupu,
+
+      nazwaProduktu: chosen_produkt.nazwaProduktu,
+      ilosc: int.parse(iloscController.text),
+      miara: chosen_produkt.miara,
+      kategorieProdukty: chosen_produkt.kategorieProdukty,
+      kategorieZakupy: chosen_produkt.kategorieProdukty,
     );
 
     produktController.updateProdukt(id, produkt);
   }
 
 
+  onScreenOpened(objectId){
+    produktController.fetchAtrybuty(objectId);
+  }
+
+  onAddAtributePressed(){
+
+    Atrybuty atrybut = new Atrybuty(
+      nazwa: atrybutController.text,
+      objectIdProdukt: chosen_produkt.objectId,
+    );
+
+    produktController.addAtrybut(atrybut);
+  }
 
   ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
@@ -33,20 +62,70 @@ class ProduktDetail extends StatelessWidget {
   Widget build(BuildContext context) {
 
     iloscController.text = chosen_produkt.ilosc.toString();
+    onScreenOpened(chosen_produkt.objectId);
 
     return Scaffold(
 
       appBar: AppBar(
         toolbarHeight: 42.5,
         title: Text('Szczegóły produktu'),
+
+
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: () => {
+
+              onUpdatePressed(chosen_produkt.objectId),
+              Navigator.pop(context),
+
+            },
+          ),
+        ],
       ),
 
-      body: Container(
 
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add_comment_rounded),
+        onPressed: () {
+          onScreenOpened(chosen_produkt.objectId);
+
+          showDialog(context: context, builder: (_) =>
+              AlertDialog(
+                title: Text('Dodaj krótką notkę:'),
+
+                content: TextField(
+                  controller: atrybutController,
+                  decoration: InputDecoration(hintText: "Tutaj dodaj notkę"),
+
+                 /* onChanged: (value) {
+                    String val = value;
+                    atrybutController.text = val;
+                  }, // Allows for spelling backwards */
+
+                ),
+
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        onAddAtributePressed();
+                        onScreenOpened(chosen_produkt.objectId);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Dodaj'))
+                ],
+              ),
+          );
+
+        },
+
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+
+      body: Container(
         padding: EdgeInsets.all(24),
 
         child: Column(
-
           children: [
 
             Padding(
@@ -74,90 +153,52 @@ class ProduktDetail extends StatelessWidget {
               },
             ),
 
-            /*
-            TextField(
-              controller: iloscController,
-              decoration: InputDecoration(hintText: "ilość"),
-            ),
-            */
-
-
-            Row(
-
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-              children: [
-
-                CustomButton(
-                  onPressed: ()  {
-
-                    //onUpdatePressed(chosen_produkt.objectId); // nie aktualizuje listy na głównym ekranie !!
-                    /*
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute( builder: (context) => Home() ),
-                    );
-                    */
-                    Navigator.pop(context);
-
-                  },
-                  text: "Zapisz zmiany",
-                ),
-
-                CustomButton(
-                  onPressed: () {
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute( builder: (context) => Home() ),
-                    );
-
-                  },
-                  text: "Powrót",
-                ),
-
-
-              ],
-
-            ),
-            SizedBox(height: 22),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-
-                Text(
-                  "Twoje atrybuty",
-                  style: TextStyle(fontSize: 22),
-                ),
-                SizedBox(height: 18),
-                Text(
-                  "Twoje atrybuty",
-                  style: TextStyle(fontSize: 22),
-                ),
-                SizedBox(height: 18),
-                Text(
-                  "Twoje atrybuty",
-                  style: TextStyle(fontSize: 22),
-                ),
-                SizedBox(height: 18),
-                Text(
-                  "Twoje atrybuty",
-                  style: TextStyle(fontSize: 22),
-                ),
-                SizedBox(height: 18),
-
-              ],
-            ),
-            /*
-            Text(
-              'Ilość produktu: ' + chosen_produkt.ilosc.toString(),
-              style: TextStyle(
-                fontSize: 14
+            Text("Kategoria produktu: " + chosen_produkt.kategorieProdukty,
+                style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold
               ),
             ),
-            */
-            //CustomButton(), //Add custom button to save edit
+
+
+            Text("Kategoria zakupu " + chosen_produkt.kategorieZakupy,
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+
+            SizedBox(height: 22),
+
+            //ListView(), Needed here to display all attributes of object
+
+
+            GetBuilder<ProduktController>(
+                builder: (produktController) =>
+
+                    Expanded(
+
+                      child: ListView.separated(
+                          itemBuilder: (context, index) => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                            children: [
+                              Text(produktController.atrybuty[index].nazwa),
+                            ],
+
+                          ),
+
+
+
+                          separatorBuilder: (context, index) =>
+                            Divider(color: Colors.black),
+
+
+
+                          itemCount: produktController.atrybuty.length,
+                      ),
+                    ),
+            ),
 
           ],
 

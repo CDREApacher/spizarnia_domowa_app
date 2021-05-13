@@ -27,7 +27,7 @@ class AddProdukt extends StatelessWidget {
       ilosc: int.parse(iloscController.text),
       miara: miaraController.text,
       kategorieProdukty: kategoriaProduktyController.text,
-      kategorieZakupy: kategoriaZakupyController.text,
+      kategorieZakupy: kategoriaProduktyController.text,
     );
 
     produktController.addProdukt(produkt);
@@ -56,6 +56,9 @@ class AddProdukt extends StatelessWidget {
           ),
         ],
       ),
+
+
+
 
       body: Container(
 
@@ -100,13 +103,13 @@ class AddProdukt extends StatelessWidget {
               controller: kategoriaProduktyController,
               decoration: InputDecoration(hintText: "kategoria produktu"),
             ),
-
+            /*
             TextField(
               //Kategoria zakupy
               controller: kategoriaZakupyController,
               decoration: InputDecoration(hintText: "kategoria w zakupach"),
             ),
-
+            */
             SizedBox(height: 16),
 
 

@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:spizarnia_domowa_app/api/client.dart';
 import 'package:spizarnia_domowa_app/api/produkty_api.dart';
+import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/item_count.dart';
+import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 
 
 class ProduktRepository{
@@ -16,12 +19,15 @@ class ProduktRepository{
     // initialize others if needed
   }
 
+  // Produkty
+
   Future<List<Produkt>> fetchAllProdukts() async {
     /*
     Response response = await fetchAll(apiClient);
 
     return List<Produkt>.from(
-      (response.data).map((json) => Produkt.fromJson(json))); // Old method that didn't include paging
+      (response.data).map((json) => Produkt.fromJson(json))
+      ); // Old method that didn't include paging
     */
 
 
@@ -70,5 +76,85 @@ class ProduktRepository{
   Future<Response> updateProdukt(String objectId, Produkt produkt) async {
     return await update(apiClient, objectId, produkt.toJson());
   }
+
+
+
+  // Return Produkty nalezace do danej kategorii
+  Future<List<Produkt>> fetchProduktFromCategorie(String kategoria) async {
+    Response response = await fetchProduktFromCategory(apiClient, kategoria);
+
+    return List<Produkt>.from(
+        (response.data).map((json) => Produkt.fromJson(json)),
+    );
+
+  }
+
+  // Kategorie
+
+  Future<List<Kategoria>> fetchAllKategorie() async {
+    Response response = await fetchKategorie(apiClient);
+
+    return List<Kategoria>.from(
+        (response.data).map((json) => Kategoria.fromJson(json))
+    );
+  }
+
+  Future<Kategoria> addKategoria(Kategoria kategoria) async {
+    Response response = await addKategorie(apiClient, kategoria.toJson());
+
+    return Kategoria.fromJson(response.data);
+  }
+
+  // Zakupy
+
+  Future<List<ProduktZakupy>> fetchAllZakupy() async {
+    Response response = await fetchZakupy(apiClient);
+
+    return List<ProduktZakupy>.from(
+        (response.data).map((json) => ProduktZakupy.fromJson(json))
+    );
+  }
+
+  Future<ProduktZakupy> addZakupy(ProduktZakupy produktZakup) async {
+    Response response = await addZakup(apiClient, produktZakup.toJson());
+
+    return ProduktZakupy.fromJson(response.data);
+  }
+
+  // Atrybuty
+
+  Future<List<Atrybuty>> fetchAtrybuty(String objectId) async {
+    Response response = await fetchAtrybutyById(apiClient, objectId);
+
+    return List<Atrybuty>.from(
+        (response.data).map((json) => Atrybuty.fromJson(json))
+    );
+  }
+
+  Future<Atrybuty> addAtrybutToObject(Atrybuty atrybut) async {
+    Response response = await addAtrybut(apiClient, atrybut.toJson());
+
+    return Atrybuty.fromJson(response.data);
+  }
+
+  /*
+  Future<List<Kategoria>> fetchKategorieProdukty() async {
+    Response response = await fetchKategorieProdukty();
+
+    return List<Kategoria>.from(
+        (response.data).map((json) => Kategoria.fromJson(json))
+    );
+  }
+*/
+
+  /*
+  Future<List<Kategoria>> fetchKategorieZakupy() async {
+    Response response = await fetchKategorieZakupy(apiClient);
+
+    return List<Kategoria>.from(
+        (response.data).map((json) => Kategoria.fromJson(json))
+    );
+  }
+*/
 
 } // class ProduktRepository

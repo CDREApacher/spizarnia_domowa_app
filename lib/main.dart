@@ -21,6 +21,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     produktController.fetchAllProdukts();
+    produktController.fetchAllKategorie();
+    produktController.fetchZakupy();
+
+    produktController.fetchProduktyKategorii("napoje");
   }
 
   @override

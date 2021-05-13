@@ -2,8 +2,12 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_spinbox/material.dart';
+import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
+
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
+import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
@@ -61,6 +65,24 @@ class Home extends StatelessWidget{
     produktController.refreshAllProdukts();
   }
 
+  onKategoriePressed(String kategoria) {
+    produktController.fetchProduktyKategorii(kategoria);
+  }
+
+  onAddZakupPressed(Produkt produkt) {
+    ProduktZakupy zakup = new ProduktZakupy(
+
+        nazwaProduktu: produkt.nazwaProduktu,
+        miara: produkt.miara,
+        kategoriaZakupy: produkt.kategorieZakupy,
+        ilosc: int.parse(iloscController.text),
+        objectIdProduktu : produkt.objectId,
+
+    );
+    produktController.addNewZakup(zakup);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +99,10 @@ class Home extends StatelessWidget{
           IconButton(
             icon: Icon(Icons.refresh),
             tooltip: "Odśwież listę",
-            onPressed: () => onRefreshPressed(),
+            onPressed: () => {
+              onRefreshPressed(),
+              //onKategoriePressed("nabiał"),
+            }
           ),
         ],
 
@@ -97,22 +122,7 @@ class Home extends StatelessWidget{
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
 
-      /*
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
-        child: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () =>  () {
-            Navigator
-                .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
-                .then((value) => onRefreshPressed());// Navigator
-          },
 
-        ),
-
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      */
 ///////////////////////////////////////////////////////////
 
       body: Container(
@@ -124,71 +134,243 @@ class Home extends StatelessWidget{
 
 
 
+            // Column child # 1
+            // Grab all the categories from the database
             /*
             GetBuilder<ProduktController>(
                 builder: (produktController) =>
-                    Text(
-                        produktController.selectedProduct == null
-                            ? ''
-                            : produktController.selectedProduct.id,
-                    )
 
-            ),
+                    Expanded(
+                        child: ListView.separated(
+                            itemBuilder: (context, index) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
 
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(hintText: "nazwa"),
-            ),
+                                /*
+                                Card(
+                                  color: Colors.lightBlueAccent,
+                                  child: SizedBox.expand(
+                                    child: Text(produktController.kategorie[index].nazwa),
+                                    ),
+                                  ),
+                                */
 
-            TextField(
-              controller: iloscController,
-              decoration: InputDecoration(hintText: "ilosc"),
-            ),
+                                SizedBox(
+                                  width: 300,
 
-            SizedBox(height: 16),
+                                  child: InkWell(
+                                    onTap: () {},
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
 
-              GetBuilder<ProduktController>(
+                                      children: [
+
+
+
+                                        Container(
+                                          //padding: EdgeInsets.only(bottom:10,top:10,left:10,right: 10),
+                                          //width: 200,
+                                          margin: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.red, width: 2.0),
+                                            borderRadius: BorderRadius.circular(5)
+                                          ),
+
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                            children: [
+
+                                              Text(produktController.kategorie[index].nazwa),
+                                              Text(produktController.kategorie[index].lista),
+
+
+                                              //////////////////////////////////////////////////////////////////////
+                                              /*
+                                              ListView.builder(
+                                                  itemCount: produktController.produkty.length,
+                                                  itemBuilder: (context, index2) {
+                                                      return ListTile(
+                                                        title: Text(produktController.produkty[index2].nazwaProduktu),
+                                                      );
+                                                  }
+                                              ),*/
+
+
+
+
+
+                                              /*
+                                              GetBuilder<ProduktController>(
+                                                builder: (produktController) =>
+
+                                                    Expanded(
+
+                                                      child: ListView.separated(
+                                                          itemBuilder: (context, index2) => Row(
+
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+
+                                                              SizedBox(
+                                                                width:200,
+
+                                                                child: InkWell(
+                                                                  onTap: () {
+
+                                                                    Navigator
+                                                                        .push(
+                                                                        context,
+                                                                        MaterialPageRoute(builder: (context) => ProduktDetail(chosen_produkt: produktController.produkty[index2]))) // push
+                                                                        .then(
+                                                                            (value) => onRefreshPressed()
+                                                                    );//Navigator
+                                                                  }, //onTap
+
+                                                                  child: Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+
+                                                                      SizedBox(height: 8),
+
+                                                                      Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        children: [
+
+                                                                          Text(produktController.produkty[index2].nazwaProduktu),
+
+                                                                          Text(produktController.produkty[index2].ilosc.toString() + ' ' + produktController.produkty[index2].miara),
+
+                                                                        ],
+                                                                      ),
+
+                                                                      SizedBox(height: 8),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+
+                                                              IconButton(
+                                                                  icon: Icon(Icons.arrow_forward_ios_rounded),
+                                                                  onPressed: () => {} //onDeletePressed(produktController.produkty[index].objectId),
+                                                              ),
+                                                            ], // Children
+                                                          ),
+
+                                                          separatorBuilder: (context, index) =>
+                                                              Divider(color: Colors.black),
+                                                          itemCount: produktController.produkty.length),
+                                                    ),
+                                              ),*/
+                                              ///////////////////////////////////////////////////
+
+
+                                              //Text(produktController.kategorie[index].lista),
+
+
+
+
+                                              // Here we need the products belonging to this category !!!!!!!!
+                                              //function to update produkts in category
+
+                                              //onKategoriePressed(produktController.kategorie[index].nazwa),
+
+
+
+                                              /*
+                                              GetBuilder<ProduktController>(
+                                                  builder: (produktController) =>
+
+
+
+                                                      Expanded(
+                                                        child: ListView.separated(
+
+                                                            itemBuilder: (context, index) => Row(
+
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                                              children: [
+
+                                                                Text(produktController.produktyKategorii[index].nazwaProduktu),
+
+                                                              ],
+
+                                                            ),
+
+                                                            separatorBuilder: (context, index) =>
+                                                                Divider(color: Colors.black),
+
+                                                            itemCount: produktController.produktyKategorii.length,
+                                                        ),
+                                                      ),
+                                              ),*/
+
+
+
+
+
+
+
+
+
+
+
+
+                                            ],
+                                          ),
+
+                                        ),
+
+                                      ],
+                                    ),
+
+                                  ),
+                                ),
+
+                              ],
+                            ),
+
+                            separatorBuilder: (context, index) =>
+                              Divider(color: Colors.black),
+
+                            itemCount: produktController.kategorie.length,
+                        )
+                    ),
+            ),*/
+
+
+            // Wyświetl produkty kategorii nabiał
+
+            /*GetBuilder<ProduktController>(
                 builder: (produktController) =>
 
-                  CustomButton(
-                    onPressed: produktController.selectedProduct == null
-                        ? () => onAddPressed()
-                        : null,
-                    text: "Add",
-                  ),
+                    Expanded(
+                        child: ListView.separated(
+                            itemBuilder: (context, index) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                ),
+                              children: [
+                                Text(produktController.produktyKategorii[index].nazwaProduktu),
+                              ],
+                            ),
 
-                GetBuilder<ProduktController>(
-                  builder: (produktController) =>
+                            separatorBuilder: (context, index) =>
+                                Divider(color: Colors.black),
 
-                  CustomButton(
-                   onPressed: produktController.selectedProduct == null
-                       ? null
-                       : () => onUpdatePressed(produktController.selectedProduct.id),
-                   text: "Update",
-                  ),
+                            itemCount: produktController.produktyKategorii.length
+                        ),
+                    ),
 
-                ),
-
-                  CustomButton(
-                    onPressed: () => onClearPressed(),
-                   text: "Clear",
-                  ),
-
-              ],
-
-            ),
-
-          SizedBox(height: 16),
-            */
+            ),*/
 
 
 
+
+
+            // Column child # 2
+            // Get all the products from the database
             GetBuilder<ProduktController>(
               builder: (produktController) =>
 
@@ -200,12 +382,46 @@ class Home extends StatelessWidget{
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
+                            IconButton(
+                                icon: Icon(Icons.add_business_rounded),
+                                onPressed: () => {
+                                  showDialog(context: context, builder: (_) => AlertDialog(
+                                    title: Text('Dodaj '+ produktController.produkty[index].nazwaProduktu + ' do listy zakupów. ('+ produktController.produkty[index].miara+')'),
+                                    content:  SpinBox(
+                                      value: 0,
+                                      min: 0,
+                                      max: 2048,
+                                      onChanged: (value) {
+                                        print(value);
+                                        int val = value.toInt();
+                                        iloscController.text = val.toString();
+                                      },
+                                    ),
+
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            onAddZakupPressed(produktController.produkty[index]);
+                                            Navigator.pop(context);
+                                          },
+
+
+                                          child: Text('Dodaj')
+                                      ),
+                                    ],
+                                   // elevation: 5.0,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  ), //showDialog
+
+                                } //onDeletePressed(produktController.produkty[index].objectId),
+                            ),
+
                             SizedBox(
                               width:200,
 
                               child: InkWell(
                                 onTap: () {
-
 
 
                                   Navigator
@@ -216,10 +432,8 @@ class Home extends StatelessWidget{
                                           (value) => onRefreshPressed()
                                   );//Navigator
 
+
                                 }, //onTap
-
-
-
 
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,33 +455,34 @@ class Home extends StatelessWidget{
                                     SizedBox(height: 8),
                                   ],
                                 ),
-
                               ),
-
                             ),
 
                             IconButton(
                               icon: Icon(Icons.arrow_forward_ios_rounded),
-                              //onPressed: () => onDeletePressed(produktController.produkty[index].objectId),
+                              onPressed: () => {
+
+
+                              } //onDeletePressed(produktController.produkty[index].objectId),
                             ),
 
-                          ],
-
+                          ], // Children
                         ),
 
                         separatorBuilder: (context, index) =>
                             Divider(color: Colors.black),
                         itemCount: produktController.produkty.length),
-
                   ),
-
             ),
 
-
+            // Column child end
           ],
 
         ),
       ),
+
+
+
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -302,9 +517,7 @@ class Home extends StatelessWidget{
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
+
                 Navigator.pop(context);
 
                 // Go to the new screen lista_zakupow.dart
@@ -317,33 +530,32 @@ class Home extends StatelessWidget{
             ),
 
             ListTile(
-              title: Text('Edytuj wprowadzone miary'),
+              title: Text('Miary'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
+
                 Navigator.pop(context);
 
-                // Go to the new screen lista_zakupow.dart
+                // Go to the new screen containing Miary
+                /*
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
                     .then((value) => null);
-
+                */
 
               },
             ),
 
             ListTile(
-              title: Text('Edytuj wprowadzone kategorie'),
+              title: Text('Kategorie'),
               onTap: () {
                 // Update the state of the app
                 // ...
                 // Then close the drawer
                 Navigator.pop(context);
 
-                // Go to the new screen lista_zakupow.dart
+                // Go to the new screen lista_kategorii.dart
                 Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
                     .then((value) => null);
 
 
