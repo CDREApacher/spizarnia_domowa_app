@@ -17,15 +17,15 @@ class ProduktDetail extends StatelessWidget {
 
   onUpdatePressed(String id) {
     Produkt produkt = new Produkt(
-        nazwa: chosen_produkt.nazwa,
+        nazwaProduktu: chosen_produkt.nazwaProduktu,
         ilosc: int.parse(iloscController.text),
-        rodzaj: chosen_produkt.rodzaj
+        miara: chosen_produkt.miara
     );
-    
+
     produktController.updateProdukt(id, produkt);
   }
-  
-  
+
+
 
   ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
@@ -37,6 +37,7 @@ class ProduktDetail extends StatelessWidget {
     return Scaffold(
 
       appBar: AppBar(
+        toolbarHeight: 42.5,
         title: Text('Szczegóły produktu'),
       ),
 
@@ -51,15 +52,15 @@ class ProduktDetail extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                chosen_produkt.nazwa,
+                chosen_produkt.nazwaProduktu,
                 style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold
                 ),
               ),
             ),
 
-            Text("Ilość " + chosen_produkt.rodzaj + " produktu:"),
+            Text("Ilość " + chosen_produkt.miara + " produktu:"),
 
 
             SpinBox(
@@ -70,7 +71,7 @@ class ProduktDetail extends StatelessWidget {
                 print(value);
                 int val = value.toInt();
                 iloscController.text = val.toString();
-                },
+              },
             ),
 
             /*
@@ -90,23 +91,14 @@ class ProduktDetail extends StatelessWidget {
                 CustomButton(
                   onPressed: ()  {
 
-
-                    onUpdatePressed(chosen_produkt.id); // nie aktualizuje listy na głównym ekranie !!
-
-
-
+                    //onUpdatePressed(chosen_produkt.objectId); // nie aktualizuje listy na głównym ekranie !!
                     /*
                     Navigator.push(
                       context,
                       MaterialPageRoute( builder: (context) => Home() ),
                     );
                     */
-                     Navigator.pop(context);
-
-
-
-
-
+                    Navigator.pop(context);
 
                   },
                   text: "Zapisz zmiany",
@@ -135,7 +127,7 @@ class ProduktDetail extends StatelessWidget {
               children: [
 
                 Text(
-                    "Twoje atrybuty",
+                  "Twoje atrybuty",
                   style: TextStyle(fontSize: 22),
                 ),
                 SizedBox(height: 18),

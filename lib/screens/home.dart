@@ -8,7 +8,7 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
-
+import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
 
 class Home extends StatelessWidget{
 
@@ -18,7 +18,7 @@ class Home extends StatelessWidget{
   final ProduktController produktController = ProduktController.to;
 
   onItemPressed(Produkt produkt) {
-    nameController.text = produkt.nazwa;
+    nameController.text = produkt.nazwaProduktu;
     iloscController.text = produkt.ilosc.toString();
 
     produktController.setSelected(produkt);
@@ -26,7 +26,7 @@ class Home extends StatelessWidget{
 
   onAddPressed() {
     Produkt produkt = new Produkt(
-        nazwa: nameController.text,
+        nazwaProduktu: nameController.text,
         ilosc: int.parse(iloscController.text)
     );
     onClearPressed();
@@ -40,7 +40,7 @@ class Home extends StatelessWidget{
 
   onUpdatePressed(String id) {
     Produkt produkt = new Produkt(
-        nazwa: nameController.text,
+        nazwaProduktu: nameController.text,
         ilosc: int.parse(iloscController.text)
     );
 
@@ -65,38 +65,55 @@ class Home extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
 
-
+//////////////////////////////////////////////////////////
 
       appBar: AppBar(
 
-          title: Text('Spiżarnia Domowa'),
+        toolbarHeight: 42.5,
 
+        title: Text('Spiżarnia Domowa'),
 
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.refresh),
-                tooltip: "Odśwież listę",
-                onPressed: () => onRefreshPressed(),
-            ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            tooltip: "Odśwież listę",
+            onPressed: () => onRefreshPressed(),
+          ),
         ],
 
       ),
 
 
-
+//////////////////////////////////////////////////////////
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddProdukt()),
-          );
+          Navigator
+              .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
+              .then((value) => onRefreshPressed());// Navigator
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
 
+      /*
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () =>  () {
+            Navigator
+                .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
+                .then((value) => onRefreshPressed());// Navigator
+          },
+
+        ),
+
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      */
+///////////////////////////////////////////////////////////
 
       body: Container(
         padding: EdgeInsets.all(24),
@@ -175,84 +192,174 @@ class Home extends StatelessWidget{
             GetBuilder<ProduktController>(
               builder: (produktController) =>
 
-              Expanded(
+                  Expanded(
 
-                child: ListView.separated(
-                  itemBuilder: (context, index) => Row(
+                    child: ListView.separated(
+                        itemBuilder: (context, index) => Row(
 
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                      SizedBox(
-                       width:200,
+                            SizedBox(
+                              width:200,
 
-                        child: InkWell(
-                          onTap: () {
-
-
-
-                            Navigator
-                                .push(
-                                context, MaterialPageRoute(
-                                builder: (context) => ProduktDetail(chosen_produkt: produktController.produkty[index])
-                                )
-                                ) // push
-                                .then(
-                                    (value) => onRefreshPressed()
-                            );//Navigator
-                          }, //onTap
+                              child: InkWell(
+                                onTap: () {
 
 
 
+                                  Navigator
+                                      .push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ProduktDetail(chosen_produkt: produktController.produkty[index]))) // push
+                                      .then(
+                                          (value) => onRefreshPressed()
+                                  );//Navigator
 
-                         child: Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
+                                }, //onTap
 
-                            SizedBox(height: 8),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
 
-                                Text(produktController.produkty[index].nazwa),
 
-                                Text(produktController.produkty[index].ilosc.toString() + ' ' + produktController.produkty[index].rodzaj),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
 
-                              ],
+                                    SizedBox(height: 8),
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+
+                                        Text(produktController.produkty[index].nazwaProduktu),
+
+                                        Text(produktController.produkty[index].ilosc.toString() + ' ' + produktController.produkty[index].miara),
+
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 8),
+                                  ],
+                                ),
+
+                              ),
+
                             ),
 
-                            SizedBox(height: 8),
+                            IconButton(
+                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                              //onPressed: () => onDeletePressed(produktController.produkty[index].objectId),
+                            ),
+
                           ],
+
                         ),
 
-                      ),
+                        separatorBuilder: (context, index) =>
+                            Divider(color: Colors.black),
+                        itemCount: produktController.produkty.length),
 
-                    ),
-
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () => onDeletePressed(produktController.produkty[index].id),
-                    ),
-
-                  ],
-
-                ),
-
-                  separatorBuilder: (context, index) =>
-                      Divider(color: Colors.black),
-                  itemCount: produktController.produkty.length),
-
-              ),
+                  ),
 
             ),
 
 
-            ],
+          ],
 
-          ),
         ),
-      );
+      ),
+
+/////////////////////////////////////////////////////////////////////////
+
+      drawer: Drawer(
+
+        child: ListView(
+          padding: EdgeInsets.zero,
+
+          children: <Widget>[
+
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+
+              child: Text('Menu'),
+            ),
+
+            ListTile(
+              title: Text('Lista Produktów'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+                // We're already here so do nothing but close the drawer
+
+              },
+            ),
+
+
+            ListTile(
+              title: Text('Lista Zakupów'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .then((value) => null);
+
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Edytuj wprowadzone miary'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .then((value) => null);
+
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Edytuj wprowadzone kategorie'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .then((value) => null);
+
+
+              },
+            ),
+
+
+          ],
+
+
+        ),
+
+      ),
+
+
+    );
   }// Widget build
 
 }// class Home

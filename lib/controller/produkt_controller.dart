@@ -35,7 +35,7 @@ class ProduktController extends GetxController {
   deleteProdukt(String objectId) async {
     Response response = await produktRepository.deleteProdukt(objectId);
     if(response.data['code'] == null){
-      produkty.removeWhere((element) => element.id == objectId);
+      produkty.removeWhere((element) => element.objectId == objectId);
       update();
     }
   }
@@ -43,7 +43,7 @@ class ProduktController extends GetxController {
   updateProdukt(String objectId, Produkt produkt) async {
     Response response = await produktRepository.updateProdukt(objectId, produkt);
     if(response.data['code'] == null){
-      int index = produkty.indexWhere((element) => element.id == objectId);
+      int index = produkty.indexWhere((element) => element.objectId == objectId);
       produkty[index] == Produkt.fromJson(response.data);
       update();
     }

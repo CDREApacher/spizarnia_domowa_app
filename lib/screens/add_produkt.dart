@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_spinbox/material.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -13,16 +14,20 @@ class AddProdukt extends StatelessWidget {
 
   final nameController = TextEditingController();
   final iloscController = TextEditingController();
-  final typController = TextEditingController();
+  final miaraController = TextEditingController();
+  final kategoriaProduktyController = TextEditingController();
+  final kategoriaZakupyController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
 
   onConfirmPressed() {
     Produkt produkt = new Produkt(
-        nazwa: nameController.text,
-        ilosc: int.parse(iloscController.text),
-        rodzaj: rod
+      nazwaProduktu: nameController.text,
+      ilosc: int.parse(iloscController.text),
+      miara: miaraController.text,
+      kategorieProdukty: kategoriaProduktyController.text,
+      kategorieZakupy: kategoriaZakupyController.text,
     );
 
     produktController.addProdukt(produkt);
@@ -38,7 +43,19 @@ class AddProdukt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Debug Spiżarnia Domowa')),
+      appBar: AppBar(
+        toolbarHeight: 42.5,
+        title: Text('Dodaj Produkt'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: () => {
+              onConfirmPressed(),
+              Navigator.pop(context),
+            },
+          ),
+        ],
+      ),
 
       body: Container(
 
@@ -55,17 +72,47 @@ class AddProdukt extends StatelessWidget {
               decoration: InputDecoration(hintText: "nazwa"),
             ),
 
+            /*
             TextField(
               controller: iloscController,
               decoration: InputDecoration(hintText: "ilosc"),
             ),
+            */
 
-            /*TextField(
-              controller: typController,
-              decoration: InputDecoration(hintText: "typ"),
-            ),*/
+            SpinBox(
+              value: 0,
+              min: 0,
+              max: 2048,
+              onChanged: (value) {
+                print(value);
+                int val = value.toInt();
+                iloscController.text = val.toString();
+              },
+            ),
+
+            TextField(
+              controller: miaraController,
+              decoration: InputDecoration(hintText: "miara"),
+            ),
+
+            TextField(
+              //Kategoria produktu
+              controller: kategoriaProduktyController,
+              decoration: InputDecoration(hintText: "kategoria produktu"),
+            ),
+
+            TextField(
+              //Kategoria zakupy
+              controller: kategoriaZakupyController,
+              decoration: InputDecoration(hintText: "kategoria w zakupach"),
+            ),
 
             SizedBox(height: 16),
+
+
+
+            /*
+
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -73,26 +120,22 @@ class AddProdukt extends StatelessWidget {
               children: [
 
                 CustomButton(
-                  onPressed: () => onConfirmPressed(),
+                  onPressed: () => {
+                    onConfirmPressed(),
+                    Navigator.pop(context),
+                  },
                   text: "Potwierdź",
                 ),
 
-                CustomButton(
-                  //onPressed: () => onCancelPressed(),
-                  text: "Anuluj",
-                  onPressed: () {
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute( builder: (context) => Home() ),
-                    );
-
-                  },
-                ),
 
               ],
 
             ),
+
+            */
+
+
+
 
           ],
 
@@ -103,5 +146,5 @@ class AddProdukt extends StatelessWidget {
     );
 
   }//Widget build
-  
+
 }//class AddProdukt

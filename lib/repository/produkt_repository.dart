@@ -17,10 +17,13 @@ class ProduktRepository{
   }
 
   Future<List<Produkt>> fetchAllProdukts() async {
-    /*Response response = await fetchAll(apiClient);
+    /*
+    Response response = await fetchAll(apiClient);
 
     return List<Produkt>.from(
-      (response.data).map((json) => Produkt.fromJson(json)),*/ // Old method that didn't include paging
+      (response.data).map((json) => Produkt.fromJson(json))); // Old method that didn't include paging
+    */
+
 
     List<Produkt> listaP = [];
     List<ItemCount> itemCountList = await fetchItemCount(apiClient);
@@ -43,7 +46,7 @@ class ProduktRepository{
     Response response = await getCount(apiClient);
 
     return List<ItemCount>.from(
-        (response.data).map((json) => ItemCount.fromJson(json)),
+      (response.data).map((json) => ItemCount.fromJson(json)),
     );
   }
 
@@ -51,7 +54,7 @@ class ProduktRepository{
     Response response = await fetch(apiClient, objectId);
 
     return List<Produkt>.from(
-        (response.data).map((json) => Produkt.fromJson(json)),
+      (response.data).map((json) => Produkt.fromJson(json)),
     );
   }
 
