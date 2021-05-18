@@ -56,12 +56,10 @@ class ProduktRepository{
     );
   }
 
-  Future<List<Produkt>> fetchProdukt(String objectId) async {
+  Future<Produkt> fetchProdukt(String objectId) async {
     Response response = await fetch(apiClient, objectId);
 
-    return List<Produkt>.from(
-      (response.data).map((json) => Produkt.fromJson(json)),
-    );
+    return Produkt.fromJson(response.data);
   }
 
   Future<Produkt> addProdukt(Produkt produkt) async {
@@ -76,8 +74,6 @@ class ProduktRepository{
   Future<Response> updateProdukt(String objectId, Produkt produkt) async {
     return await update(apiClient, objectId, produkt.toJson());
   }
-
-
 
   // Return Produkty nalezace do danej kategorii
   Future<List<Produkt>> fetchProduktFromCategorie(String kategoria) async {
@@ -119,6 +115,10 @@ class ProduktRepository{
     Response response = await addZakup(apiClient, produktZakup.toJson());
 
     return ProduktZakupy.fromJson(response.data);
+  }
+
+  Future<Response> updateZakupy(String objectId, ProduktZakupy produktZakup) async {
+    return await updateZakup(apiClient, objectId, produktZakup.toJson());
   }
 
   // Atrybuty

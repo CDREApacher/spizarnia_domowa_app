@@ -1,74 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
+
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
+import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
-class ProduktDetail extends StatelessWidget {
+class ZakupDetail extends StatelessWidget{
 
-  final Produkt chosen_produkt;
+  final ProduktZakupy chosen_produkt;
 
+  final ProduktController produktController = ProduktController.to;
 
   final nameController = TextEditingController();
   final iloscController = TextEditingController();
   final miaraController = TextEditingController();
-  final kategoriaProduktyController = TextEditingController();
   final kategoriaZakupyController = TextEditingController();
 
-  final atrybutController = TextEditingController();
 
-
-
-  final ProduktController produktController = ProduktController.to;
 
   onUpdatePressed(String id) {
 
-    Produkt produkt = new Produkt(
-      autoZakup: chosen_produkt.autoZakup,
-      progAutoZakupu: chosen_produkt.progAutoZakupu,
+    ProduktZakupy zakup = new ProduktZakupy(
+      objectIdProduktu: chosen_produkt.objectIdProduktu,
 
       nazwaProduktu: chosen_produkt.nazwaProduktu,
       ilosc: int.parse(iloscController.text),
       miara: chosen_produkt.miara,
-      kategorieProdukty: chosen_produkt.kategorieProdukty,
-      kategorieZakupy: chosen_produkt.kategorieProdukty,
+      kategoriaZakupy: chosen_produkt.kategoriaZakupy,
     );
 
-    produktController.updateProdukt(id, produkt);
+    produktController.updateZakup(id, zakup);
   }
 
 
-  onScreenOpened(objectId){
-    produktController.fetchAtrybuty(objectId);
-  }
 
-  onAddAtributePressed(){
 
-    Atrybuty atrybut = new Atrybuty(
-      nazwa: atrybutController.text,
-      objectIdProdukt: chosen_produkt.objectId,
-    );
-
-    produktController.addAtrybut(atrybut);
-  }
-
-  ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+  ZakupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
+
     iloscController.text = chosen_produkt.ilosc.toString();
-    onScreenOpened(chosen_produkt.objectId);
+
+
 
     return Scaffold(
 
       appBar: AppBar(
         toolbarHeight: 42.5,
-        title: Text('Szczegóły produktu'),
+        title: Text('Szczegóły zakupu'),
 
 
         actions: <Widget>[
@@ -85,9 +71,11 @@ class ProduktDetail extends StatelessWidget {
       ),
 
 
+      /*
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_comment_rounded),
+        child: Icon(Icons.add),
         onPressed: () {
+          /*
           onScreenOpened(chosen_produkt.objectId);
 
           showDialog(context: context, builder: (_) =>
@@ -98,7 +86,7 @@ class ProduktDetail extends StatelessWidget {
                   controller: atrybutController,
                   decoration: InputDecoration(hintText: "Tutaj dodaj notkę"),
 
-                 /* onChanged: (value) {
+                  /* onChanged: (value) {
                     String val = value;
                     atrybutController.text = val;
                   }, // Allows for spelling backwards */
@@ -116,11 +104,15 @@ class ProduktDetail extends StatelessWidget {
                 ],
               ),
           );
-
-        },
+        */
+        }, // onPressed
 
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      */
+
+
+
 
       body: Container(
         padding: EdgeInsets.all(24),
@@ -141,7 +133,6 @@ class ProduktDetail extends StatelessWidget {
 
             Text("Ilość " + chosen_produkt.miara + " produktu:"),
 
-
             SpinBox(
               value: double.parse(iloscController.text),
               min: 0,
@@ -153,61 +144,29 @@ class ProduktDetail extends StatelessWidget {
               },
             ),
 
-            Text("Kategoria produktu: " + chosen_produkt.kategorieProdukty,
-                style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold
+
+            Text("Kategoria zakupu " + chosen_produkt.kategoriaZakupy,
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold
               ),
             ),
-
-
-            Text("Kategoria zakupu " + chosen_produkt.kategorieZakupy,
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
 
             SizedBox(height: 22),
 
-            //ListView(), Needed here to display all attributes of object
-
-
-            GetBuilder<ProduktController>(
-                builder: (produktController) =>
-
-                    Expanded(
-
-                      child: ListView.separated(
-                          itemBuilder: (context, index) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                            children: [
-                              Text(produktController.atrybuty[index].nazwa),
-                            ],
-
-                          ),
 
 
 
-                          separatorBuilder: (context, index) =>
-                            Divider(color: Colors.black),
 
 
-
-                          itemCount: produktController.atrybuty.length,
-                      ),
-                    ),
-            ),
 
           ],
-
         ),
-
       ),
 
+
+
     );
+  }
 
-  }//Widget build
-
-}//class ProduktDetail
+}

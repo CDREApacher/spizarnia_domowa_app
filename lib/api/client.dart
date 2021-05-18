@@ -20,17 +20,17 @@ Dio client (){
 } // Dio client
 
 requestInterceptors(RequestOptions options){
-  logger.d(options);
+  logger.d(options); //TODO Remove debug Logger
   return options;
 }
 
 responseInterceptors(Response response){
-  logger.d(response.data);
+  logger.d(response.data); //TODO Remove debug Logger
   return response;
 }
 
 errorInterceptors(DioError err){
-  logger.d(err.error);
-  logger.d(err.message);
+  logger.d(err.error); //TODO Remove debug Logger
+  logger.d(err.message); //TODO Remove debug Logger
   return err;
 }

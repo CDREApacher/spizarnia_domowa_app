@@ -37,11 +37,13 @@ class ProduktController extends GetxController {
     update();
   }
 
-  /*
-  Future<List<Produkt>> fetchProdukt(String id) async {
+
+  Future<Produkt> fetchProdukt(String id) async {
    return await produktRepository.fetchProdukt(id);
+   selectedProduct = await produktRepository.fetchProdukt(id);
   }
-  */
+
+
 
   addProdukt(Produkt produkt) async {
     produkty.add(await produktRepository.addProdukt(produkt));
@@ -67,7 +69,6 @@ class ProduktController extends GetxController {
 
   // Kategorie
 
-
   fetchAllKategorie() async {
     kategorie = await produktRepository.fetchAllKategorie();
   }
@@ -83,8 +84,6 @@ class ProduktController extends GetxController {
     update();
   }
 
-
-
   // Zakupy
 
   addNewZakup(ProduktZakupy produkt) async {
@@ -95,6 +94,15 @@ class ProduktController extends GetxController {
   fetchZakupy() async {
     zakupy = await produktRepository.fetchAllZakupy();
     update();
+  }
+
+  updateZakup(String objectId, ProduktZakupy produktZakup) async {
+    Response response = await produktRepository.updateZakupy(objectId, produktZakup);
+    if(response.data['code'] == null){
+      int index = zakupy.indexWhere((element) => element.objectId == objectId);
+      zakupy[index] = ProduktZakupy.fromJson(response.data);
+      update();
+    }
   }
 
   // Atrybuty

@@ -96,6 +96,9 @@ class _ListaKategorii extends State<ListaKategorii>{
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
+
+
+
       body: Container(
         padding: EdgeInsets.all(24),
 

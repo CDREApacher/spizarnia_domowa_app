@@ -73,6 +73,10 @@ Future<Response> addZakup(Dio dio, Map<String, dynamic> dane){
   return dio.post("/data/Lista_Zakupow", data: dane);
 }
 
+Future<Response> updateZakup(Dio dio, String objectId, Map<String, dynamic> dane){
+  return dio.put("/data/Lista_Zakupow/$objectId", data: dane);
+}
+
 // Atrybuty
 
 Future<Response> fetchAtrybutyById(Dio dio, String objectId){
