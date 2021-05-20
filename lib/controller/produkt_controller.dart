@@ -131,4 +131,21 @@ class ProduktController extends GetxController {
 
 
 
+  // Znajdz index obiektu w liscie zakupy gdzie :
+  // Produkt.objectId == ProduktZakupy.objectIdProduktu
+  findProduktInZakupyList(String produktId){
+    int index = zakupy.indexWhere((element) => element.objectIdProduktu == produktId);
+    return index;
+  }
+
+  getProduktFromZakupy(int index){
+    return zakupy[index];
+    /*
+    * Child function to findProduktInZakupyList
+    * should be called if the parent function returns something other than -1
+    * returns a ProduktZakupy object
+    * */
+  }
+
+
 } // class ProduktController

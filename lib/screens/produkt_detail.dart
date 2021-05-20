@@ -4,6 +4,7 @@ import 'package:flutter_spinbox/material.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
@@ -42,6 +43,82 @@ class ProduktDetail extends StatelessWidget {
   }
 
 
+
+  onAddZakupPressed(Produkt produkt) {
+    ProduktZakupy zakup = new ProduktZakupy(
+
+      nazwaProduktu: produkt.nazwaProduktu,
+      miara: produkt.miara,
+      kategoriaZakupy: produkt.kategorieZakupy,
+      ilosc: int.parse(iloscController.text),
+      objectIdProduktu : produkt.objectId,
+
+    );
+    produktController.addNewZakup(zakup);
+  }
+
+
+  onCheckUpdatePressed(){
+    if(chosen_produkt.autoZakup == false){
+      onUpdatePressed(chosen_produkt.objectId);
+    }else{
+      if( (int.parse(iloscController.text) >= chosen_produkt.progAutoZakupu) || (chosen_produkt.ilosc <= int.parse(iloscController.text)) ){ // chosen_produkt.ilosc after update >= chosen_produkt.progAutoZakupu
+        onUpdatePressed(chosen_produkt.objectId);
+      }else{// chosen_produkt.ilosc after update < chosen_produkt.progAutoZakupu
+        int index = produktController.findProduktInZakupyList(chosen_produkt.objectId);
+
+        int naszProg = chosen_produkt.progAutoZakupu;
+        int staraWartosc = chosen_produkt.ilosc;
+        int nowaWartosc = int.parse(iloscController.text);
+        int wynik;
+
+        if(staraWartosc >= naszProg){
+          // To co w bazie było orginalnie większe niż próg
+          wynik = naszProg - nowaWartosc;
+        }else{
+          // To co w bazie NIE było orginalnie większe niż próg
+          wynik = staraWartosc - nowaWartosc;
+        }
+        if(wynik < 0){wynik = wynik * (-1);}
+
+
+        if(index == -1){// No produkt like this found in zakupy lista // create new zakup
+
+          ProduktZakupy zakupDodaj = new ProduktZakupy(
+
+            nazwaProduktu: chosen_produkt.nazwaProduktu,
+            miara: chosen_produkt.miara,
+            kategoriaZakupy: chosen_produkt.kategorieZakupy,
+            ilosc: wynik,
+            objectIdProduktu : chosen_produkt.objectId,
+
+            );
+          produktController.addNewZakup(zakupDodaj);
+
+          onUpdatePressed(chosen_produkt.objectId);
+
+        }else{// Produkt like this found in zakupy lista // get the Produkt
+
+          ProduktZakupy zakup = produktController.getProduktFromZakupy(index);
+
+          if(zakup.ilosc + wynik + nowaWartosc < chosen_produkt.progAutoZakupu){
+            zakup.ilosc = chosen_produkt.progAutoZakupu - nowaWartosc;
+          }else{
+            zakup.ilosc += wynik;
+          }
+
+          produktController.updateZakup(zakup.objectId, zakup); // update zakupy
+
+          onUpdatePressed(chosen_produkt.objectId); // update produkty
+
+        }// Third else
+
+      }// Second else
+
+    }// First else
+
+  }// onCheckUpdatePressed()
+
   onScreenOpened(objectId){
     produktController.fetchAtrybuty(objectId);
   }
@@ -54,12 +131,18 @@ class ProduktDetail extends StatelessWidget {
     );
 
     produktController.addAtrybut(atrybut);
+    //onScreenOpened(objectId)
+    //produktController.fetchZakupy(chosen_produkt.objectId);
   }
 
   ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    bool _autoZakup = chosen_produkt.autoZakup;
 
     iloscController.text = chosen_produkt.ilosc.toString();
     onScreenOpened(chosen_produkt.objectId);
@@ -76,7 +159,18 @@ class ProduktDetail extends StatelessWidget {
             icon: Icon(Icons.check),
             onPressed: () => {
 
-              onUpdatePressed(chosen_produkt.objectId),
+
+              onCheckUpdatePressed(),
+
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Produkt Zaktualizowany"),
+                  duration: Duration(seconds: 2),
+                )
+              ),
+
+
               Navigator.pop(context),
 
             },
@@ -116,7 +210,7 @@ class ProduktDetail extends StatelessWidget {
                 ],
               ),
           );
-
+          //Navigator.pop(context);
         },
 
       ),
@@ -147,7 +241,7 @@ class ProduktDetail extends StatelessWidget {
               min: 0,
               max: 2048,
               onChanged: (value)  {
-                print(value);
+                print(value); // TODO remove debug
                 int val = value.toInt();
                 iloscController.text = val.toString();
               },
@@ -170,7 +264,14 @@ class ProduktDetail extends StatelessWidget {
 
             SizedBox(height: 22),
 
-            //ListView(), Needed here to display all attributes of object
+            SwitchListTile(
+                title: Text("Turn me on!"),
+                value: _autoZakup,
+                onChanged: (bool value) {
+
+                },
+            ),
+
 
 
             GetBuilder<ProduktController>(

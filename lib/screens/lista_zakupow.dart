@@ -189,25 +189,11 @@ class _ListaZakupow extends State<ListaZakupow>{
 
                     ),
 
-
-
                 );
-
-
-
-
-
-
-
-
-
 
               }, // itemBuilder
             ),
       ),
-
-
-
 
     );
   }

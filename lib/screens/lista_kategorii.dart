@@ -118,7 +118,7 @@ class _ListaKategorii extends State<ListaKategorii>{
                             children: [
 
                               SizedBox(
-                                width:340,
+                                width:340, // TODO change this static value to screen like 90% width
 
                                 child: InkWell(
                                   onTap: () {},
