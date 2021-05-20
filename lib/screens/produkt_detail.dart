@@ -9,40 +9,59 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
-class ProduktDetail extends StatelessWidget {
+class ProduktDetail extends StatefulWidget {
 
   final Produkt chosen_produkt;
 
 
+  ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+
+  @override
+  _ProduktDetailState createState() => _ProduktDetailState();
+}
+
+
+
+
+
+
+
+
+
+
+
+class _ProduktDetailState extends State<ProduktDetail> {
   final nameController = TextEditingController();
+
   final iloscController = TextEditingController();
+
   final miaraController = TextEditingController();
+
   final kategoriaProduktyController = TextEditingController();
+
   final kategoriaZakupyController = TextEditingController();
 
   final atrybutController = TextEditingController();
 
-
+  final iloscAutoZakupuController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
   onUpdatePressed(String id) {
 
     Produkt produkt = new Produkt(
-      autoZakup: chosen_produkt.autoZakup,
-      progAutoZakupu: chosen_produkt.progAutoZakupu,
+      autoZakup: widget.chosen_produkt.autoZakup,
+      progAutoZakupu: int.parse(iloscAutoZakupuController.text),
 
-      nazwaProduktu: chosen_produkt.nazwaProduktu,
+      nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
       ilosc: int.parse(iloscController.text),
-      miara: chosen_produkt.miara,
-      kategorieProdukty: chosen_produkt.kategorieProdukty,
-      kategorieZakupy: chosen_produkt.kategorieProdukty,
+      miara: widget.chosen_produkt.miara,
+      kategorieProdukty: widget.chosen_produkt.kategorieProdukty,
+      kategorieZakupy: widget.chosen_produkt.kategorieProdukty,
     );
 
     produktController.updateProdukt(id, produkt);
   }
-
-
 
   onAddZakupPressed(Produkt produkt) {
     ProduktZakupy zakup = new ProduktZakupy(
@@ -57,18 +76,17 @@ class ProduktDetail extends StatelessWidget {
     produktController.addNewZakup(zakup);
   }
 
-
   onCheckUpdatePressed(){
-    if(chosen_produkt.autoZakup == false){
-      onUpdatePressed(chosen_produkt.objectId);
+    if(widget.chosen_produkt.autoZakup == false){
+      onUpdatePressed(widget.chosen_produkt.objectId);
     }else{
-      if( (int.parse(iloscController.text) >= chosen_produkt.progAutoZakupu) || (chosen_produkt.ilosc <= int.parse(iloscController.text)) ){ // chosen_produkt.ilosc after update >= chosen_produkt.progAutoZakupu
-        onUpdatePressed(chosen_produkt.objectId);
+      if( (int.parse(iloscController.text) >= widget.chosen_produkt.progAutoZakupu) || (widget.chosen_produkt.ilosc <= int.parse(iloscController.text)) ){ // chosen_produkt.ilosc after update >= chosen_produkt.progAutoZakupu
+        onUpdatePressed(widget.chosen_produkt.objectId);
       }else{// chosen_produkt.ilosc after update < chosen_produkt.progAutoZakupu
-        int index = produktController.findProduktInZakupyList(chosen_produkt.objectId);
+        int index = produktController.findProduktInZakupyList(widget.chosen_produkt.objectId);
 
-        int naszProg = chosen_produkt.progAutoZakupu;
-        int staraWartosc = chosen_produkt.ilosc;
+        int naszProg = widget.chosen_produkt.progAutoZakupu;
+        int staraWartosc = widget.chosen_produkt.ilosc;
         int nowaWartosc = int.parse(iloscController.text);
         int wynik;
 
@@ -86,30 +104,30 @@ class ProduktDetail extends StatelessWidget {
 
           ProduktZakupy zakupDodaj = new ProduktZakupy(
 
-            nazwaProduktu: chosen_produkt.nazwaProduktu,
-            miara: chosen_produkt.miara,
-            kategoriaZakupy: chosen_produkt.kategorieZakupy,
+            nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
+            miara: widget.chosen_produkt.miara,
+            kategoriaZakupy: widget.chosen_produkt.kategorieZakupy,
             ilosc: wynik,
-            objectIdProduktu : chosen_produkt.objectId,
+            objectIdProduktu : widget.chosen_produkt.objectId,
 
             );
           produktController.addNewZakup(zakupDodaj);
 
-          onUpdatePressed(chosen_produkt.objectId);
+          onUpdatePressed(widget.chosen_produkt.objectId);
 
         }else{// Produkt like this found in zakupy lista // get the Produkt
 
           ProduktZakupy zakup = produktController.getProduktFromZakupy(index);
 
-          if(zakup.ilosc + wynik + nowaWartosc < chosen_produkt.progAutoZakupu){
-            zakup.ilosc = chosen_produkt.progAutoZakupu - nowaWartosc;
+          if(zakup.ilosc + wynik + nowaWartosc < widget.chosen_produkt.progAutoZakupu){
+            zakup.ilosc = widget.chosen_produkt.progAutoZakupu - nowaWartosc;
           }else{
             zakup.ilosc += wynik;
           }
 
           produktController.updateZakup(zakup.objectId, zakup); // update zakupy
 
-          onUpdatePressed(chosen_produkt.objectId); // update produkty
+          onUpdatePressed(widget.chosen_produkt.objectId); // update produkty
 
         }// Third else
 
@@ -117,8 +135,7 @@ class ProduktDetail extends StatelessWidget {
 
     }// First else
 
-  }// onCheckUpdatePressed()
-
+  }
   onScreenOpened(objectId){
     produktController.fetchAtrybuty(objectId);
   }
@@ -127,7 +144,7 @@ class ProduktDetail extends StatelessWidget {
 
     Atrybuty atrybut = new Atrybuty(
       nazwa: atrybutController.text,
-      objectIdProdukt: chosen_produkt.objectId,
+      objectIdProdukt: widget.chosen_produkt.objectId,
     );
 
     produktController.addAtrybut(atrybut);
@@ -135,17 +152,23 @@ class ProduktDetail extends StatelessWidget {
     //produktController.fetchZakupy(chosen_produkt.objectId);
   }
 
-  ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
-
+  @override
+  void initState() {
+    //bool _checkbox = widget.chosen_produkt.autoZakup;
+    super.initState();
+  }
+  
+  bool _checkbox = false;
 
   @override
   Widget build(BuildContext context) {
 
-    bool _autoZakup = chosen_produkt.autoZakup;
+  _checkbox = widget.chosen_produkt.autoZakup;
 
-    iloscController.text = chosen_produkt.ilosc.toString();
-    onScreenOpened(chosen_produkt.objectId);
+    iloscAutoZakupuController.text = widget.chosen_produkt.progAutoZakupu.toString();
+    iloscController.text = widget.chosen_produkt.ilosc.toString();
+    onScreenOpened(widget.chosen_produkt.objectId);
 
     return Scaffold(
 
@@ -182,7 +205,7 @@ class ProduktDetail extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_comment_rounded),
         onPressed: () {
-          onScreenOpened(chosen_produkt.objectId);
+          onScreenOpened(widget.chosen_produkt.objectId);
 
           showDialog(context: context, builder: (_) =>
               AlertDialog(
@@ -203,7 +226,7 @@ class ProduktDetail extends StatelessWidget {
                   TextButton(
                       onPressed: () {
                         onAddAtributePressed();
-                        onScreenOpened(chosen_produkt.objectId);
+                        onScreenOpened(widget.chosen_produkt.objectId);
                         Navigator.pop(context);
                       },
                       child: Text('Dodaj'))
@@ -225,7 +248,7 @@ class ProduktDetail extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                chosen_produkt.nazwaProduktu,
+                widget.chosen_produkt.nazwaProduktu,
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
@@ -233,7 +256,7 @@ class ProduktDetail extends StatelessWidget {
               ),
             ),
 
-            Text("Ilość " + chosen_produkt.miara + " produktu:"),
+            Text("Ilość " + widget.chosen_produkt.miara + " produktu:"),
 
 
             SpinBox(
@@ -247,7 +270,7 @@ class ProduktDetail extends StatelessWidget {
               },
             ),
 
-            Text("Kategoria produktu: " + chosen_produkt.kategorieProdukty,
+            Text("Kategoria produktu: " + widget.chosen_produkt.kategorieProdukty,
                 style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold
@@ -255,7 +278,7 @@ class ProduktDetail extends StatelessWidget {
             ),
 
 
-            Text("Kategoria zakupu " + chosen_produkt.kategorieZakupy,
+            Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy,
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
@@ -264,10 +287,49 @@ class ProduktDetail extends StatelessWidget {
 
             SizedBox(height: 22),
 
+
             SwitchListTile(
-                title: Text("Turn me on!"),
-                value: _autoZakup,
+                title: Text("Włącz auto zakup:"),
+                value: _checkbox,
                 onChanged: (bool value) {
+
+                  widget.chosen_produkt.autoZakup = value;
+                  setState(() {
+                    _checkbox = value;
+                  });
+
+                  if(value == true){
+
+
+                    showDialog(context: context, builder: (_) =>
+                        AlertDialog(
+                          title: Text('Ustal próg automatycznego dodawania'),
+                          content: SpinBox(
+                            value: double.parse(iloscAutoZakupuController.text),
+                            min: 0,
+                            max: 2048,
+                            onChanged: (value) {
+                              print(value); // TODO remove debug print
+                              int val = value.toInt();
+                              iloscAutoZakupuController.text = val.toString();
+                            },
+                          ),
+
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  //onAddZakupPressed(produkt);
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Zatwierdź')
+                            ),
+                          ],
+
+                        ),
+                    );
+
+
+                  }
 
                 },
             ),
@@ -309,6 +371,4 @@ class ProduktDetail extends StatelessWidget {
 
     );
 
-  }//Widget build
-
-}//class ProduktDetail
+  }}//class ProduktDetail
