@@ -20,6 +20,7 @@ import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
 import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
+import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
 
 // Debug
 import 'package:logger/logger.dart';
@@ -142,93 +143,93 @@ class Home extends StatelessWidget{
 
 
       body: GetBuilder<ProduktController>(
-          builder: (produktController) =>
-              GroupedListView<Produkt, String>(
+        builder: (produktController) =>
+            GroupedListView<Produkt, String>(
 
-                elements: produktController.produkty,
-                groupBy: (produkt) {
-                  return produkt.kategorieProdukty;
-                },
-                useStickyGroupSeparators: true,
+              elements: produktController.produkty,
+              groupBy: (produkt) {
+                return produkt.kategorieProdukty;
+              },
+              useStickyGroupSeparators: true,
 
-                groupHeaderBuilder: (Produkt produkt) => Padding(
-                  padding: const EdgeInsets.all(8.0),
+              groupHeaderBuilder: (Produkt produkt) => Padding(
+                padding: const EdgeInsets.all(8.0),
 
-                  child: Text(
-                    produkt.kategorieProdukty,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                child: Text(
+                  produkt.kategorieProdukty,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
+              ),
 
-                itemBuilder: (context, Produkt produkt) {
-                  return Card(
-                    elevation: 5.0,
-                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              itemBuilder: (context, Produkt produkt) {
+                return Card(
+                  elevation: 5.0,
+                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
 
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
 
-                        IconButton(
-                            icon: Icon(Icons.add_business_rounded),
-                            onPressed: () => {
+                      IconButton(
+                          icon: Icon(Icons.add_business_rounded),
+                          onPressed: () => {
 
-                              showDialog(context: context, builder: (_) =>
-                                  AlertDialog(
-                                    title: Text('Dodaj ' + produkt.nazwaProduktu + ' do listy zakupów. (' + produkt.miara + ')'),
-                                    content: SpinBox(
-                                      value: 0,
-                                      min: 0,
-                                      max: 2048,
-                                      onChanged: (value) {
-                                        print(value); // TODO remove debug print
-                                        int val = value.toInt();
-                                        iloscController.text = val.toString();
-                                      },
-                                    ),
+                            showDialog(context: context, builder: (_) =>
+                                AlertDialog(
+                                  title: Text('Dodaj ' + produkt.nazwaProduktu + ' do listy zakupów. (' + produkt.miara + ')'),
+                                  content: SpinBox(
+                                    value: 0,
+                                    min: 0,
+                                    max: 2048,
+                                    onChanged: (value) {
+                                      print(value); // TODO remove debug print
+                                      int val = value.toInt();
+                                      iloscController.text = val.toString();
+                                    },
+                                  ),
 
-                                    actions: [
-                                      TextButton(
+                                  actions: [
+                                    TextButton(
                                         onPressed: () {
                                           onAddZakupPressed(produkt);
                                           Navigator.pop(context);
                                         },
                                         child: Text('Dodaj')
-                                      ),
-                                    ],
+                                    ),
+                                  ],
 
                                 ),
-                              ), // showDialog
+                            ), // showDialog
 
-                            } // onPressed
-                        ),
+                          } // onPressed
+                      ),
 
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator
-                                  .push(context, MaterialPageRoute(builder: (context) => ProduktDetail(chosen_produkt: produkt)))
-                                  .then((value) => onRefreshPressed());
-                            },
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator
+                                .push(context, MaterialPageRoute(builder: (context) => ProduktDetail(chosen_produkt: produkt)))
+                                .then((value) => onRefreshPressed());
+                          },
 
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(produkt.nazwaProduktu + ' : ' + produkt.ilosc.toString() + ' ' + produkt.miara),
-                                Icon(Icons.arrow_forward_ios_rounded),
-                              ],
-                            ),
-
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(produkt.nazwaProduktu + ' : ' + produkt.ilosc.toString() + ' ' + produkt.miara),
+                              Icon(Icons.arrow_forward_ios_rounded),
+                            ],
                           ),
+
                         ),
+                      ),
 
-                      ],
-                    ),
+                    ],
+                  ),
 
-                  );
-                }, // itemBuilder
-              ),
+                );
+              }, // itemBuilder
+            ),
       ),
 
 /////////////////////////////////////////////////////////////////////////
@@ -276,11 +277,11 @@ class Home extends StatelessWidget{
               onTap: () {
                 Navigator.pop(context);
                 // Go to the new screen containing Miary
-                /*
+
                 Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
                     .then((value) => null);
-                */
+
               },
             ),
 

@@ -63,6 +63,10 @@ Future<Response> addKategorie(Dio dio, Map<String, dynamic> dane){
   return dio.post("/data/Kategorie", data: dane);
 }
 
+Future<Response> deleteKategorie(Dio dio, String objectId){
+  return dio.delete("/data/Kategorie/$objectId");
+}
+
 // Zakupy
 
 Future<Response> fetchZakupy(Dio dio){
@@ -85,4 +89,18 @@ Future<Response> fetchAtrybutyById(Dio dio, String objectId){
 
 Future<Response> addAtrybut(Dio dio, Map<String, dynamic> dane){
   return dio.post("/data/Atrybuty", data: dane);
+}
+
+// Miary
+
+Future<Response> fetchMiary(Dio dio){
+  return dio.get("/data/Miara", queryParameters: {'pageSize' : 100});
+}
+
+Future<Response> addMiary(Dio dio, Map<String, dynamic> dane){
+  return dio.post("/data/Miara", data: dane);
+}
+
+Future<Response> deleteMiary(Dio dio, String objectId){
+  return dio.delete("/data/Miara/$objectId");
 }

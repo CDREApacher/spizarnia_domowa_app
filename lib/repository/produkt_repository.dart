@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:spizarnia_domowa_app/api/client.dart';
 import 'package:spizarnia_domowa_app/api/produkty_api.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
@@ -6,6 +7,7 @@ import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/item_count.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+import 'package:spizarnia_domowa_app/model/miara.dart';
 
 
 class ProduktRepository{
@@ -97,8 +99,11 @@ class ProduktRepository{
 
   Future<Kategoria> addKategoria(Kategoria kategoria) async {
     Response response = await addKategorie(apiClient, kategoria.toJson());
-
     return Kategoria.fromJson(response.data);
+  }
+
+  Future<Response> deleteKategoria(String objectId) async {
+    return await deleteKategorie(apiClient, objectId);
   }
 
   // Zakupy
@@ -136,6 +141,26 @@ class ProduktRepository{
 
     return Atrybuty.fromJson(response.data);
   }
+
+  // Miary
+  Future<List<Miara>> fetchAllMiary() async {
+    Response response = await fetchMiary(apiClient);
+
+    return List<Miara>.from(
+        (response.data).map((json) => Miara.fromJson(json))
+    );
+  }
+
+  Future<Miara> addMiara(Miara miara) async {
+    Response response = await addMiary(apiClient, miara.toJson());
+    return Miara.fromJson(response.data);
+  }
+
+  Future<Response> deleteMiara(String objectId) async {
+    return await deleteMiary(apiClient, objectId);
+  }
+
+
 
   /*
   Future<List<Kategoria>> fetchKategorieProdukty() async {

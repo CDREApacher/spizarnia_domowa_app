@@ -22,14 +22,6 @@ class ProduktDetail extends StatefulWidget {
 
 
 
-
-
-
-
-
-
-
-
 class _ProduktDetailState extends State<ProduktDetail> {
   final nameController = TextEditingController();
 

@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+import 'package:spizarnia_domowa_app/model/miara.dart';
 
 import 'package:spizarnia_domowa_app/repository/produkt_repository.dart';
 import 'package:dio/dio.dart';
@@ -13,16 +15,21 @@ class ProduktController extends GetxController {
 
   List<Kategoria> kategorie = [];
 
+  List<String> displayKategorie = []; // add_produkt.dart
+
   List<Produkt> produktyKategorii = [];
 
   List<ProduktZakupy> zakupy = [];
 
   List<Atrybuty> atrybuty = [];
 
+  List<Miara> miary = []; // lista_miar.dart
+
   Produkt selectedProduct;
   ProduktRepository produktRepository = ProduktRepository();
 
   static ProduktController get to => Get.find<ProduktController>();
+
 
 
   // Produkty
@@ -84,6 +91,14 @@ class ProduktController extends GetxController {
     update();
   }
 
+  deleteKategoria(String objectId) async {
+    Response response = await produktRepository.deleteKategoria(objectId);
+    if(response.data['code'] == null){
+      kategorie.removeWhere((element) => element.objectId == objectId);
+      update();
+    }
+  }
+
   // Zakupy
 
   addNewZakup(ProduktZakupy produkt) async {
@@ -115,6 +130,27 @@ class ProduktController extends GetxController {
   addAtrybut(Atrybuty atrybut) async {
     atrybuty.add(await produktRepository.addAtrybutToObject(atrybut));
   }
+
+  // Miary
+
+  fetchMiary() async {
+    miary = await produktRepository.fetchAllMiary();
+  }
+
+  addMiary(Miara miara) async {
+    miary.add(await produktRepository.addMiara(miara));
+    update();
+  }
+
+  deleteMiary(String objectId) async {
+    Response response = await produktRepository.deleteMiara(objectId);
+    if(response.data['code'] == null){
+      miary.removeWhere((element) => element.objectId == objectId);
+      update();
+    }
+
+  }
+
 
 
   // Funkcje
