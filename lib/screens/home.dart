@@ -268,7 +268,7 @@ class Home extends StatelessWidget{
                 // Go to the new screen lista_zakupow.dart
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
-                    .then((value) => null);
+                    .then((value) => onRefreshPressed());
               },
             ),
 

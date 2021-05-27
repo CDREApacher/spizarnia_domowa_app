@@ -81,6 +81,10 @@ Future<Response> updateZakup(Dio dio, String objectId, Map<String, dynamic> dane
   return dio.put("/data/Lista_Zakupow/$objectId", data: dane);
 }
 
+Future<Response> deleteZakupy(Dio dio, String objectId){
+  return dio.delete("/data/Lista_Zakupow/$objectId");
+}
+
 // Atrybuty
 
 Future<Response> fetchAtrybutyById(Dio dio, String objectId){
@@ -91,6 +95,9 @@ Future<Response> addAtrybut(Dio dio, Map<String, dynamic> dane){
   return dio.post("/data/Atrybuty", data: dane);
 }
 
+Future<Response> deleteAtrybuty(Dio dio, String objectId){
+  return dio.delete("/data/Atrybuty/$objectId");
+}
 // Miary
 
 Future<Response> fetchMiary(Dio dio){

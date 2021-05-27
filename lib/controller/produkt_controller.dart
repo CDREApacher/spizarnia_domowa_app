@@ -15,11 +15,16 @@ class ProduktController extends GetxController {
 
   List<Kategoria> kategorie = [];
 
-  List<String> displayKategorie = []; // add_produkt.dart
+  List<String> displayKategorie = []; // add_produkt.dart & produkt_detail.dart
+
+  List<String> displayKategorieZakupy = []; // produkt_detail.dart
 
   List<Produkt> produktyKategorii = [];
 
   List<ProduktZakupy> zakupy = [];
+  List<ProduktZakupy> zakupyWyswietlaj = [];
+
+  List<ProduktZakupy> doKupienia = []; // tryb_zakupow.dart
 
   List<Atrybuty> atrybuty = [];
 
@@ -120,6 +125,14 @@ class ProduktController extends GetxController {
     }
   }
 
+  deleteZakup(String objectId) async {
+    Response response = await produktRepository.deleteZakup(objectId);
+    if(response.data['code'] == null){
+      zakupy.removeWhere((element) => element.objectId == objectId);
+      update();
+    }
+  }
+
   // Atrybuty
 
   fetchAtrybuty(String objectId) async {
@@ -129,6 +142,14 @@ class ProduktController extends GetxController {
 
   addAtrybut(Atrybuty atrybut) async {
     atrybuty.add(await produktRepository.addAtrybutToObject(atrybut));
+  }
+
+  deleteAtrybut(String objectId) async {
+    Response response = await produktRepository.deleteAtrybut(objectId);
+    if(response.data['code'] == null){
+      atrybuty.removeWhere((element) => element.objectId == objectId);
+      update();
+    }
   }
 
   // Miary

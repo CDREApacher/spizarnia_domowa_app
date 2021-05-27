@@ -126,6 +126,10 @@ class ProduktRepository{
     return await updateZakup(apiClient, objectId, produktZakup.toJson());
   }
 
+  Future<Response> deleteZakup(String objectId) async {
+    return await deleteZakupy(apiClient, objectId);
+  }
+
   // Atrybuty
 
   Future<List<Atrybuty>> fetchAtrybuty(String objectId) async {
@@ -142,7 +146,11 @@ class ProduktRepository{
     return Atrybuty.fromJson(response.data);
   }
 
+  Future<Response> deleteAtrybut(String objectId) async {
+    return await deleteAtrybuty(apiClient, objectId);
+  }
   // Miary
+
   Future<List<Miara>> fetchAllMiary() async {
     Response response = await fetchMiary(apiClient);
 

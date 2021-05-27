@@ -11,6 +11,7 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
+import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
 
 // Debug
 import 'package:logger/logger.dart';
@@ -27,12 +28,13 @@ class _ListaZakupow extends State<ListaZakupow>{
 
   final ProduktController produktController = ProduktController.to;
 
-
   onRefreshPressed() {
     produktController.fetchZakupy();
   }
 
-
+  onDeleteZakup(String objectId){
+    produktController.deleteZakup(objectId);
+  }
 
   @override
   void initState() {
@@ -46,7 +48,28 @@ class _ListaZakupow extends State<ListaZakupow>{
       appBar: AppBar(
         toolbarHeight: 42.5,
         title: Text("Lista Zakupów"),
+
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.shopping_cart_rounded),
+              tooltip: "Tryb zakupów",
+              onPressed: () {
+
+                produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+
+                Navigator
+                  .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))
+                  .then((value) => onRefreshPressed());// Navigator
+            },
+          ),
+        ],
       ),
+
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
       body: GetBuilder<ProduktController>(
         builder: (produktController) =>
@@ -57,6 +80,7 @@ class _ListaZakupow extends State<ListaZakupow>{
                 return zakup.kategoriaZakupy;
               },
               useStickyGroupSeparators: true,
+
 
               groupHeaderBuilder: (ProduktZakupy zakup) => Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -80,12 +104,9 @@ class _ListaZakupow extends State<ListaZakupow>{
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
 
-                          Icon(Icons.shopping_cart_rounded),
-
                           Expanded(
                             child: InkWell(
                               onTap: () {
-
 
                                 Navigator
                                   .push(context, MaterialPageRoute(builder: (context) => ZakupDetail(chosen_produkt: zakup)))
@@ -96,8 +117,29 @@ class _ListaZakupow extends State<ListaZakupow>{
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(zakup.nazwaProduktu + ' : ' + zakup.ilosc.toString() + ' ' + zakup.miara),
-                                  Icon(Icons.arrow_forward_ios_rounded),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+
+                                    onPressed: () {
+                                      // TODO add confirmation on delete
+                                      onDeleteZakup(zakup.objectId);
+                                    },
+                                  ),
+
+                                  Expanded(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10),
+                                            child: Text(zakup.nazwaProduktu + ' : ' + zakup.ilosc.toString() + ' ' + zakup.miara),
+                                          ),
+
+                                          Icon(Icons.arrow_forward_ios_rounded),
+                                        ],
+                                      ),
+                                  ),
+
                                 ],
                               ),
 
@@ -113,6 +155,7 @@ class _ListaZakupow extends State<ListaZakupow>{
 
               }, // itemBuilder
             ),
+
       ),
 
     );

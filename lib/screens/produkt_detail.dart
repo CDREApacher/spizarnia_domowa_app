@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
+//import 'package:barcode_widget/barcode_widget.dart';
+//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
@@ -23,9 +27,9 @@ class ProduktDetail extends StatefulWidget {
 
 
 class _ProduktDetailState extends State<ProduktDetail> {
-  final nameController = TextEditingController();
+  final nameController = TextEditingController(); //
 
-  final iloscController = TextEditingController();
+  final iloscController = TextEditingController(); //
 
   final miaraController = TextEditingController();
 
@@ -45,10 +49,12 @@ class _ProduktDetailState extends State<ProduktDetail> {
       autoZakup: widget.chosen_produkt.autoZakup,
       progAutoZakupu: int.parse(iloscAutoZakupuController.text),
 
-      nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
+      //nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
+      nazwaProduktu: nameController.text,
+
       ilosc: int.parse(iloscController.text),
       miara: widget.chosen_produkt.miara,
-      kategorieProdukty: widget.chosen_produkt.kategorieProdukty,
+      kategorieProdukty: kategoriaProduktyController.text,
       kategorieZakupy: widget.chosen_produkt.kategorieProdukty,
     );
 
@@ -128,6 +134,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     }// First else
 
   }
+
   onScreenOpened(objectId){
     produktController.fetchAtrybuty(objectId);
   }
@@ -144,14 +151,68 @@ class _ProduktDetailState extends State<ProduktDetail> {
     //produktController.fetchZakupy(chosen_produkt.objectId);
   }
 
+  onDeleteAttributePressed(String objectId){
+    produktController.deleteAtrybut(objectId);
+  }
+
+  createListKategorieProduktu(){
+    if(produktController.displayKategorie.length == 0) { // check to see if it was already created
+      for (var i = 0; i < produktController.kategorie.length; i++) {
+        if (produktController.kategorie[i].lista == 'produkty') {
+          produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
+        }
+      }
+    }
+    print(produktController.displayKategorie);
+  }
+
+  createListKategorieZakupu(){
+    if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
+      for (var i = 0; i < produktController.kategorie.length; i++) {
+        if (produktController.kategorie[i].lista == 'zakupy') {
+          produktController.displayKategorieZakupy.add(produktController.kategorie[i].nazwa);
+        }
+      }
+    }
+    print(produktController.displayKategorieZakupy);
+  }
+
 
   @override
   void initState() {
-    //bool _checkbox = widget.chosen_produkt.autoZakup;
+    createListKategorieProduktu();
+    createListKategorieZakupu();
+    kategoriaProduktyController.text = widget.chosen_produkt.kategorieProdukty;
+    kategoriaZakupyController.text = widget.chosen_produkt.kategorieZakupy;
     super.initState();
   }
-  
+
   bool _checkbox = false;
+
+
+  /*
+  String scanResult;
+
+  Future scanBarcode() async {
+    String scanResult;
+
+    try {
+      scanResult = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666",
+        "Anuluj",
+        true,
+        ScanMode.BARCODE,
+      );
+    } on PlatformException {
+      scanResult = 'Failed to get platform vaersion';
+    }
+    if (!mounted) return;
+
+    setState(() => this.scanResult = scanResult);
+  }
+  */
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +221,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
     iloscAutoZakupuController.text = widget.chosen_produkt.progAutoZakupu.toString();
     iloscController.text = widget.chosen_produkt.ilosc.toString();
+    nameController.text = widget.chosen_produkt.nazwaProduktu;
     onScreenOpened(widget.chosen_produkt.objectId);
 
     return Scaffold(
@@ -174,9 +236,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             icon: Icon(Icons.check),
             onPressed: () => {
 
-
               onCheckUpdatePressed(),
-
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -185,14 +245,12 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 )
               ),
 
-
               Navigator.pop(context),
 
             },
           ),
         ],
       ),
-
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_comment_rounded),
@@ -202,6 +260,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
           showDialog(context: context, builder: (_) =>
               AlertDialog(
                 title: Text('Dodaj krótką notkę:'),
+
+
 
                 content: TextField(
                   controller: atrybutController,
@@ -215,13 +275,40 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 ),
 
                 actions: [
+                  IconButton(
+                      icon: Icon(Icons.add_chart),
+                      onPressed: () {
+
+                        //scanBarcode();
+                        /*
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Produkt Zaktualizowany"),
+                              duration: Duration(seconds: 2),
+                            )
+                        );
+
+                        Text(
+                          scanResult == null
+                            ? 'scan a code!'
+                            : 'Scan result : $scanResult',
+                        )
+                        */
+
+
+                      }
+                  ),
+
                   TextButton(
                       onPressed: () {
                         onAddAtributePressed();
                         onScreenOpened(widget.chosen_produkt.objectId);
                         Navigator.pop(context);
                       },
-                      child: Text('Dodaj'))
+                      child: Text('Dodaj')),
+
+
+
                 ],
               ),
           );
@@ -237,19 +324,33 @@ class _ProduktDetailState extends State<ProduktDetail> {
         child: Column(
           children: [
 
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                widget.chosen_produkt.nazwaProduktu,
-                style: TextStyle(
+            Text(
+                "Nazwa produktu",
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
-                ),
               ),
             ),
 
-            Text("Ilość " + widget.chosen_produkt.miara + " produktu:"),
 
+
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(hintText: "Nazwa"),
+            ),
+
+
+            SizedBox(
+              height: 18,
+            ),
+
+            Text(
+                "Ilość " + widget.chosen_produkt.miara + " produktu:",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold
+                ),
+            ),
 
             SpinBox(
               value: double.parse(iloscController.text),
@@ -262,6 +363,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
               },
             ),
 
+            SizedBox(
+              height: 18,
+            ),
+
             Text("Kategoria produktu: " + widget.chosen_produkt.kategorieProdukty,
                 style: TextStyle(
                 fontSize: 22,
@@ -270,6 +375,37 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
 
 
+
+            DropdownButton(
+              value: kategoriaProduktyController.text,
+              icon: Icon(Icons.arrow_downward_rounded),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 22),
+
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+
+              onChanged: (String newValue){
+                setState(() {
+                  kategoriaProduktyController.text = newValue;
+                });
+              },
+
+              items: produktController.displayKategorie.map((produkt) {
+                return DropdownMenuItem(
+                  child: new Text(produkt),
+                  value: produkt,
+                );
+              }).toList(),
+            ),
+
+            SizedBox(
+              height: 18,
+            ),
+
             Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy,
                 style: TextStyle(
                     fontSize: 22,
@@ -277,11 +413,40 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 ),
               ),
 
+
+            // TODO fix this one the other one works
+            /*
+            DropdownButton(
+              value: kategoriaZakupyController.text,
+              icon: Icon(Icons.arrow_downward_rounded),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 22),
+
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+
+              onChanged: (String newValue){
+                setState(() {
+                  kategoriaZakupyController.text = newValue;
+                });
+              },
+
+              items: produktController.displayKategorieZakupy.map((produkt) {
+                return DropdownMenuItem(
+                  child: new Text(produkt),
+                  value: produkt,
+                );
+              }).toList(),
+            ),
+            */
+
             SizedBox(height: 22),
 
-
             SwitchListTile(
-                title: Text("Włącz auto zakup:"),
+                title: Text("Włącz auto zakup: (próg " + widget.chosen_produkt.progAutoZakupu.toString() + ")"),
                 value: _checkbox,
                 onChanged: (bool value) {
 
@@ -291,7 +456,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
                   });
 
                   if(value == true){
-
 
                     showDialog(context: context, builder: (_) =>
                         AlertDialog(
@@ -320,13 +484,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
                         ),
                     );
 
-
                   }
 
                 },
             ),
-
-
 
             GetBuilder<ProduktController>(
                 builder: (produktController) =>
@@ -335,20 +496,23 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
                       child: ListView.separated(
                           itemBuilder: (context, index) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
 
                             children: [
+                              IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: (){
+                                    onDeleteAttributePressed(produktController.atrybuty[index].objectId);
+                                  }
+                              ),
+
                               Text(produktController.atrybuty[index].nazwa),
                             ],
 
                           ),
 
-
-
                           separatorBuilder: (context, index) =>
                             Divider(color: Colors.black),
-
-
 
                           itemCount: produktController.atrybuty.length,
                       ),
@@ -363,4 +527,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
     );
 
-  }}//class ProduktDetail
+  }
+
+}//class ProduktDetail
