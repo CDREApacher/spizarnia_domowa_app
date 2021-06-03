@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
-//import 'package:barcode_widget/barcode_widget.dart';
-//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
@@ -190,7 +190,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
   bool _checkbox = false;
 
 
-  /*
+
   String scanResult;
 
   Future scanBarcode() async {
@@ -204,13 +204,26 @@ class _ProduktDetailState extends State<ProduktDetail> {
         ScanMode.BARCODE,
       );
     } on PlatformException {
-      scanResult = 'Failed to get platform vaersion';
+      SnackBar(
+        content: Text("Błąd skanowania!"),
+        duration: Duration(seconds: 2),
+      );
     }
     if (!mounted) return;
-
+   /* SnackBar(
+      content: Text(),
+      duration: Duration(seconds: 20),
+    );*/
     setState(() => this.scanResult = scanResult);
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$scanResult"),
+          duration: Duration(seconds: 10),
+        )
+    );
+    //atrybutController.text = this.scanResult;
   }
-  */
+
 
 
 
@@ -279,8 +292,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
                       icon: Icon(Icons.add_chart),
                       onPressed: () {
 
-                        //scanBarcode();
-                        /*
+                        scanBarcode();
+
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Produkt Zaktualizowany"),
@@ -292,8 +305,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
                           scanResult == null
                             ? 'scan a code!'
                             : 'Scan result : $scanResult',
-                        )
-                        */
+                        );
+
+
+
 
 
                       }
@@ -327,7 +342,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             Text(
                 "Nazwa produktu",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold
               ),
             ),
@@ -347,7 +362,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             Text(
                 "Ilość " + widget.chosen_produkt.miara + " produktu:",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold
                 ),
             ),
@@ -366,14 +381,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
             SizedBox(
               height: 18,
             ),
-
+            /*
             Text("Kategoria produktu: " + widget.chosen_produkt.kategorieProdukty,
                 style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold
               ),
             ),
-
+            */
 
 
             DropdownButton(
@@ -408,7 +423,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
             Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy,
                 style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold
                 ),
               ),
@@ -459,7 +474,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
                     showDialog(context: context, builder: (_) =>
                         AlertDialog(
-                          title: Text('Ustal próg automatycznego dodawania'),
+                          title: Text('Ustal próg automatycznego dodawania:'),
                           content: SpinBox(
                             value: double.parse(iloscAutoZakupuController.text),
                             min: 0,

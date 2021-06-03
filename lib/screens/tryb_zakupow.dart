@@ -8,6 +8,7 @@ import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
+import 'package:spizarnia_domowa_app/screens/home.dart';
 
 class TrybZakupow extends StatefulWidget {
   @override
@@ -75,8 +76,9 @@ class _TrybZakupowState extends State<TrybZakupow> {
     // Update the view
     produktController.update();
 
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator
+        .push(context, MaterialPageRoute(builder: (context) => Home()))
+        .then((value) => null);
 
   } // onEndZakupy()
 
@@ -116,7 +118,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
           children: [
 
-            Card(
+           /* Card(
               elevation: 5.0,
               margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               color: Colors.yellowAccent,
@@ -129,6 +131,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
                 ),
               ),
             ),
+            */
 
             SizedBox(
 
@@ -291,7 +294,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
               ),
             ),
 
-            Text("TEST TEST"),
+            //Text("TEST TEST"),
           ],
         ),
       ),

@@ -12,6 +12,13 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
+import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
+import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
+import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
+import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
+import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
+
+import 'package:spizarnia_domowa_app/screens/home.dart';
 
 // Debug
 import 'package:logger/logger.dart';
@@ -158,6 +165,76 @@ class _ListaZakupow extends State<ListaZakupow>{
 
       ),
 
+      drawer: Drawer(
+
+        child: ListView(
+          padding: EdgeInsets.zero,
+
+          children: <Widget>[
+
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+
+              child: Text('Menu'),
+            ),
+
+            ListTile(
+              title: Text('Lista Produktów'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => Home()))
+                    .then((value) => null);
+
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Lista Zakupów'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .then((value) => null);
+              },
+            ),
+
+            ListTile(
+              title: Text('Miary'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen containing Miary
+
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
+                    .then((value) => null);
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Kategorie'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+                // Go to the new screen lista_kategorii.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
+                    .then((value) => null);
+              },
+            ),
+
+          ], // children
+        ),
+      ),
     );
   }
 }
