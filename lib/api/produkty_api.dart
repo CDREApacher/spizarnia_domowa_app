@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 // Produkty
 
 Future<Response> fetchAll(Dio dio, int pgOffset){
-  return dio.get("/data/Produkt", queryParameters: {'pageSize' : 100, 'offset' : pgOffset});
+  return dio.get("/products/all");//, queryParameters: {'pageSize' : 100, 'offset' : pgOffset});
 }
 /*
 Future<Response> fetchAll(Dio dio){

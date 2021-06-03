@@ -1,13 +1,13 @@
-class Atrybuty{
+class KategoriaZakupy {
   String objectId;
   String nazwa;
 
-  Atrybuty({
+  KategoriaZakupy({
     this.objectId,
     this.nazwa,
   });
 
-  Atrybuty.fromJson(Map<String, dynamic> json){
+  KategoriaZakupy.fromJson(Map<String, dynamic> json) {
     objectId = json['id'];
     nazwa = json['name'];
   }
@@ -16,5 +16,4 @@ class Atrybuty{
     'id': objectId,
     'name': nazwa,
   };
-
-} // class
+}
