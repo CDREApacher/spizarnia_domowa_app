@@ -79,7 +79,7 @@ class ProduktController extends GetxController {
       update();
     }
   }
-
+/*
   updateProdukt(String objectId, Produkt produkt) async {
     Response response = await produktRepository.updateProdukt(objectId, produkt);
     if(response.data['code'] == null){
@@ -88,6 +88,22 @@ class ProduktController extends GetxController {
       update();
     }
   }
+*/
+
+  updateProdukt(String objectId, Produkt produkt) async {
+    Response response = await produktRepository.updateProdukt(produkt);
+    /*
+    if(response.data['code'] == null){
+      int index = produkty.indexWhere((element) => element.objectId == objectId);
+      produkty[index] = Produkt.fromJson(response.data);
+      update();
+    }
+    */
+    int index = produkty.indexWhere((element) => element.objectId == objectId);
+    produkty[index] = Produkt.fromJson(response.data);
+    update();
+  }
+
 
   // Kategorie
 
@@ -181,6 +197,19 @@ class ProduktController extends GetxController {
 
 
 
+
+
+  buyProdukts(String produktId, int quantity) async{
+    return await produktRepository.buyProdukts(produktId, quantity);
+    update();
+  }
+
+
+
+
+
+
+
   updateZakup(String objectId, ProduktZakupy produktZakup) async {
     Response response = await produktRepository.updateZakupy(objectId, produktZakup);
     if(response.data['code'] == null){
@@ -192,10 +221,14 @@ class ProduktController extends GetxController {
 
   deleteZakup(String objectId) async {
     Response response = await produktRepository.deleteZakup(objectId);
+    /*
     if(response.data['code'] == null){
       zakupy.removeWhere((element) => element.objectId == objectId);
       update();
     }
+    */
+    zakupy.removeWhere((element) => element.objectId == objectId);
+    update();
   }
 
   // Atrybuty
