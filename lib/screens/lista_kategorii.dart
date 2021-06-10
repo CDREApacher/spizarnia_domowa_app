@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:grouped_list/grouped_list.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
+import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 
 class ListaKategorii extends StatefulWidget{
   @override
@@ -12,6 +15,8 @@ class ListaKategorii extends StatefulWidget{
 }
 
 class _ListaKategorii extends State<ListaKategorii>{
+
+  var uuid = Uuid();
 
   final ProduktController produktController = ProduktController.to;
 
@@ -25,6 +30,8 @@ class _ListaKategorii extends State<ListaKategorii>{
     listaController.clear();
   }
 
+
+  /*
   onAddKategoriaPressed() {
     Kategoria kategoria = new Kategoria (
       nazwa: nameController.text,
@@ -34,14 +41,44 @@ class _ListaKategorii extends State<ListaKategorii>{
     produktController.addKategorie(kategoria);
     onClearPressed();
   }
+  */
+  onAddKategoriaPressed() {
 
+    if(listaController.text == "produkty"){
+      Kategoria kategoria = new Kategoria(
+        objectId: uuid.v4(),
+        nazwa: nameController.text,
+      );
+
+      produktController.addKategoriaProdukty(kategoria);
+    }
+
+
+
+    if(listaController.text == "zakupy"){
+      KategoriaZakupy kategoriaZakupy = new KategoriaZakupy(
+        objectId: uuid.v4(),
+        nazwa: nameController.text,
+      );
+
+      produktController.addKategoriaZakupy(kategoriaZakupy);
+    }
+
+    onClearPressed();
+
+  }
+
+/*
   onDeleteKategoriaPressed(String objectId){
     produktController.deleteKategoria(objectId);
   }
+  */
 
   @override
   void initState() {
-    produktController.fetchAllKategorie();
+    //produktController.fetchAllKategorie();
+    produktController.fetchKategorieProdukty();
+    produktController.fetchKategorieZakupy();
     listaController.text = "produkty";
     super.initState();
   }
@@ -55,6 +92,10 @@ class _ListaKategorii extends State<ListaKategorii>{
         toolbarHeight: 42.5,
         title: Text('Spiżarnia Domowa'),
       ),
+
+
+
+
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -79,7 +120,11 @@ class _ListaKategorii extends State<ListaKategorii>{
                               decoration: InputDecoration(hintText: "Nazwa kategorii"),
                             ),
 
-                            Text("Lista"),
+                            SizedBox(
+                              width: 10,
+                              height: 20,
+                            ),
+                            Text("Dodaj do listy:"),
 
                             DropdownButton<String>(
                               value: listaController.text,
@@ -137,7 +182,109 @@ class _ListaKategorii extends State<ListaKategorii>{
 
 
 
-      body: GetBuilder<ProduktController> (
+
+
+
+      body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Card(
+                elevation: 5.0,
+                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                //color: Colors.lightGreen,
+
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
+                  child: Text(
+                    "Kategorie Produktów",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+
+              // Produkt category list
+              Expanded(
+                child: GetBuilder<ProduktController> (
+                    builder: (produktController) =>
+
+                        ListView.builder(
+                            itemCount: produktController.kategorie.length,
+                            itemBuilder: (context, index) =>
+                                Container(
+                                  height: 55,
+                                  child: Card(
+                                    elevation: 5,
+                                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
+                                          child: Text(
+                                            produktController.kategorie[index].nazwa
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                        )
+                ),
+              ),
+
+              Card(
+                elevation: 5.0,
+                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                //color: Colors.lightGreen,
+
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
+                  child: Text(
+                    "Kategorie Zakupów",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+
+              // Shopping category list
+              Expanded(
+                child: GetBuilder<ProduktController> (
+                    builder: (produktController) =>
+
+                        ListView.builder(
+                            itemCount: produktController.kategorieZakupy.length,
+                            itemBuilder: (context, index) =>
+                                Container(
+                                  height: 55,
+                                  child: Card(
+                                    elevation: 5,
+                                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
+                                          child: Text(
+                                              produktController.kategorieZakupy[index].nazwa
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                        )
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      );
+
+
+      /*GetBuilder<ProduktController> (
         builder: (produktController) =>
 
           GroupedListView<Kategoria, String>(
@@ -158,7 +305,6 @@ class _ListaKategorii extends State<ListaKategorii>{
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-
 
             itemBuilder: (context, Kategoria kategoria) {
                 return Card(
@@ -181,20 +327,19 @@ class _ListaKategorii extends State<ListaKategorii>{
                             // TODO Add confirmation dialog before deleting
                           },
                       ),
-
                     ],
                   ),
                 );
             },
-
           ),
-
-
-
       ),
+      */
 
 
-    );
+
+
+
+
 
   } // Build
 

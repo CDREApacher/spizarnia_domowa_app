@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
+
+import 'package:uuid/uuid.dart';
+
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
+import 'package:spizarnia_domowa_app/model/miara.dart';
+import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/kategoria.dart';
+import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+
+
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/screens/home.dart';
@@ -17,6 +26,8 @@ class AddProdukt extends StatefulWidget {
 
 class _AddProduktState extends State<AddProdukt> {
 
+  var uuid = Uuid();
+
   final nameController = TextEditingController();
 
   final iloscController = TextEditingController();
@@ -29,45 +40,107 @@ class _AddProduktState extends State<AddProdukt> {
 
   final ProduktController produktController = ProduktController.to;
 
+
+
   onConfirmPressed() {
+
+    List<Atrybuty> atrybutyProduktu = [];
+
+    int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
+    String idMiara = produktController.miary[indexMiara].objectId;
+
+    Miara miaraProduktu = new Miara(
+      objectId: idMiara,
+      miara: miaraController.text,
+    );
+
+    int indexKategoriaProduktu = produktController.kategorie.indexWhere((element) => element.nazwa == kategoriaProduktyController.text);
+    String idKategoriaProduktu = produktController.kategorie[indexKategoriaProduktu].objectId;
+
+    Kategoria kategoriaProduktu = new Kategoria(
+      objectId: idKategoriaProduktu,
+      nazwa: kategoriaProduktyController.text,
+    );
+
+    int indexKategoriaZakupu = produktController.kategorieZakupy.indexWhere((element) => element.nazwa == kategoriaZakupyController.text);
+    String idKategoriaZakupu = produktController.kategorieZakupy[indexKategoriaZakupu].objectId;
+
+    KategoriaZakupy kategoriaZakupu = new KategoriaZakupy(
+      objectId: idKategoriaZakupu,
+      nazwa: kategoriaZakupyController.text,
+    );
+
     Produkt produkt = new Produkt(
+      objectId: uuid.v4(),
       nazwaProduktu: nameController.text,
       ilosc: int.parse(iloscController.text),
-      miara: miaraController.text,
-      kategorieProdukty: kategoriaProduktyController.text,
-      kategorieZakupy: kategoriaProduktyController.text,
+
+      progAutoZakupu: 0,
+      autoZakup: false,
+
+      miara: miaraProduktu,
+
+      kategorieProdukty: kategoriaProduktu,
+
+      kategorieZakupy: kategoriaZakupu,
+
+      atrybuty: atrybutyProduktu,
     );
 
     produktController.addProdukt(produkt);
   }
+
+
 
   onClearPressed() {
     nameController.clear();
     iloscController.clear();
   }
 
-  createList(){
-    /*
-    produktController.kategorie.forEach((element) {
-      produktController.displayKategorie.add(element.nazwa);
-    });
-    */
 
+
+  createListKategorieProduktu(){
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
-      for (var i = 0; i < produktController.kategorie.length; i++) {
-        if (produktController.kategorie[i].lista == 'produkty') {
-          produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
-        }
-      }
-    }
 
+      for (var i = 0; i < produktController.kategorie.length; i++) {
+        produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
+      }
+
+    }
+    print(produktController.displayKategorie);
+  }
+
+  createListKategorieZakupu(){
+    if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
+
+      for (var i = 0; i < produktController.kategorieZakupy.length; i++) {
+        produktController.displayKategorieZakupy.add(produktController.kategorieZakupy[i].nazwa);
+      }
+
+    }
+    print(produktController.displayKategorieZakupy);
+  }
+
+  createListMiary(){
+    if(produktController.displayMiary.length == 0) { // check to see if it was already created
+
+      for (var i = 0; i < produktController.miary.length; i++) {
+        produktController.displayMiary.add(produktController.miary[i].miara);
+      }
+
+    }
+    print(produktController.displayMiary);
   }
 
   @override
   void initState(){
-    super.initState();
-    createList();
+    createListKategorieProduktu();
+    createListKategorieZakupu();
+    createListMiary();
     kategoriaProduktyController.text = produktController.displayKategorie.first;
+    kategoriaZakupyController.text = produktController.displayKategorieZakupy.first;
+    miaraController.text = produktController.displayMiary.first;
+    super.initState();
   }
 
 
@@ -98,9 +171,21 @@ class _AddProduktState extends State<AddProdukt> {
 
           children: <Widget>[
 
+            Text(
+              "Nazwa produktu",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+
             TextField(
               controller: nameController,
               decoration: InputDecoration(hintText: "nazwa"),
+            ),
+
+            SizedBox(height: 16),
+
+            Text(
+              "Ilość produktu",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             SpinBox(
@@ -114,10 +199,43 @@ class _AddProduktState extends State<AddProdukt> {
               },
             ),
 
-            TextField(
-              controller: miaraController,
-              decoration: InputDecoration(hintText: "miara"),
+            SizedBox(height: 16),
+
+            Text(
+              "Miara produktu",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
+
+
+            DropdownButton<String>(
+              value: miaraController.text,
+              icon: Icon(Icons.arrow_downward_rounded),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurpleAccent),
+
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+
+              onChanged: (String newValue){
+                setState(() {
+                  miaraController.text = newValue;
+                });
+              },
+
+              items: produktController.displayMiary.map((miara) {
+                return DropdownMenuItem(
+                  child: new Text(miara),
+                  value: miara,
+                );
+              }).toList(),
+
+            ),
+
+
+            SizedBox(height: 16),
 
             Text(
               "Kategoria produktu",
@@ -151,14 +269,44 @@ class _AddProduktState extends State<AddProdukt> {
 
             ),
 
-            /*
-            TextField(
-              //Kategoria zakupy
-              controller: kategoriaZakupyController,
-              decoration: InputDecoration(hintText: "kategoria w zakupach"),
-            ),
-            */
+
             SizedBox(height: 16),
+
+            Text(
+              "Kategoria zakupu",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+
+            SizedBox(height: 16),
+
+            DropdownButton<String>(
+              value: kategoriaZakupyController.text,
+              icon: Icon(Icons.arrow_downward_rounded),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurpleAccent),
+
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+
+              onChanged: (String newValue){
+                setState(() {
+                  kategoriaZakupyController.text = newValue;
+                });
+              },
+
+              items: produktController.displayKategorieZakupy.map((zakup) {
+                return DropdownMenuItem(
+                  child: new Text(zakup),
+                  value: zakup,
+                );
+              }).toList(),
+
+            ),
+
+
 
           ],
 

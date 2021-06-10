@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
-//import 'package:barcode_widget/barcode_widget.dart';
-//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
+import 'package:uuid/uuid.dart';
 
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/miara.dart';
+import 'package:spizarnia_domowa_app/model/kategoria.dart';
+import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
+
+
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
@@ -27,6 +34,9 @@ class ProduktDetail extends StatefulWidget {
 
 
 class _ProduktDetailState extends State<ProduktDetail> {
+
+  var uuid = Uuid();
+
   final nameController = TextEditingController(); //
 
   final iloscController = TextEditingController(); //
@@ -44,7 +54,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
   final ProduktController produktController = ProduktController.to;
 
   onUpdatePressed(String id) {
-
+  /*
     Produkt produkt = new Produkt(
       autoZakup: widget.chosen_produkt.autoZakup,
       progAutoZakupu: int.parse(iloscAutoZakupuController.text),
@@ -54,25 +64,79 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
       ilosc: int.parse(iloscController.text),
       miara: widget.chosen_produkt.miara,
-      kategorieProdukty: kategoriaProduktyController.text,
-      kategorieZakupy: widget.chosen_produkt.kategorieProdukty,
+      //kategorieProdukty: kategoriaProduktyController.text,
+      //kategorieZakupy: widget.chosen_produkt.kategorieProdukty,
     );
 
     produktController.updateProdukt(id, produkt);
+   */
+
+
+    List<Atrybuty> atrybutyProduktu = widget.chosen_produkt.atrybuty;
+
+    int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
+    String idMiara = produktController.miary[indexMiara].objectId;
+
+    Miara miaraProduktu = new Miara(
+      objectId: idMiara,
+      miara: miaraController.text,
+    );
+
+    int indexKategoriaProduktu = produktController.kategorie.indexWhere((element) => element.nazwa == kategoriaProduktyController.text);
+    String idKategoriaProduktu = produktController.kategorie[indexKategoriaProduktu].objectId;
+
+    Kategoria kategoriaProduktu = new Kategoria(
+      objectId: idKategoriaProduktu,
+      nazwa: kategoriaProduktyController.text,
+    );
+
+    int indexKategoriaZakupu = produktController.kategorieZakupy.indexWhere((element) => element.nazwa == kategoriaZakupyController.text);
+    String idKategoriaZakupu = produktController.kategorieZakupy[indexKategoriaZakupu].objectId;
+
+    KategoriaZakupy kategoriaZakupu = new KategoriaZakupy(
+      objectId: idKategoriaZakupu,
+      nazwa: kategoriaZakupyController.text,
+    );
+
+    Produkt produkt = new Produkt(
+      objectId: uuid.v4(),
+      nazwaProduktu: nameController.text,
+      ilosc: int.parse(iloscController.text),
+
+      progAutoZakupu: 0,
+      autoZakup: false,
+
+      miara: miaraProduktu,
+
+      kategorieProdukty: kategoriaProduktu,
+
+      kategorieZakupy: kategoriaZakupu,
+
+      atrybuty: atrybutyProduktu,
+    );
+
+    produktController.addProdukt(produkt);
   }
 
+
+
+
+
+  /*
   onAddZakupPressed(Produkt produkt) {
     ProduktZakupy zakup = new ProduktZakupy(
 
       nazwaProduktu: produkt.nazwaProduktu,
-      miara: produkt.miara,
-      kategoriaZakupy: produkt.kategorieZakupy,
+      //miara: produkt.miara,
+      //kategoriaZakupy: produkt.kategorieZakupy,
       ilosc: int.parse(iloscController.text),
       objectIdProduktu : produkt.objectId,
 
     );
     produktController.addNewZakup(zakup);
   }
+  */
+
 
   onCheckUpdatePressed(){
     if(widget.chosen_produkt.autoZakup == false){
@@ -103,13 +167,13 @@ class _ProduktDetailState extends State<ProduktDetail> {
           ProduktZakupy zakupDodaj = new ProduktZakupy(
 
             nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
-            miara: widget.chosen_produkt.miara,
-            kategoriaZakupy: widget.chosen_produkt.kategorieZakupy,
+            //miara: widget.chosen_produkt.miara,
+            //kategoriaZakupy: widget.chosen_produkt.kategorieZakupy,
             ilosc: wynik,
             objectIdProduktu : widget.chosen_produkt.objectId,
 
             );
-          produktController.addNewZakup(zakupDodaj);
+          //produktController.addNewZakup(zakupDodaj);
 
           onUpdatePressed(widget.chosen_produkt.objectId);
 
@@ -135,44 +199,46 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
   }
 
+  /*
   onScreenOpened(objectId){
     produktController.fetchAtrybuty(objectId);
   }
+  */
 
-  onAddAtributePressed(){
 
-    Atrybuty atrybut = new Atrybuty(
-      nazwa: atrybutController.text,
-      objectIdProdukt: widget.chosen_produkt.objectId,
-    );
+  onAddAtributePressed(String nazwa){
+    String nazwaAtrybutu = nazwa;
+    String idProduktu = widget.chosen_produkt.objectId;
 
-    produktController.addAtrybut(atrybut);
-    //onScreenOpened(objectId)
-    //produktController.fetchZakupy(chosen_produkt.objectId);
+    produktController.addAtrybut(idProduktu, nazwaAtrybutu);
+    Navigator.pop(context);
   }
 
-  onDeleteAttributePressed(String objectId){
-    produktController.deleteAtrybut(objectId);
+  onDeleteAttributePressed(String atrybutId){
+    String produktId = widget.chosen_produkt.objectId;
+
+    produktController.deleteAtrybut(produktId, atrybutId);
+    Navigator.pop(context);
   }
 
   createListKategorieProduktu(){
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
+
       for (var i = 0; i < produktController.kategorie.length; i++) {
-        if (produktController.kategorie[i].lista == 'produkty') {
           produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
-        }
       }
+
     }
     print(produktController.displayKategorie);
   }
 
   createListKategorieZakupu(){
     if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
-      for (var i = 0; i < produktController.kategorie.length; i++) {
-        if (produktController.kategorie[i].lista == 'zakupy') {
-          produktController.displayKategorieZakupy.add(produktController.kategorie[i].nazwa);
-        }
+
+      for (var i = 0; i < produktController.kategorieZakupy.length; i++) {
+          produktController.displayKategorieZakupy.add(produktController.kategorieZakupy[i].nazwa);
       }
+
     }
     print(produktController.displayKategorieZakupy);
   }
@@ -182,15 +248,13 @@ class _ProduktDetailState extends State<ProduktDetail> {
   void initState() {
     createListKategorieProduktu();
     createListKategorieZakupu();
-    kategoriaProduktyController.text = widget.chosen_produkt.kategorieProdukty;
-    kategoriaZakupyController.text = widget.chosen_produkt.kategorieZakupy;
+    kategoriaProduktyController.text = widget.chosen_produkt.kategorieProdukty.nazwa;
+    kategoriaZakupyController.text = widget.chosen_produkt.kategorieZakupy.nazwa;
     super.initState();
   }
 
   bool _checkbox = false;
 
-
-  /*
   String scanResult;
 
   Future scanBarcode() async {
@@ -200,17 +264,32 @@ class _ProduktDetailState extends State<ProduktDetail> {
       scanResult = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666",
         "Anuluj",
-        true,
+        false,
         ScanMode.BARCODE,
       );
     } on PlatformException {
-      scanResult = 'Failed to get platform vaersion';
+      scanResult = 'Błąd skanowania';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("$scanResult"),
+            duration: Duration(seconds: 2),
+          )
+      );
+
     }
     if (!mounted) return;
 
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$scanResult"),
+          duration: Duration(seconds: 2),
+        )
+    );
+
     setState(() => this.scanResult = scanResult);
+    atrybutController.text = scanResult;
   }
-  */
 
 
 
@@ -222,7 +301,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     iloscAutoZakupuController.text = widget.chosen_produkt.progAutoZakupu.toString();
     iloscController.text = widget.chosen_produkt.ilosc.toString();
     nameController.text = widget.chosen_produkt.nazwaProduktu;
-    onScreenOpened(widget.chosen_produkt.objectId);
+    //onScreenOpened(widget.chosen_produkt.objectId);
 
     return Scaffold(
 
@@ -252,16 +331,18 @@ class _ProduktDetailState extends State<ProduktDetail> {
         ],
       ),
 
+
+
+
+
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_comment_rounded),
         onPressed: () {
-          onScreenOpened(widget.chosen_produkt.objectId);
+          //onScreenOpened(widget.chosen_produkt.objectId);
 
           showDialog(context: context, builder: (_) =>
               AlertDialog(
                 title: Text('Dodaj krótką notkę:'),
-
-
 
                 content: TextField(
                   controller: atrybutController,
@@ -279,7 +360,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
                       icon: Icon(Icons.add_chart),
                       onPressed: () {
 
-                        //scanBarcode();
+                        scanBarcode();
                         /*
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -295,14 +376,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
                         )
                         */
 
-
                       }
                   ),
 
                   TextButton(
                       onPressed: () {
-                        onAddAtributePressed();
-                        onScreenOpened(widget.chosen_produkt.objectId);
+
+                        onAddAtributePressed(atrybutController.text);
+                        //onScreenOpened(widget.chosen_produkt.objectId);
                         Navigator.pop(context);
                       },
                       child: Text('Dodaj')),
@@ -317,6 +398,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+
+
+
+
 
       body: Container(
         padding: EdgeInsets.all(24),
@@ -345,7 +430,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
 
             Text(
-                "Ilość " + widget.chosen_produkt.miara + " produktu:",
+                "Ilość " + widget.chosen_produkt.miara.miara + " produktu:",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
@@ -367,12 +452,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
               height: 18,
             ),
 
-            Text("Kategoria produktu: " + widget.chosen_produkt.kategorieProdukty,
+            Text("Kategoria produktu: " + widget.chosen_produkt.kategorieProdukty.nazwa,
                 style: TextStyle(
-                fontSize: 22,
+                fontSize: 16,
                 fontWeight: FontWeight.bold
               ),
             ),
+
+
 
 
 
@@ -402,20 +489,24 @@ class _ProduktDetailState extends State<ProduktDetail> {
               }).toList(),
             ),
 
+
+
+
+
             SizedBox(
               height: 18,
             ),
 
-            Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy,
+            Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy.nazwa,
                 style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold
                 ),
               ),
 
 
-            // TODO fix this one the other one works
-            /*
+
+
             DropdownButton(
               value: kategoriaZakupyController.text,
               icon: Icon(Icons.arrow_downward_rounded),
@@ -428,9 +519,9 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 color: Colors.deepPurpleAccent,
               ),
 
-              onChanged: (String newValue){
+              onChanged: (String newValueZ){
                 setState(() {
-                  kategoriaZakupyController.text = newValue;
+                  kategoriaZakupyController.text = newValueZ;
                 });
               },
 
@@ -441,7 +532,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 );
               }).toList(),
             ),
-            */
+
 
             SizedBox(height: 22),
 
@@ -489,12 +580,18 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 },
             ),
 
+
+
+
+
+
             GetBuilder<ProduktController>(
                 builder: (produktController) =>
 
                     Expanded(
 
                       child: ListView.separated(
+
                           itemBuilder: (context, index) => Row(
                             mainAxisAlignment: MainAxisAlignment.start,
 
@@ -502,22 +599,33 @@ class _ProduktDetailState extends State<ProduktDetail> {
                               IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: (){
-                                    onDeleteAttributePressed(produktController.atrybuty[index].objectId);
+                                    onDeleteAttributePressed(widget.chosen_produkt.atrybuty[index].objectId);
                                   }
                               ),
 
-                              Text(produktController.atrybuty[index].nazwa),
+                              Text(widget.chosen_produkt.atrybuty[index].nazwa),
                             ],
 
                           ),
 
+
                           separatorBuilder: (context, index) =>
                             Divider(color: Colors.black),
 
-                          itemCount: produktController.atrybuty.length,
+
+                          itemCount: widget.chosen_produkt.atrybuty.length,
                       ),
+
                     ),
+
             ),
+
+
+
+
+
+
+
 
           ],
 
