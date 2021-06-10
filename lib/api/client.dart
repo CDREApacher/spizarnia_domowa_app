@@ -7,6 +7,7 @@ Logger logger = Logger();
 Dio client (){
   Dio dio = new Dio();
 
+  //dio.options.baseUrl = "$queryUrl/$restAPIKey";
   dio.options.baseUrl = "$queryUrl";
   dio.options.receiveTimeout = 20000;
   dio.interceptors.add(
