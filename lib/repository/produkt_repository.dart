@@ -78,10 +78,16 @@ class ProduktRepository{
   Future<Response> deleteProdukt(String objectId) async {
     return await delete(apiClient, objectId);
   }
-
+/*
   Future<Response> updateProdukt(String objectId, Produkt produkt) async {
     return await update(apiClient, objectId, produkt.toJson());
   }
+*/
+
+  Future<Response> updateProdukt(Produkt produkt) async {
+    return await update(apiClient, produkt.toJson());
+  }
+
 
   // Return Produkty nalezace do danej kategorii
   Future<List<Produkt>> fetchProduktFromCategorie(String kategoria) async {
@@ -180,9 +186,21 @@ class ProduktRepository{
 
 
 
+
+  Future<Response> buyProdukts(String produktId, int quantity) async {
+    return await buyProdukt(apiClient, produktId, quantity);
+  }
+
+
+
+
+
+
   Future<Response> updateZakupy(String objectId, ProduktZakupy produktZakup) async {
     return await updateZakup(apiClient, objectId, produktZakup.toJson());
   }
+
+
 
   Future<Response> deleteZakup(String objectId) async {
     return await deleteZakupy(apiClient, objectId);
