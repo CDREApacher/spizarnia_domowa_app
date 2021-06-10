@@ -8,6 +8,7 @@ import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
+import 'package:spizarnia_domowa_app/screens/tryb_zakupow_detail.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
 class TrybZakupow extends StatefulWidget {
@@ -174,7 +175,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                     child: InkWell(
                                       onTap: () {
                                         Navigator
-                                            .push(context, MaterialPageRoute(builder: (context) => ZakupDetail(chosen_produkt: zakup)))
+                                            .push(context, MaterialPageRoute(builder: (context) => TrybZakupDetail(chosen_produkt: zakup)))
                                             .then((value) => {} );
                                       },
 

@@ -36,7 +36,7 @@ class _AddProduktState extends State<AddNewZakup> {
       ilosc: 0,
       miara: miaraController.text,
       kategorieProdukty: kategoriaProduktyController.text,
-      kategorieZakupy: kategoriaProduktyController.text,
+      kategorieZakupy: kategoriaZakupyController.text,
     );
 
     produktController.addProdukt(produkt);
@@ -66,9 +66,9 @@ class _AddProduktState extends State<AddNewZakup> {
 
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
       for (var i = 0; i < produktController.kategorie.length; i++) {
-        if (produktController.kategorie[i].lista == 'produkty') {
+       // if (produktController.kategorie[i].lista == 'produkty') {
           produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
-        }
+       // }
       }
     }
     if(produktController.displayMiary.length == 0) { // check to see if it was already created
@@ -120,6 +120,7 @@ class _AddProduktState extends State<AddNewZakup> {
             TextField(
               controller: nameController,
               decoration: InputDecoration(hintText: "nazwa"),
+              textAlign: TextAlign.center,
             ),
 
             SpinBox(
@@ -133,62 +134,120 @@ class _AddProduktState extends State<AddNewZakup> {
               },
             ),
 
-            DropdownButton<String>(
-              value: miaraController.text,
-              icon: Icon(Icons.arrow_downward_rounded),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurpleAccent),
+            Row(
+                children: [
+                  Text("Miara:  ",
+                    style: TextStyle(
+                      fontSize: 15,
 
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
+                    ),
+                  ),
+                  DropdownButton<String>(
+                    value: miaraController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 15,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
 
-              onChanged: (String newValue){
-                setState(() {
-                  miaraController.text = newValue;
-                });
-              },
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
 
-              items: produktController.displayMiary.map((miara) {
-                return DropdownMenuItem(
-                  child: new Text(miara),
-                  value: miara,
-                );
-              }).toList(),
+                    onChanged: (String newValue){
+                      setState(() {
+                        miaraController.text = newValue;
+                      });
+                    },
+
+                    items: produktController.displayMiary.map((miara) {
+                      return DropdownMenuItem(
+                        child: new Text(miara),
+                        value: miara,
+                      );
+                    }).toList(),
+
+                  ),
+                ]
+            ),
+
+
+            Row(
+              children: [
+                Text("Kategoria produktu:  ",
+                  style: TextStyle(
+                    fontSize: 15,
+
+                  ),
+                ),
+
+                DropdownButton(
+                  value: kategoriaProduktyController.text,
+                  icon: Icon(Icons.arrow_downward_rounded),
+                  iconSize: 15,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+
+                  underline: Container(
+                    height: 2,
+                    color: Colors.blue,
+                  ),
+
+                  onChanged: (String newValue){
+                    setState(() {
+                      kategoriaProduktyController.text = newValue;
+                    });
+                  },
+
+                  items: produktController.displayKategorie.map((produkt) {
+                    return DropdownMenuItem(
+                      child: new Text(produkt),
+                      value: produkt,
+                    );
+                  }).toList(),
+                ),
+              ],
 
             ),
 
-            Text(
-              "Kategoria produktu",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 1,
             ),
+            Row(
+              children: [
+                Text("Kategoria zakupu:  ",
+                  style: TextStyle(
+                    fontSize: 15,
 
-            DropdownButton<String>(
-              value: kategoriaProduktyController.text,
-              icon: Icon(Icons.arrow_downward_rounded),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurpleAccent),
+                  ),
+                ),
 
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
+                DropdownButton(
+                  value: kategoriaZakupyController.text,
+                  icon: Icon(Icons.arrow_downward_rounded),
+                  iconSize: 15,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
 
-              onChanged: (String newValue){
-                setState(() {
-                  kategoriaProduktyController.text = newValue;
-                });
-              },
+                  underline: Container(
+                    height: 2,
+                    color: Colors.blue,
+                  ),
 
-              items: produktController.displayKategorie.map((produkt) {
-                return DropdownMenuItem(
-                  child: new Text(produkt),
-                  value: produkt,
-                );
-              }).toList(),
+                  onChanged: (String newValue){
+                    setState(() {
+                      kategoriaZakupyController.text = newValue;
+                    });
+                  },
+
+                  items: produktController.displayKategorie.map((zakup) {
+                    return DropdownMenuItem(
+                      child: new Text(zakup),
+                      value: zakup,
+                    );
+                  }).toList(),
+                ),
+              ],
 
             ),
 

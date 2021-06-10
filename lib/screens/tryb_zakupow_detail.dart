@@ -10,17 +10,17 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
-class ZakupDetail extends StatefulWidget{
+class TrybZakupDetail extends StatefulWidget{
 
   final ProduktZakupy chosen_produkt;
 
-  ZakupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+  TrybZakupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
   @override
   _ZakupDetailState createState() => _ZakupDetailState();
 }
 
-class _ZakupDetailState extends State<ZakupDetail> {
+class _ZakupDetailState extends State<TrybZakupDetail> {
   final ProduktController produktController = ProduktController.to;
 
   final nameController = TextEditingController();
@@ -77,7 +77,7 @@ class _ZakupDetailState extends State<ZakupDetail> {
         title: Text('Szczegóły zakupu'),
 
 
-        actions: <Widget>[
+        /*actions: <Widget>[
           IconButton(
             icon: Icon(Icons.check),
             onPressed: () => {
@@ -87,7 +87,7 @@ class _ZakupDetailState extends State<ZakupDetail> {
 
             },
           ),
-        ],
+        ],*/
       ),
 
 
@@ -152,9 +152,9 @@ class _ZakupDetailState extends State<ZakupDetail> {
               ),
             ),
 
-            Text("Ilość " + widget.chosen_produkt.miara + " produktu:"),
+            Text("Ilość produktu:" + widget.chosen_produkt.ilosc.toString() + " " + widget.chosen_produkt.miara),
 
-            SpinBox(
+            /*SpinBox(
               value: double.parse(iloscController.text),
               min: 0,
               max: 2048,
@@ -163,12 +163,17 @@ class _ZakupDetailState extends State<ZakupDetail> {
                 int val = value.toInt();
                 iloscController.text = val.toString();
               },
+            ),*/
+            Text("Kategoria zakupu: "+widget.chosen_produkt.kategoriaZakupy,
+              style: TextStyle(
+                fontSize: 15,
+
+              ),
             ),
 
-
-            Row(
+            /*Row(
               children: [
-                Text("Kategoria zakupu: ",
+                Text("Kategoria zakupu: "+widget.chosen_produkt.kategoriaZakupy,
                   style: TextStyle(
                     fontSize: 15,
 
@@ -202,7 +207,7 @@ class _ZakupDetailState extends State<ZakupDetail> {
                 ),
               ],
 
-            ),
+            ),*/
             SizedBox(
               height: 10,
             ),

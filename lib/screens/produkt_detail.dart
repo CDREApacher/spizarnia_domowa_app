@@ -158,8 +158,15 @@ class _ProduktDetailState extends State<ProduktDetail> {
   createListKategorieProduktu(){
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
       for (var i = 0; i < produktController.kategorie.length; i++) {
-      //  if (produktController.kategorie[i].lista == 'produkty') {
-          produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
+          if (produktController.kategorie[i].lista == 'produkty') {
+        produktController.displayKategorie.add(
+            produktController.kategorie[i].nazwa);
+      }
+      }
+    }
+    if(produktController.displayMiary.length == 0) { // check to see if it was already created
+      for (var i = 0; i < produktController.miary.length; i++) {
+        produktController.displayMiary.add(produktController.miary[i].miara);
 
       }
     }
@@ -184,6 +191,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     createListKategorieZakupu();
     kategoriaProduktyController.text = widget.chosen_produkt.kategorieProdukty;
     kategoriaZakupyController.text = widget.chosen_produkt.kategorieZakupy;
+    miaraController.text = widget.chosen_produkt.miara;
     super.initState();
   }
 
@@ -362,23 +370,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
 
             Text(
-                "Ilość " + widget.chosen_produkt.miara + " produktu:",
+                "Ilość produktu:",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold
                 ),
             ),
 
-            SpinBox(
-              value: double.parse(iloscController.text),
-              min: 0,
-              max: 2048,
-              onChanged: (value)  {
-                print(value); // TODO remove debug
-                int val = value.toInt();
-                iloscController.text = val.toString();
-              },
-            ),
+
 
             SizedBox(
               height: 1,
@@ -391,6 +390,53 @@ class _ProduktDetailState extends State<ProduktDetail> {
               ),
             ),
             */
+            SpinBox(
+              value: double.parse(iloscController.text),
+              min: 0,
+              max: 2048,
+              onChanged: (value)  {
+                print(value); // TODO remove debug
+                int val = value.toInt();
+                iloscController.text = val.toString();
+              },
+            ),
+            Row(
+                children: [
+                  Text("Miara:  ",
+                    style: TextStyle(
+                      fontSize: 15,
+
+                    ),
+                  ),
+                  DropdownButton<String>(
+                    value: miaraController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 15,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
+
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+
+                    onChanged: (String newValue){
+                      setState(() {
+                        miaraController.text = newValue;
+                      });
+                    },
+
+                    items: produktController.displayMiary.map((miara) {
+                      return DropdownMenuItem(
+                        child: new Text(miara),
+                        value: miara,
+                      );
+                    }).toList(),
+
+                  ),
+                ]
+            ),
+
 
             Row(
               children: [
@@ -406,11 +452,11 @@ class _ProduktDetailState extends State<ProduktDetail> {
                   icon: Icon(Icons.arrow_downward_rounded),
                   iconSize: 15,
                   elevation: 16,
-                  style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 15),
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
 
                   underline: Container(
                     height: 2,
-                    color: Colors.deepPurpleAccent,
+                    color: Colors.blue,
                   ),
 
                   onChanged: (String newValue){
@@ -447,11 +493,11 @@ class _ProduktDetailState extends State<ProduktDetail> {
                   icon: Icon(Icons.arrow_downward_rounded),
                   iconSize: 15,
                   elevation: 16,
-                  style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 15),
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
 
                   underline: Container(
                     height: 2,
-                    color: Colors.deepPurpleAccent,
+                    color: Colors.blue,
                   ),
 
                   onChanged: (String newValue){
@@ -460,7 +506,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
                     });
                   },
 
-                  items: produktController.displayKategorie.map((zakup) {
+                  items: produktController.displayKategorieZakupy.map((zakup) {
                     return DropdownMenuItem(
                       child: new Text(zakup),
                       value: zakup,
