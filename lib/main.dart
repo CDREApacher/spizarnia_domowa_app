@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/screens/screen_choice.dart';
 
@@ -40,7 +41,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: Colors.blue),
       ),
-      home: Home(),
+      home: HomeMain(),
     );
   }// Widget build
 }
