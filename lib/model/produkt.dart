@@ -1,37 +1,3 @@
-/*
-class Produkt {
-  String id;
-  String nazwa;
-  int ilosc;
-  String rodzaj;
-
-
-  Produkt({
-    this.id,
-    this.nazwa,
-    this.ilosc,
-    this.rodzaj
-  });
-
-  Produkt.fromJson(Map<String, dynamic> json){
-    id = json['objectId'];
-    nazwa = json['nazwa'];
-    ilosc = json['ilosc'];
-    rodzaj = json['rodzaj_ilosc'];
-  }
-
-  Map<String, dynamic> toJson() => {
-    'objectId': id,
-    'nazwa': nazwa,
-    'ilosc' : ilosc,
-    'rodzaj_ilosc' : rodzaj,
-  };
-
-
-
-}// class Produkt
-*/
-
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
@@ -61,6 +27,19 @@ class Produkt {
     this.atrybuty,
   });
 
+  /*
+  Produkt.fromJson(Map<String, dynamic> json){
+    objectId = json['id'];
+    nazwaProduktu = json['productName'];
+    ilosc = json['quantity'];
+    miara = json['miara'];//////////////////
+    progAutoZakupu = json['autoPurchaseCount'];
+    autoZakup = json['autoPurchase'];
+    kategorieProdukty = json['kategorieProdukty'];///////////////
+    kategorieZakupy = json['kategorieZakupy'];/////////////////
+  }
+  */
+
   Produkt.fromJson(Map<String, dynamic> json){
     objectId = json['id'];
     nazwaProduktu = json['productName'];
@@ -80,6 +59,19 @@ class Produkt {
   }
 
 
+  /*
+  Map<String, dynamic> toJson() => {
+    'objectId': objectId,
+    'nazwaProduktu': nazwaProduktu,
+    'ilosc' : ilosc,
+    'miara' : miara,
+    'progAutoZakupu' : progAutoZakupu,
+    'autoZakup' : autoZakup,
+    'kategorieProdukty' : kategorieProdukty,
+    'kategorieZakupy' : kategorieZakupy,
+  };
+  */
+
   Map<String, dynamic> toJson() => {
     'id': objectId,
     'productName': nazwaProduktu,
@@ -93,9 +85,8 @@ class Produkt {
     if (kategorieZakupy != null)
       'categoryShopping' : kategorieZakupy.toJson(),
     if (atrybuty != null)
-        'attributeList' : atrybuty.map((v) => v.toJson()).toList(),
+      'attributeList' : atrybuty.map((v) => v.toJson()).toList(),
   };
-
 
 
 }// class Produkt
