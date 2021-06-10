@@ -228,14 +228,14 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
             Card(
               elevation: 5.0,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-              color: Colors.lightGreen,
+              margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 1.0),
+              color: Colors.blue,
 
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: 5 ,vertical: 1),
                 child: Text(
                   "Lista rzeczy w koszyku",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

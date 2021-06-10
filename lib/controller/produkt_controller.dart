@@ -16,6 +16,7 @@ class ProduktController extends GetxController {
   List<Kategoria> kategorie = [];
 
   List<String> displayKategorie = []; // add_produkt.dart & produkt_detail.dart
+  List<String> displayMiary = []; // miary
 
   List<String> displayKategorieZakupy = []; // produkt_detail.dart
 

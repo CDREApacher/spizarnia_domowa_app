@@ -13,6 +13,7 @@ import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
 import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
+import 'package:spizarnia_domowa_app/screens/add_existing_zakupy.dart';
 import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
@@ -61,8 +62,9 @@ class _ListaZakupow extends State<ListaZakupow>{
               icon: Icon(Icons.shopping_cart_rounded),
               tooltip: "Tryb zakupów",
               onPressed: () {
-
-                produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+                if(produktController.zakupyWyswietlaj.isEmpty){
+                  produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+                }
 
                 Navigator
                   .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))
@@ -74,7 +76,12 @@ class _ListaZakupow extends State<ListaZakupow>{
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+
+          Navigator
+              .push(context, MaterialPageRoute(builder: (context) => AddExistingZakup()))
+              .then((value) => null);
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 

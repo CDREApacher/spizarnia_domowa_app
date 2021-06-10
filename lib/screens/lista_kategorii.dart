@@ -41,6 +41,7 @@ class _ListaKategorii extends State<ListaKategorii>{
 
   @override
   void initState() {
+
     produktController.fetchAllKategorie();
     listaController.text = "produkty";
     super.initState();

@@ -33,11 +33,30 @@ class AddExistingProduct extends StatelessWidget{
 
   final nameController = TextEditingController(); //
   final ProduktController produktController = ProduktController.to;
+  final iloscController = TextEditingController();
 
+  onUpdatePressed(int index) {
+
+    Produkt produkt = new Produkt(
+      autoZakup: produktController.produkty[index].autoZakup,
+      progAutoZakupu: produktController.produkty[index].progAutoZakupu,
+
+      //nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
+      nazwaProduktu: produktController.produkty[index].nazwaProduktu,
+
+      ilosc: int.parse(iloscController.text),
+      miara: produktController.produkty[index].miara,
+      kategorieProdukty: produktController.produkty[index].kategorieProdukty,
+      kategorieZakupy:produktController.produkty[index].kategorieProdukty,
+    );
+
+    produktController.updateProdukt(produktController.produkty[index].objectId, produkt);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
 
 //////////////////////////////////////////////////////////
 
@@ -64,7 +83,7 @@ class AddExistingProduct extends StatelessWidget{
     child:Column(
     mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TextField(
+        /*TextField(
           controller: nameController,
           decoration: InputDecoration(hintText: "Nazwa"),
         ),
@@ -73,7 +92,7 @@ class AddExistingProduct extends StatelessWidget{
           onPressed:() {
 
           },
-        ),
+        ),*/
 
         Expanded(
           child: GetBuilder<ProduktController> (
@@ -87,16 +106,56 @@ class AddExistingProduct extends StatelessWidget{
                             child: Card(
                               elevation: 5,
                               margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
-                                    child: Text(
-                                        produktController.produkty[index].nazwaProduktu
+
+                              child: InkWell(
+                                onTap: () {
+                                  showDialog(context: context, builder: (_) =>
+                                      AlertDialog(
+                                        title: Text('Ilość ' +  produktController.produkty[index].nazwaProduktu + ' do listy produktów. (' +  produktController.produkty[index].miara + ')'),
+                                        content: SpinBox(
+                                          value: double.parse(produktController.produkty[index].ilosc.toString()),
+                                          min: 0,
+                                          max: 2048,
+                                          onChanged: (value) {
+                                            print(value); // TODO remove debug print
+                                            int val = value.toInt();
+                                            iloscController.text = val.toString();
+                                          },
+                                        ),
+
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                onUpdatePressed(index);
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                  content: Text("Zaktualizowano "  +  produktController.produkty[index].nazwaProduktu + ": "  + iloscController.text + " " +  produktController.produkty[index].miara ),
+                                                  duration: Duration(seconds: 5),
+                                                    ),
+                                                );
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+
+                                              },
+                                              child: Text('Dodaj')
+                                          ),
+                                        ],
+
+                                      ),
+                                  );
+                                },
+                                child:Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
+                                      child: Text(
+                                          produktController.produkty[index].nazwaProduktu
+                                      ),
                                     ),
-                                  )
-                                ],
+                                    Icon(Icons.add_rounded),
+                                  ],
+                                ),
                               ),
                             ),
                           )

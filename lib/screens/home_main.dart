@@ -98,8 +98,9 @@ class HomeMain extends StatelessWidget{
           ),
           InkWell(
             onTap: () {
-
-              produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+              if(produktController.zakupyWyswietlaj.isEmpty){
+                produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+              }
 
               Navigator
                   .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))

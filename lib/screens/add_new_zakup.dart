@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
+import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
-class AddProdukt extends StatefulWidget {
+class AddNewZakup extends StatefulWidget {
 
   @override
   _AddProduktState createState() => _AddProduktState();
@@ -15,7 +16,7 @@ class AddProdukt extends StatefulWidget {
 
 
 
-class _AddProduktState extends State<AddProdukt> {
+class _AddProduktState extends State<AddNewZakup> {
 
   final nameController = TextEditingController();
 
@@ -32,13 +33,23 @@ class _AddProduktState extends State<AddProdukt> {
   onConfirmPressed() {
     Produkt produkt = new Produkt(
       nazwaProduktu: nameController.text,
-      ilosc: int.parse(iloscController.text),
+      ilosc: 0,
       miara: miaraController.text,
       kategorieProdukty: kategoriaProduktyController.text,
       kategorieZakupy: kategoriaProduktyController.text,
     );
 
     produktController.addProdukt(produkt);
+    ProduktZakupy zakup = new ProduktZakupy(
+
+      nazwaProduktu: produkt.nazwaProduktu,
+      miara: produkt.miara,
+      kategoriaZakupy: produkt.kategorieZakupy,
+      ilosc: int.parse(iloscController.text),
+      objectIdProduktu : produkt.objectId,
+
+    );
+    produktController.addNewZakup(zakup);
   }
 
   onClearPressed() {
@@ -62,12 +73,12 @@ class _AddProduktState extends State<AddProdukt> {
     }
     if(produktController.displayMiary.length == 0) { // check to see if it was already created
       for (var i = 0; i < produktController.miary.length; i++) {
-          produktController.displayMiary.add(produktController.miary[i].miara);
+        produktController.displayMiary.add(produktController.miary[i].miara);
 
       }
     }
 
-  }
+  }//createList
 
   @override
   void initState(){
@@ -155,29 +166,29 @@ class _AddProduktState extends State<AddProdukt> {
             ),
 
             DropdownButton<String>(
-                value: kategoriaProduktyController.text,
-                icon: Icon(Icons.arrow_downward_rounded),
-                iconSize: 24,
-                elevation: 16,
-                style: TextStyle(color: Colors.deepPurpleAccent),
+              value: kategoriaProduktyController.text,
+              icon: Icon(Icons.arrow_downward_rounded),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurpleAccent),
 
-                underline: Container(
-                  height: 2,
-                  color: Colors.deepPurpleAccent,
-                ),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
 
-                onChanged: (String newValue){
-                  setState(() {
-                    kategoriaProduktyController.text = newValue;
-                  });
-                },
+              onChanged: (String newValue){
+                setState(() {
+                  kategoriaProduktyController.text = newValue;
+                });
+              },
 
-                items: produktController.displayKategorie.map((produkt) {
-                  return DropdownMenuItem(
-                    child: new Text(produkt),
-                    value: produkt,
-                  );
-                }).toList(),
+              items: produktController.displayKategorie.map((produkt) {
+                return DropdownMenuItem(
+                  child: new Text(produkt),
+                  value: produkt,
+                );
+              }).toList(),
 
             ),
 

@@ -55,7 +55,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
       ilosc: int.parse(iloscController.text),
       miara: widget.chosen_produkt.miara,
       kategorieProdukty: kategoriaProduktyController.text,
-      kategorieZakupy: widget.chosen_produkt.kategorieProdukty,
+      kategorieZakupy: kategoriaZakupyController.text,
     );
 
     produktController.updateProdukt(id, produkt);
@@ -66,7 +66,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
       nazwaProduktu: produkt.nazwaProduktu,
       miara: produkt.miara,
-      kategoriaZakupy: produkt.kategorieZakupy,
+      kategoriaZakupy: kategoriaZakupyController.text,
       ilosc: int.parse(iloscController.text),
       objectIdProduktu : produkt.objectId,
 
@@ -104,7 +104,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
             nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
             miara: widget.chosen_produkt.miara,
-            kategoriaZakupy: widget.chosen_produkt.kategorieZakupy,
+            kategoriaZakupy: kategoriaZakupyController.text,
             ilosc: wynik,
             objectIdProduktu : widget.chosen_produkt.objectId,
 
@@ -158,9 +158,9 @@ class _ProduktDetailState extends State<ProduktDetail> {
   createListKategorieProduktu(){
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
       for (var i = 0; i < produktController.kategorie.length; i++) {
-        if (produktController.kategorie[i].lista == 'produkty') {
+      //  if (produktController.kategorie[i].lista == 'produkty') {
           produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
-        }
+
       }
     }
     print(produktController.displayKategorie);
@@ -169,9 +169,9 @@ class _ProduktDetailState extends State<ProduktDetail> {
   createListKategorieZakupu(){
     if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
       for (var i = 0; i < produktController.kategorie.length; i++) {
-        if (produktController.kategorie[i].lista == 'zakupy') {
+
           produktController.displayKategorieZakupy.add(produktController.kategorie[i].nazwa);
-        }
+
       }
     }
     print(produktController.displayKategorieZakupy);
@@ -218,10 +218,11 @@ class _ProduktDetailState extends State<ProduktDetail> {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("$scanResult"),
-          duration: Duration(seconds: 10),
+          duration: Duration(seconds: 5),
         )
     );
-    //atrybutController.text = this.scanResult;
+    atrybutController.text = this.scanResult;
+
   }
 
 
@@ -343,20 +344,21 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 "Nazwa produktu",
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
+
+
               ),
             ),
-
-
 
             TextField(
               controller: nameController,
               decoration: InputDecoration(hintText: "Nazwa"),
+              textAlign: TextAlign.center,
             ),
 
 
             SizedBox(
-              height: 18,
+              height: 1,
             ),
 
             Text(
@@ -379,7 +381,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
 
             SizedBox(
-              height: 18,
+              height: 1,
             ),
             /*
             Text("Kategoria produktu: " + widget.chosen_produkt.kategorieProdukty,
@@ -390,38 +392,85 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
             */
 
+            Row(
+              children: [
+                Text("Kategoria produktu: ",
+                  style: TextStyle(
+                      fontSize: 15,
 
-            DropdownButton(
-              value: kategoriaProduktyController.text,
-              icon: Icon(Icons.arrow_downward_rounded),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 22),
+                  ),
+                ),
 
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
+                DropdownButton(
+                  value: kategoriaProduktyController.text,
+                  icon: Icon(Icons.arrow_downward_rounded),
+                  iconSize: 15,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 15),
 
-              onChanged: (String newValue){
-                setState(() {
-                  kategoriaProduktyController.text = newValue;
-                });
-              },
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
 
-              items: produktController.displayKategorie.map((produkt) {
-                return DropdownMenuItem(
-                  child: new Text(produkt),
-                  value: produkt,
-                );
-              }).toList(),
+                  onChanged: (String newValue){
+                    setState(() {
+                      kategoriaProduktyController.text = newValue;
+                    });
+                  },
+
+                  items: produktController.displayKategorie.map((produkt) {
+                    return DropdownMenuItem(
+                      child: new Text(produkt),
+                      value: produkt,
+                    );
+                  }).toList(),
+                ),
+              ],
+
             ),
 
             SizedBox(
-              height: 18,
+              height: 1,
             ),
+            Row(
+              children: [
+                Text("Kategoria zakupu: ",
+                  style: TextStyle(
+                    fontSize: 15,
 
-            Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy,
+                  ),
+                ),
+
+                DropdownButton(
+                  value: kategoriaZakupyController.text,
+                  icon: Icon(Icons.arrow_downward_rounded),
+                  iconSize: 15,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 15),
+
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+
+                  onChanged: (String newValue){
+                    setState(() {
+                      kategoriaZakupyController.text = newValue;
+                    });
+                  },
+
+                  items: produktController.displayKategorie.map((zakup) {
+                    return DropdownMenuItem(
+                      child: new Text(zakup),
+                      value: zakup,
+                    );
+                  }).toList(),
+                ),
+              ],
+
+            ),
+    /*Text("Kategoria zakupu " + widget.chosen_produkt.kategorieZakupy,
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold
@@ -430,7 +479,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
             // TODO fix this one the other one works
-            /*
+
             DropdownButton(
               value: kategoriaZakupyController.text,
               icon: Icon(Icons.arrow_downward_rounded),
@@ -458,7 +507,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
             */
 
-            SizedBox(height: 22),
+            SizedBox(height: 1),
 
             SwitchListTile(
                 title: Text("Włącz auto zakup: (próg " + widget.chosen_produkt.progAutoZakupu.toString() + ")"),
