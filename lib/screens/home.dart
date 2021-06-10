@@ -32,6 +32,7 @@ import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
 import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
+import 'package:spizarnia_domowa_app/screens/add_existing_produkt.dart';
 
 // Debug
 import 'package:logger/logger.dart';
@@ -118,6 +119,8 @@ class Home extends StatelessWidget{
     produktController.addNewZakup(zakup);
   }
   */
+
+
   onAddZakupPressed(Produkt produkt){
 
     ShoppingList listaZakupow = new ShoppingList(
@@ -163,7 +166,7 @@ class Home extends StatelessWidget{
         child: Icon(Icons.add),
         onPressed: () {
           Navigator
-              .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
+              .push(context, MaterialPageRoute(builder: (context) => AddExistingProduct()))
               .then((value) => onRefreshPressed());// Navigator
         },
       ),

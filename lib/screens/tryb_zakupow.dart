@@ -7,6 +7,7 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
+import 'package:spizarnia_domowa_app/screens/tryb_zakupowy_detail.dart';
 
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 
@@ -34,15 +35,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
   onEndZakupy(){
     for(var i = 0; i < produktController.doKupienia.length; i++){
-      // TODO add all items from doKupienia list to the database
-      // TODO for each element added to database update produkty list
-      // TODO for each element added to produkty list remove them from doKupienia list
-
-      // nie tyle post co put
-      // w tej chili zaktualizuj te produkty
-      // produktController.updateProdukt(id, produkt)
-
-
+      /*
       // Get the index of the produkt we want to update
       int produktIndex = produktController.produkty.indexWhere((element) => element.objectId == produktController.doKupienia[i].produkt.objectId);
 
@@ -50,38 +43,42 @@ class _TrybZakupowState extends State<TrybZakupow> {
       Produkt ref = produktController.produkty[produktIndex];
 
       String id = ref.objectId;
+      */
+      produktController.buyProdukts(produktController.doKupienia[i].objectId, produktController.doKupienia[i].quantityToBuy);
 
 
-
+      /*
       // Create the updated object
       Produkt produkt = new Produkt(
-        //objectId: ,
+        objectId: produktController.doKupienia[i].objectId,
         nazwaProduktu: produktController.doKupienia[i].produkt.nazwaProduktu,
         ilosc: ref.ilosc + produktController.doKupienia[i].quantityToBuy, // Increase from what is in ref
         miara: produktController.doKupienia[i].produkt.miara,
         progAutoZakupu: ref.progAutoZakupu, // get from produkt ref
         autoZakup: ref.autoZakup, // get from produkt ref
-        kategorieProdukty: ref.kategorieProdukty, // get frfom produkt ref
+        kategorieProdukty: ref.kategorieProdukty, // get from produkt ref
         kategorieZakupy: ref.kategorieZakupy, //get from produkt ref
 
       );
+      */
 
-
+      /*
       // Update in the database
       produktController.updateProdukt(id, produkt);
-      // TODO Can't do, not implemented serevr side
+      */
 
       /*
       int zakupIndex = produktController.zakupy.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectId);
       ProduktZakupy zakupRef = produktController.zakupy[zakupIndex];
       */
 
+      /*
       int zakupIndex = produktController.listaZakupow.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectId);
       ShoppingList zakupRef = produktController.listaZakupow[zakupIndex];
-
+        */
       // Remove from database
-      produktController.deleteZakup(zakupRef.objectId);
-      // TODO Can't do, not implemented serevr side
+      //produktController.deleteZakup(zakupRef.objectId);
+
 
 
     } // for
@@ -121,7 +118,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
             icon: Icon(Icons.check),
             tooltip: "Zakończ zakupy",
             onPressed: () {
-              //onEndZakupy();
+              onEndZakupy();
             },
           ),
         ],
@@ -190,8 +187,9 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                     child: InkWell(
                                       onTap: () {
 
+
                                         Navigator
-                                            .push(context, MaterialPageRoute(builder: (context) => ZakupDetail(chosen_produkt: zakup)))
+                                            .push(context, MaterialPageRoute(builder: (context) => TrybZakupowyDetail(chosen_produkt: zakup.produkt)))
                                             .then((value) => {} );
 
                                       },

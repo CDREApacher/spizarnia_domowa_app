@@ -20,20 +20,20 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
-class ProduktDetail extends StatefulWidget {
+class TrybZakupowyDetail extends StatefulWidget {
 
   final Produkt chosen_produkt;
 
 
-  ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+  TrybZakupowyDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
   @override
-  _ProduktDetailState createState() => _ProduktDetailState();
+  _TrybZakupowyDetailState createState() => _TrybZakupowyDetailState();
 }
 
 
 
-class _ProduktDetailState extends State<ProduktDetail> {
+class _TrybZakupowyDetailState extends State<TrybZakupowyDetail> {
 
   var uuid = Uuid();
 
@@ -54,7 +54,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
   final ProduktController produktController = ProduktController.to;
 
   onUpdatePressed(String id) {
-  /*
+    /*
     Produkt produkt = new Produkt(
       autoZakup: widget.chosen_produkt.autoZakup,
       progAutoZakupu: int.parse(iloscAutoZakupuController.text),
@@ -173,7 +173,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ilosc: wynik,
             objectIdProduktu : widget.chosen_produkt.objectId,
 
-            );
+          );
           //produktController.addNewZakup(zakupDodaj);
 
           onUpdatePressed(widget.chosen_produkt.objectId);
@@ -226,7 +226,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorie.length; i++) {
-          produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
+        produktController.displayKategorie.add(produktController.kategorie[i].nazwa);
       }
 
     }
@@ -237,7 +237,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorieZakupy.length; i++) {
-          produktController.displayKategorieZakupy.add(produktController.kategorieZakupy[i].nazwa);
+        produktController.displayKategorieZakupy.add(produktController.kategorieZakupy[i].nazwa);
       }
 
     }
@@ -297,7 +297,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
   @override
   Widget build(BuildContext context) {
 
-  _checkbox = widget.chosen_produkt.autoZakup;
+    _checkbox = widget.chosen_produkt.autoZakup;
 
     iloscAutoZakupuController.text = widget.chosen_produkt.progAutoZakupu.toString();
     iloscController.text = widget.chosen_produkt.ilosc.toString();
@@ -310,99 +310,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
         toolbarHeight: 42.5,
         title: Text('Szczegóły produktu'),
 
-
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () => {
-
-              onCheckUpdatePressed(),
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Produkt Zaktualizowany"),
-                  duration: Duration(seconds: 2),
-                )
-              ),
-
-              Navigator.pop(context),
-
-            },
-          ),
-        ],
       ),
-
-
-
-
-
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_comment_rounded),
-        onPressed: () {
-          //onScreenOpened(widget.chosen_produkt.objectId);
-
-          showDialog(context: context, builder: (_) =>
-              AlertDialog(
-                title: Text('Dodaj krótką notkę:'),
-
-                content: TextField(
-                  controller: atrybutController,
-                  decoration: InputDecoration(hintText: "Tutaj dodaj notkę"),
-
-                 /* onChanged: (value) {
-                    String val = value;
-                    atrybutController.text = val;
-                  }, // Allows for spelling backwards */
-
-                ),
-
-                actions: [
-                  IconButton(
-                      icon: Icon(Icons.add_chart),
-                      onPressed: () {
-
-                        scanBarcode();
-                        /*
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Produkt Zaktualizowany"),
-                              duration: Duration(seconds: 2),
-                            )
-                        );
-
-                        Text(
-                          scanResult == null
-                            ? 'scan a code!'
-                            : 'Scan result : $scanResult',
-                        )
-                        */
-
-                      }
-                  ),
-
-                  TextButton(
-                      onPressed: () {
-
-                        onAddAtributePressed(atrybutController.text);
-                        //onScreenOpened(widget.chosen_produkt.objectId);
-                        Navigator.pop(context);
-                      },
-                      child: Text('Dodaj')),
-
-
-
-                ],
-              ),
-          );
-          //Navigator.pop(context);
-        },
-
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-
-
-
-
 
       body: Container(
         padding: EdgeInsets.all(24),
@@ -411,219 +319,86 @@ class _ProduktDetailState extends State<ProduktDetail> {
           children: [
 
             Text(
-                "Nazwa produktu",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
+              "Nazwa produktu",
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold
               ),
             ),
 
 
 
+            Text(
+              nameController.text,
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
+
+
+            /*
             TextField(
               controller: nameController,
               decoration: InputDecoration(hintText: "Nazwa"),
               textAlign: TextAlign.center,
             ),
-
+            */
 
             SizedBox(
               height: 10,
             ),
 
             Text(
-                "Ilość " + widget.chosen_produkt.miara.miara + " produktu:",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),
+              "Ilość " + widget.chosen_produkt.miara.miara + " produktu: " + widget.chosen_produkt.ilosc.toString(),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
+              ),
             ),
-
-            SpinBox(
-              value: double.parse(iloscController.text),
-              min: 0,
-              max: 2048,
-              onChanged: (value)  {
-                print(value); // TODO remove debug
-                int val = value.toInt();
-                iloscController.text = val.toString();
-              },
-            ),
-
-            SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Kategoria produktu: ",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-
-
-                DropdownButton(
-                  value: kategoriaProduktyController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 15,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
-
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
-                  ),
-
-                  onChanged: (String newValue){
-                    setState(() {
-                      kategoriaProduktyController.text = newValue;
-                    });
-                  },
-
-                  items: produktController.displayKategorie.map((produkt) {
-                    return DropdownMenuItem(
-                      child: new Text(produkt),
-                      value: produkt,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-
-
-
 
 
             SizedBox(
               height: 10,
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Kategoria zakupu ",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
 
-
-                DropdownButton(
-                  value: kategoriaZakupyController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 15,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
-
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
-                  ),
-
-                  onChanged: (String newValueZ){
-                    setState(() {
-                      kategoriaZakupyController.text = newValueZ;
-                    });
-                  },
-
-                  items: produktController.displayKategorieZakupy.map((produkt) {
-                    return DropdownMenuItem(
-                      child: new Text(produkt),
-                      value: produkt,
-                    );
-                  }).toList(),
-                ),
-              ],
+            Text("Kategoria zakupu "+ widget.chosen_produkt.kategorieZakupy.nazwa,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
+              ),
             ),
-
-
-            SizedBox(height: 10),
-
-            SwitchListTile(
-                title: Text("Włącz auto zakup: (próg " + widget.chosen_produkt.progAutoZakupu.toString() + ")"),
-                value: _checkbox,
-                onChanged: (bool value) {
-
-                  widget.chosen_produkt.autoZakup = value;
-                  setState(() {
-                    _checkbox = value;
-                  });
-
-                  if(value == true){
-
-                    showDialog(context: context, builder: (_) =>
-                        AlertDialog(
-                          title: Text('Ustal próg automatycznego dodawania'),
-                          content: SpinBox(
-                            value: double.parse(iloscAutoZakupuController.text),
-                            min: 0,
-                            max: 2048,
-                            onChanged: (value) {
-                              print(value); // TODO remove debug print
-                              int val = value.toInt();
-                              iloscAutoZakupuController.text = val.toString();
-                            },
-                          ),
-
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  //onAddZakupPressed(produkt);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Zatwierdź')
-                            ),
-                          ],
-
-                        ),
-                    );
-
-                  }
-
-                },
-            ),
-
-
-
 
 
 
             GetBuilder<ProduktController>(
-                builder: (produktController) =>
+              builder: (produktController) =>
 
-                    Expanded(
+                  Expanded(
 
-                      child: ListView.separated(
+                    child: ListView.separated(
 
-                          itemBuilder: (context, index) => Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                      itemBuilder: (context, index) => Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: (){
-                                    onDeleteAttributePressed(widget.chosen_produkt.atrybuty[index].objectId);
-                                  }
-                              ),
-
-                              Text(widget.chosen_produkt.atrybuty[index].nazwa),
-                            ],
-
-                          ),
+                        children: [
 
 
-                          separatorBuilder: (context, index) =>
-                            Divider(color: Colors.black),
+                          Text(widget.chosen_produkt.atrybuty[index].nazwa),
+                        ],
 
-
-                          itemCount: widget.chosen_produkt.atrybuty.length,
                       ),
 
+
+                      separatorBuilder: (context, index) =>
+                          Divider(color: Colors.black),
+
+
+                      itemCount: widget.chosen_produkt.atrybuty.length,
                     ),
+
+                  ),
 
             ),
 

@@ -9,13 +9,18 @@ import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+import 'package:spizarnia_domowa_app/screens/add_existing_zakupy.dart';
 
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
+import 'package:spizarnia_domowa_app/screens/home.dart';
 
 // Debug
 import 'package:logger/logger.dart';
+
+import 'lista_kategorii.dart';
+import 'lista_miar.dart';
 
 class ListaZakupow extends StatefulWidget{
   @override
@@ -33,13 +38,18 @@ class _ListaZakupow extends State<ListaZakupow>{
     produktController.fetchZakupy();
   }
 
+
   onDeleteZakup(String objectId){
     produktController.deleteZakup(objectId);
+    Navigator.pop(context);
   }
+
+
+
 
   @override
   void initState() {
-    //produktController.fetchZakupy();
+    produktController.fetchZakupy();
     logger.d(produktController.listaZakupow);
     super.initState();
   }
@@ -73,7 +83,14 @@ class _ListaZakupow extends State<ListaZakupow>{
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+
+          Navigator
+              .push(context, MaterialPageRoute(builder: (context) => AddExistingZakupy()))
+              .then((value) => onRefreshPressed());// Navigator
+
+
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
@@ -133,7 +150,8 @@ class _ListaZakupow extends State<ListaZakupow>{
 
                                     onPressed: () {
                                       // TODO add confirmation on delete
-                                      //onDeleteZakup(zakup.objectId);
+                                      onDeleteZakup(zakup.objectId);
+                                      //Navigator.pop(context);
                                     },
                                   ),
 
@@ -171,7 +189,74 @@ class _ListaZakupow extends State<ListaZakupow>{
 
 
 
+      drawer: Drawer(
 
+        child: ListView(
+          padding: EdgeInsets.zero,
+
+          children: <Widget>[
+
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+
+              child: Text('Menu'),
+            ),
+
+            ListTile(
+              title: Text('Lista Produktów'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => Home()))
+                    .then((value) => onRefreshPressed());
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Lista Zakupów'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .then((value) => onRefreshPressed());
+              },
+            ),
+
+            ListTile(
+              title: Text('Miary'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen containing Miary
+
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
+                    .then((value) => null);
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Kategorie'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+                // Go to the new screen lista_kategorii.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
+                    .then((value) => null);
+              },
+            ),
+
+          ], // children
+        ),
+      ),
 
 
 

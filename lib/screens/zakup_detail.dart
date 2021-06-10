@@ -163,6 +163,40 @@ class ZakupDetail extends StatelessWidget{
 
 
 
+            GetBuilder<ProduktController>(
+              builder: (produktController) =>
+
+                  Expanded(
+
+                    child: ListView.separated(
+
+                      itemBuilder: (context, index) => Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+
+                        children: [
+
+
+                          Text(chosen_produkt.produkt.atrybuty[index].nazwa),
+                        ],
+
+                      ),
+
+
+                      separatorBuilder: (context, index) =>
+                          Divider(color: Colors.black),
+
+
+                      itemCount: chosen_produkt.produkt.atrybuty.length,
+                    ),
+
+                  ),
+
+            ),
+
+
+
+
+
           ],
         ),
       ),
