@@ -41,9 +41,15 @@ Future<Response> add(Dio dio, Map<String, dynamic> dane){
 Future<Response> delete(Dio dio, String objectId){
   return dio.delete("/data/Produkt/$objectId");
 }
-
+/*
 Future<Response> update(Dio dio, String objectId, Map<String, dynamic> dane){
   return dio.put("/data/Produkt/$objectId", data: dane);
+}
+*/
+
+// *NEW*
+Future<Response> update(Dio dio, Map<String, dynamic> dane){
+  return dio.put("/products/update", data: dane);
 }
 
 // Return all products from given category
@@ -131,14 +137,30 @@ Future<Response> addZakup(Dio dio, Map<String, dynamic> dane){
 }
 
 
+Future<Response> deleteZakupy(Dio dio, String objectId){
+  return dio.delete("/shopping-list/$objectId");
+}
+
+
+
+Future<Response> buyProdukt(Dio dio, String produktId, int quantity) {
+  return dio.post("/shopping-list/buy/$produktId?quantity=$quantity");
+}
+
+
+
+
 
 Future<Response> updateZakup(Dio dio, String objectId, Map<String, dynamic> dane){
   return dio.put("/data/Lista_Zakupow/$objectId", data: dane);
 }
 
+/*
 Future<Response> deleteZakupy(Dio dio, String objectId){
   return dio.delete("/data/Lista_Zakupow/$objectId");
 }
+*/
+
 
 // Atrybuty
 
