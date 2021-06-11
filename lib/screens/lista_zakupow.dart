@@ -203,19 +203,20 @@ class _ListaZakupow extends State<ListaZakupow>{
 
               child: Text('Menu'),
             ),
-
+/*
             ListTile(
               title: Text('Lista Produktów'),
               onTap: () {
                 Navigator.pop(context);
                 // Go to the new screen lista_zakupow.dart
+
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => Home()))
                     .then((value) => onRefreshPressed());
 
               },
             ),
-
+*/
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {
