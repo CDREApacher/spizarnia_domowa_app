@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
+//import 'package:flutter/scheduler.dart';
+
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 
@@ -10,6 +13,7 @@ import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/screens/add_existing_zakupy.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
@@ -203,20 +207,30 @@ class _ListaZakupow extends State<ListaZakupow>{
 
               child: Text('Menu'),
             ),
-/*
+
             ListTile(
-              title: Text('Lista Produktów'),
+              title: Text('Home'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pop(context);
                 // Go to the new screen lista_zakupow.dart
-
+                /*
                 Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => Home()))
+                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
                     .then((value) => onRefreshPressed());
+                */
+                /*
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+
+                    // add your code here.
+
+                    Navigator.push(context, new MaterialPageRoute(builder: (context) => Home()));
+                });
+                */
 
               },
             ),
-*/
+
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {

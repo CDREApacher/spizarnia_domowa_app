@@ -128,7 +128,7 @@ class Home extends StatelessWidget{
       quantityToBuy: int.parse(iloscController.text),
       produkt: produkt,
     );
-    
+
     produktController.addNewZakup(listaZakupow);
   }
 
@@ -337,7 +337,7 @@ class Home extends StatelessWidget{
           ], // children
         ),
       ),
-      
+
     );
   }// Widget build
 
