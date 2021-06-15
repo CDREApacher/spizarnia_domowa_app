@@ -1,0 +1,36 @@
+Dokumentacja wersji mobilnej.
+
+Funkcje kontrolera do bazy danych
+
+Produkty
+	fetchAllProdukts() - wysyła zapytanie do api i odbiera listę produktów
+	addProdukt(Produkt) - dodaje produkt do listy produktów w bazie danych 
+	updateProdukt(id, Produkt) - aktualizuje produkt w bazie danych
+	
+Zakupy
+	fetchZakupy() - wysyła zapytanie do api i odbiera listę zakupów
+	addNewZakup(ProduktZakupy) - dodaje zakup do listy zakupów w bazie danych
+	buyProdukts(id, ilość) - usuwa produkt z listy zakupów oraz aktualizuje stan produktu w liście produktów
+	
+Kategorie
+	fetchKategorieProdukty() - wysyła zapytanie do api i odbiera listę kategorii dla produktów
+	fetchKategorieZakupy() - wysyła zapytanie do api i odbiera listę kategorii dla zakupów
+
+Miary
+	fetchMiary() - wysyła zapytanie do api i odbiera listę miar
+	addMiary(Miara) - dodaje miarę do listy miar w bazie danych
+	
+Atrybuty
+	addAtrybut(id, Atrybut) - dodaje nowy atrybut do listy atrybutów danego produktu
+	deleteAtrybut(id, id) - usuwa dany atrybut z listy atrybutów danego produktu
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
