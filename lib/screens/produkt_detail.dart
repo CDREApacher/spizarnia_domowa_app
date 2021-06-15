@@ -108,7 +108,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
       nazwaProduktu: nameController.text, //
       ilosc: int.parse(iloscController.text), //
 
-      progAutoZakupu: widget.chosen_produkt.progAutoZakupu, //
+      //progAutoZakupu: widget.chosen_produkt.progAutoZakupu, //
+      progAutoZakupu: int.parse(iloscAutoZakupuController.text),
       autoZakup: widget.chosen_produkt.autoZakup, //
 
       miara: widget.chosen_produkt.miara,
