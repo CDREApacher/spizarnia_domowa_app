@@ -135,7 +135,7 @@ class AddExistingZakupy extends StatelessWidget{
                                           AlertDialog(
                                             title: Text('Ilość ' +  produktController.produkty[index].nazwaProduktu + ' do listy produktów. (' +  produktController.produkty[index].miara.miara + ')'),
                                             content: SpinBox(
-                                              value: double.parse(produktController.produkty[index].ilosc.toString()),
+                                              value: 0,//double.parse(produktController.produkty[index].ilosc.toString()),
                                               min: 0,
                                               max: 2048,
                                               onChanged: (value) {
@@ -165,7 +165,7 @@ class AddExistingZakupy extends StatelessWidget{
                                                       ),
                                                     );
                                                     Navigator.pop(context);
-                                                    Navigator.pop(context);
+                                                    //Navigator.pop(context);
 
                                                   },
                                                   child: Text('Dodaj')

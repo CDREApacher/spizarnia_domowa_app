@@ -72,6 +72,7 @@ class _ListaZakupow extends State<ListaZakupow>{
               onPressed: () {
 
                 //produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+                produktController.zakupyWyswietlaj.clear();
                 if(produktController.zakupyWyswietlaj.isEmpty){
                   produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
                 }

@@ -97,7 +97,9 @@ class HomeMain extends StatelessWidget{
           InkWell(
             onTap: () {
 
+              produktController.fetchZakupy();
 
+              produktController.zakupyWyswietlaj.clear();
               if(produktController.zakupyWyswietlaj.isEmpty){
                 produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
               }

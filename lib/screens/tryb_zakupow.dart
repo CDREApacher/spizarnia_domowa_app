@@ -8,6 +8,7 @@ import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 import 'package:spizarnia_domowa_app/screens/tryb_zakupowy_detail.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 
@@ -89,8 +90,20 @@ class _TrybZakupowState extends State<TrybZakupow> {
     // Update the view
     produktController.update();
 
+    produktController.fetchZakupy();
+
+
     Navigator.pop(context);
+    /*
     Navigator.pop(context);
+    */
+    /*
+    Navigator
+        .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
+        .then((value) => null);
+    */
+
+
 
   } // onEndZakupy()
 

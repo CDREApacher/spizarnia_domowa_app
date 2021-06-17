@@ -100,6 +100,8 @@ class _AddProduktState extends State<AddProdukt> {
 
 
   createListKategorieProduktu(){
+    produktController.fetchKategorieProdukty();
+    produktController.displayKategorie.clear();
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorie.length; i++) {
@@ -111,6 +113,8 @@ class _AddProduktState extends State<AddProdukt> {
   }
 
   createListKategorieZakupu(){
+    produktController.fetchKategorieZakupy();
+    produktController.displayKategorieZakupy.clear();
     if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorieZakupy.length; i++) {
@@ -122,6 +126,8 @@ class _AddProduktState extends State<AddProdukt> {
   }
 
   createListMiary(){
+    produktController.fetchMiary();
+    produktController.displayMiary.clear();
     if(produktController.displayMiary.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.miary.length; i++) {
@@ -134,6 +140,7 @@ class _AddProduktState extends State<AddProdukt> {
 
   @override
   void initState(){
+
     createListKategorieProduktu();
     createListKategorieZakupu();
     createListMiary();

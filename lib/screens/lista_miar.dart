@@ -28,6 +28,7 @@ class _ListaMiar extends State<ListaMiar> {
     );
 
     produktController.addMiary(miara);
+
   }
 
   /*
@@ -96,14 +97,17 @@ class _ListaMiar extends State<ListaMiar> {
               return Card(
                 elevation: 8,
 
+
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: Text(produktController.miary[index].miara),
                     ),
 
+
+                    /*
 
                     IconButton(
                         icon: Icon(Icons.delete),
@@ -136,9 +140,11 @@ class _ListaMiar extends State<ListaMiar> {
                           );
                           */
                         }
-
-
                     ),
+
+
+                    */
+
 
                   ],
                 ),
