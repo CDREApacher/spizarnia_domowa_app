@@ -1,46 +1,18 @@
-/*
-class Produkt {
-  String id;
-  String nazwa;
-  int ilosc;
-  String rodzaj;
-
-
-  Produkt({
-    this.id,
-    this.nazwa,
-    this.ilosc,
-    this.rodzaj
-  });
-
-  Produkt.fromJson(Map<String, dynamic> json){
-    id = json['objectId'];
-    nazwa = json['nazwa'];
-    ilosc = json['ilosc'];
-    rodzaj = json['rodzaj_ilosc'];
-  }
-
-  Map<String, dynamic> toJson() => {
-    'objectId': id,
-    'nazwa': nazwa,
-    'ilosc' : ilosc,
-    'rodzaj_ilosc' : rodzaj,
-  };
-
-
-
-}// class Produkt
-*/
+import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+import 'package:spizarnia_domowa_app/model/kategoria.dart';
+import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/miara.dart';
 
 class Produkt {
   String objectId;
   String nazwaProduktu;
   int ilosc;
-  String miara;
+  Miara miara;
   int progAutoZakupu;
   bool autoZakup;
-  String kategorieZakupy;
-  String kategorieProdukty;
+  KategoriaZakupy kategorieZakupy;
+  Kategoria kategorieProdukty;
+  List <Atrybuty> atrybuty;
 
 
   Produkt({
@@ -52,19 +24,42 @@ class Produkt {
     this.autoZakup,
     this.kategorieProdukty,
     this.kategorieZakupy,
+    this.atrybuty,
   });
 
+  /*
   Produkt.fromJson(Map<String, dynamic> json){
-    objectId = json['objectId'];
-    nazwaProduktu = json['nazwaProduktu'];
-    ilosc = json['ilosc'];
-    miara = json['miara'];
-    progAutoZakupu = json['progAutoZakupu'];
-    autoZakup = json['autoZakup'];
-    kategorieProdukty = json['kategorieProdukty'];
-    kategorieZakupy = json['kategorieZakupy'];
+    objectId = json['id'];
+    nazwaProduktu = json['productName'];
+    ilosc = json['quantity'];
+    miara = json['miara'];//////////////////
+    progAutoZakupu = json['autoPurchaseCount'];
+    autoZakup = json['autoPurchase'];
+    kategorieProdukty = json['kategorieProdukty'];///////////////
+    kategorieZakupy = json['kategorieZakupy'];/////////////////
+  }
+  */
+
+  Produkt.fromJson(Map<String, dynamic> json){
+    objectId = json['id'];
+    nazwaProduktu = json['productName'];
+    ilosc = json['quantity'];
+    miara = Miara.fromJson(json['measure']);
+    progAutoZakupu = json['autoPurchaseCount'];
+    autoZakup = json['autoPurchase'];
+    kategorieProdukty = Kategoria.fromJson(json['categoryProduct']);
+    kategorieZakupy = KategoriaZakupy.fromJson(json['categoryShopping']);
+    if (json['attributeList'] != null) {
+      // ignore: deprecated_member_use
+      atrybuty = new List<Atrybuty>();
+      json['attributeList'].forEach((v) {
+        atrybuty.add(new Atrybuty.fromJson(v));
+      });
+    }
   }
 
+
+  /*
   Map<String, dynamic> toJson() => {
     'objectId': objectId,
     'nazwaProduktu': nazwaProduktu,
@@ -75,7 +70,23 @@ class Produkt {
     'kategorieProdukty' : kategorieProdukty,
     'kategorieZakupy' : kategorieZakupy,
   };
+  */
 
+  Map<String, dynamic> toJson() => {
+    'id': objectId,
+    'productName': nazwaProduktu,
+    'quantity' : ilosc,
+    if (miara != null)
+      'measure' : miara.toJson(),
+    'autoPurchaseCount' : progAutoZakupu,
+    'autoPurchase' : autoZakup,
+    if (kategorieProdukty != null)
+      'categoryProduct' : kategorieProdukty.toJson(),
+    if (kategorieZakupy != null)
+      'categoryShopping' : kategorieZakupy.toJson(),
+    if (atrybuty != null)
+      'attributeList' : atrybuty.map((v) => v.toJson()).toList(),
+  };
 
 
 }// class Produkt

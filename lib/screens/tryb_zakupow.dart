@@ -6,6 +6,9 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/shopping_list.dart';
+import 'package:spizarnia_domowa_app/screens/tryb_zakupowy_detail.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 
@@ -18,7 +21,8 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
   final ProduktController produktController = ProduktController.to;
 
-  onAddToCart(ProduktZakupy zakup){
+
+  onAddToCart(ShoppingList zakup){
     // Add to doKupienia
     produktController.doKupienia.add(zakup);
 
@@ -27,45 +31,56 @@ class _TrybZakupowState extends State<TrybZakupow> {
     produktController.update();
   }
 
+
+
+
   onEndZakupy(){
     for(var i = 0; i < produktController.doKupienia.length; i++){
-      // TODO add all items from doKupienia list to the database
-      // TODO for each element added to database update produkty list
-      // TODO for each element added to produkty list remove them from doKupienia list
-
-      // nie tyle post co put
-      // w tej chili zaktualizuj te produkty
-      // produktController.updateProdukt(id, produkt)
-
-
+      /*
       // Get the index of the produkt we want to update
-      int produktIndex = produktController.produkty.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectIdProduktu);
+      int produktIndex = produktController.produkty.indexWhere((element) => element.objectId == produktController.doKupienia[i].produkt.objectId);
+
       // Get the produkt by the index
       Produkt ref = produktController.produkty[produktIndex];
 
       String id = ref.objectId;
+      */
+      produktController.buyProdukts(produktController.doKupienia[i].objectId, produktController.doKupienia[i].quantityToBuy);
 
+
+      /*
+      // Create the updated object
       Produkt produkt = new Produkt(
-
-        nazwaProduktu: produktController.doKupienia[i].nazwaProduktu,
-        ilosc: ref.ilosc + produktController.doKupienia[i].ilosc, // Increase from what is in ref
-        miara: produktController.doKupienia[i].miara,
+        objectId: produktController.doKupienia[i].objectId,
+        nazwaProduktu: produktController.doKupienia[i].produkt.nazwaProduktu,
+        ilosc: ref.ilosc + produktController.doKupienia[i].quantityToBuy, // Increase from what is in ref
+        miara: produktController.doKupienia[i].produkt.miara,
         progAutoZakupu: ref.progAutoZakupu, // get from produkt ref
         autoZakup: ref.autoZakup, // get from produkt ref
-        kategorieProdukty: ref.kategorieProdukty, // get frfom produkt ref
+        kategorieProdukty: ref.kategorieProdukty, // get from produkt ref
         kategorieZakupy: ref.kategorieZakupy, //get from produkt ref
 
       );
+      */
 
+      /*
       // Update in the database
       produktController.updateProdukt(id, produkt);
+      */
 
-
+      /*
       int zakupIndex = produktController.zakupy.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectId);
       ProduktZakupy zakupRef = produktController.zakupy[zakupIndex];
+      */
 
+      /*
+      int zakupIndex = produktController.listaZakupow.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectId);
+      ShoppingList zakupRef = produktController.listaZakupow[zakupIndex];
+        */
       // Remove from database
-      produktController.deleteZakup(zakupRef.objectId);
+      //produktController.deleteZakup(zakupRef.objectId);
+
+
 
     } // for
     // Remove all items from doKupienia
@@ -75,14 +90,28 @@ class _TrybZakupowState extends State<TrybZakupow> {
     // Update the view
     produktController.update();
 
+    produktController.fetchZakupy();
+
+
     Navigator.pop(context);
+    /*
     Navigator.pop(context);
+    */
+    /*
+    Navigator
+        .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
+        .then((value) => null);
+    */
+
+
 
   } // onEndZakupy()
 
+
+
   @override
   void initState(){
-
+    //produktController.doKupienia.clear();
     super.initState();
   }
 
@@ -132,30 +161,30 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
             SizedBox(
 
-              height: 400,
+              height: 300,
 
               child: Expanded(
                 child: GetBuilder<ProduktController>(
                   builder: (produktController) =>
-                      GroupedListView<ProduktZakupy, String>(
+                      GroupedListView<ShoppingList, String>(
 
                         elements: produktController.zakupyWyswietlaj,
                         groupBy: (zakup) {
-                          return zakup.kategoriaZakupy;
+                          return zakup.produkt.kategorieZakupy.nazwa;
                         },
                         useStickyGroupSeparators: false,
 
-                        groupHeaderBuilder: (ProduktZakupy zakup) => Padding(
+                        groupHeaderBuilder: (ShoppingList zakup) => Padding(
                           padding: const EdgeInsets.all(8.0),
 
                           child: Text(
-                            zakup.kategoriaZakupy,
+                            zakup.produkt.kategorieZakupy.nazwa,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
 
-                        itemBuilder: (context, ProduktZakupy zakup) {
+                        itemBuilder: (context, ShoppingList zakup) {
                           return Container(
                             height: 60,
                             child: Card(
@@ -170,9 +199,12 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
+
+
                                         Navigator
-                                            .push(context, MaterialPageRoute(builder: (context) => ZakupDetail(chosen_produkt: zakup)))
+                                            .push(context, MaterialPageRoute(builder: (context) => TrybZakupowyDetail(chosen_produkt: zakup.produkt)))
                                             .then((value) => {} );
+
                                       },
 
                                       child: Row(
@@ -186,7 +218,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.symmetric(horizontal: 10),
-                                                  child: Text(zakup.nazwaProduktu + ' : ' + zakup.ilosc.toString() + ' ' + zakup.miara),
+                                                  child: Text(zakup.produkt.nazwaProduktu + ' : ' + zakup.quantityToBuy.toString() + ' ' + zakup.produkt.miara.miara),
                                                 ),
 
                                                 IconButton(
@@ -267,10 +299,10 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                       Padding(
                                         padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
                                         child: Text(
-                                            produktController.doKupienia[index].nazwaProduktu
+                                            produktController.doKupienia[index].produkt.nazwaProduktu
                                                 + " : "
-                                                + produktController.doKupienia[index].ilosc.toString()
-                                                + produktController.doKupienia[index].miara
+                                                + produktController.doKupienia[index].quantityToBuy.toString()
+                                                + produktController.doKupienia[index].produkt.miara.miara
                                         ),
                                       ),
 
@@ -291,7 +323,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
               ),
             ),
 
-            Text("TEST TEST"),
+            //Text("TEST TEST"),
           ],
         ),
       ),

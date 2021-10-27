@@ -1,20 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
+//import 'package:flutter/scheduler.dart';
+
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+import 'package:spizarnia_domowa_app/screens/add_existing_zakupy.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/zakup_detail.dart';
 import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
+import 'package:spizarnia_domowa_app/screens/home.dart';
 
 // Debug
 import 'package:logger/logger.dart';
+
+import 'lista_kategorii.dart';
+import 'lista_miar.dart';
 
 class ListaZakupow extends StatefulWidget{
   @override
@@ -32,13 +42,19 @@ class _ListaZakupow extends State<ListaZakupow>{
     produktController.fetchZakupy();
   }
 
+
   onDeleteZakup(String objectId){
     produktController.deleteZakup(objectId);
+    Navigator.pop(context);
   }
+
+
+
 
   @override
   void initState() {
     produktController.fetchZakupy();
+    logger.d(produktController.listaZakupow);
     super.initState();
   }
 
@@ -55,7 +71,12 @@ class _ListaZakupow extends State<ListaZakupow>{
               tooltip: "Tryb zakupów",
               onPressed: () {
 
-                produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+                //produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+                produktController.zakupyWyswietlaj.clear();
+                if(produktController.zakupyWyswietlaj.isEmpty){
+                  produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
+                }
+
 
                 Navigator
                   .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))
@@ -67,32 +88,42 @@ class _ListaZakupow extends State<ListaZakupow>{
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+
+          Navigator
+              .push(context, MaterialPageRoute(builder: (context) => AddExistingZakupy()))
+              .then((value) => onRefreshPressed());// Navigator
+
+
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
+
+
+
       body: GetBuilder<ProduktController>(
         builder: (produktController) =>
-            GroupedListView<ProduktZakupy, String>(
+            GroupedListView<ShoppingList, String>(
 
-              elements: produktController.zakupy,
+              elements: produktController.listaZakupow,
               groupBy: (zakup) {
-                return zakup.kategoriaZakupy;
+                return zakup.produkt.kategorieZakupy.nazwa;
               },
               useStickyGroupSeparators: true,
 
 
-              groupHeaderBuilder: (ProduktZakupy zakup) => Padding(
+              groupHeaderBuilder: (ShoppingList zakup) => Padding(
                 padding: const EdgeInsets.all(8.0),
 
                 child: Text(
-                  zakup.kategoriaZakupy,
+                  zakup.produkt.kategorieZakupy.nazwa,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
 
-              itemBuilder: (context, ProduktZakupy zakup) {
+              itemBuilder: (context, ShoppingList zakup) {
                 return Container(
                     height: 60,
                     child: Card(
@@ -108,9 +139,11 @@ class _ListaZakupow extends State<ListaZakupow>{
                             child: InkWell(
                               onTap: () {
 
+
                                 Navigator
                                   .push(context, MaterialPageRoute(builder: (context) => ZakupDetail(chosen_produkt: zakup)))
                                   .then((value) => onRefreshPressed());
+
 
                               },
 
@@ -123,6 +156,7 @@ class _ListaZakupow extends State<ListaZakupow>{
                                     onPressed: () {
                                       // TODO add confirmation on delete
                                       onDeleteZakup(zakup.objectId);
+                                      //Navigator.pop(context);
                                     },
                                   ),
 
@@ -132,7 +166,7 @@ class _ListaZakupow extends State<ListaZakupow>{
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.symmetric(horizontal: 10),
-                                            child: Text(zakup.nazwaProduktu + ' : ' + zakup.ilosc.toString() + ' ' + zakup.miara),
+                                            child: Text(zakup.produkt.nazwaProduktu + ' : ' + zakup.quantityToBuy.toString() + ' ' + zakup.produkt.miara.miara),
                                           ),
 
                                           Icon(Icons.arrow_forward_ios_rounded),
@@ -157,6 +191,90 @@ class _ListaZakupow extends State<ListaZakupow>{
             ),
 
       ),
+
+
+
+      drawer: Drawer(
+
+        child: ListView(
+          padding: EdgeInsets.zero,
+
+          children: <Widget>[
+
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+
+              child: Text('Menu'),
+            ),
+
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                // Go to the new screen lista_zakupow.dart
+                /*
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
+                    .then((value) => onRefreshPressed());
+                */
+                /*
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+
+                    // add your code here.
+
+                    Navigator.push(context, new MaterialPageRoute(builder: (context) => Home()));
+                });
+                */
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Lista Zakupów'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen lista_zakupow.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
+                    .then((value) => onRefreshPressed());
+              },
+            ),
+
+            ListTile(
+              title: Text('Miary'),
+              onTap: () {
+                Navigator.pop(context);
+                // Go to the new screen containing Miary
+
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
+                    .then((value) => null);
+
+              },
+            ),
+
+            ListTile(
+              title: Text('Kategorie'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+                // Go to the new screen lista_kategorii.dart
+                Navigator
+                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
+                    .then((value) => null);
+              },
+            ),
+
+          ], // children
+        ),
+      ),
+
+
 
     );
   }

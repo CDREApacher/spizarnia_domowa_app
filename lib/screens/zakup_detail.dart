@@ -9,10 +9,11 @@ import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
+import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 
 class ZakupDetail extends StatelessWidget{
 
-  final ProduktZakupy chosen_produkt;
+  final ShoppingList chosen_produkt;
 
   final ProduktController produktController = ProduktController.to;
 
@@ -24,7 +25,7 @@ class ZakupDetail extends StatelessWidget{
 
 
   onUpdatePressed(String id) {
-
+/*
     ProduktZakupy zakup = new ProduktZakupy(
       objectIdProduktu: chosen_produkt.objectIdProduktu,
 
@@ -35,6 +36,8 @@ class ZakupDetail extends StatelessWidget{
     );
 
     produktController.updateZakup(id, zakup);
+
+ */
   }
 
 
@@ -46,7 +49,7 @@ class ZakupDetail extends StatelessWidget{
   Widget build(BuildContext context) {
 
 
-    iloscController.text = chosen_produkt.ilosc.toString();
+    iloscController.text = chosen_produkt.quantityToBuy.toString();
 
 
 
@@ -123,7 +126,7 @@ class ZakupDetail extends StatelessWidget{
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                chosen_produkt.nazwaProduktu,
+                chosen_produkt.produkt.nazwaProduktu,
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
@@ -131,7 +134,7 @@ class ZakupDetail extends StatelessWidget{
               ),
             ),
 
-            Text("Ilość " + chosen_produkt.miara + " produktu:"),
+            Text("Ilość " + chosen_produkt.produkt.miara.miara + " produktu:"),
 
             SpinBox(
               value: double.parse(iloscController.text),
@@ -145,7 +148,7 @@ class ZakupDetail extends StatelessWidget{
             ),
 
 
-            Text("Kategoria zakupu " + chosen_produkt.kategoriaZakupy,
+            Text("Kategoria zakupu " + chosen_produkt.produkt.kategorieZakupy.nazwa,
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold
@@ -155,6 +158,40 @@ class ZakupDetail extends StatelessWidget{
             SizedBox(height: 22),
 
 
+
+
+
+
+
+            GetBuilder<ProduktController>(
+              builder: (produktController) =>
+
+                  Expanded(
+
+                    child: ListView.separated(
+
+                      itemBuilder: (context, index) => Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+
+                        children: [
+
+
+                          Text(chosen_produkt.produkt.atrybuty[index].nazwa),
+                        ],
+
+                      ),
+
+
+                      separatorBuilder: (context, index) =>
+                          Divider(color: Colors.black),
+
+
+                      itemCount: chosen_produkt.produkt.atrybuty.length,
+                    ),
+
+                  ),
+
+            ),
 
 
 

@@ -10,21 +10,22 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
-class AddProdukt extends StatefulWidget {
+class AddNewZakup extends StatefulWidget {
 
   @override
-  _AddProduktState createState() => _AddProduktState();
+  _AddNewZakupState createState() => _AddNewZakupState();
 }
 
 
 
-class _AddProduktState extends State<AddProdukt> {
+class _AddNewZakupState extends State<AddNewZakup> {
 
   var uuid = Uuid();
 
@@ -73,7 +74,7 @@ class _AddProduktState extends State<AddProdukt> {
     Produkt produkt = new Produkt(
       objectId: uuid.v4(),
       nazwaProduktu: nameController.text,
-      ilosc: int.parse(iloscController.text),
+      ilosc: 0,
 
       progAutoZakupu: 0,
       autoZakup: false,
@@ -88,6 +89,15 @@ class _AddProduktState extends State<AddProdukt> {
     );
 
     produktController.addProdukt(produkt);
+
+
+    ShoppingList listaZakupow = new ShoppingList(
+      objectId: uuid.v4(),
+      quantityToBuy: int.parse(iloscController.text),
+      produkt: produkt,
+    );
+
+    produktController.addNewZakup(listaZakupow);
   }
 
 
@@ -100,8 +110,6 @@ class _AddProduktState extends State<AddProdukt> {
 
 
   createListKategorieProduktu(){
-    produktController.fetchKategorieProdukty();
-    produktController.displayKategorie.clear();
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorie.length; i++) {
@@ -113,8 +121,6 @@ class _AddProduktState extends State<AddProdukt> {
   }
 
   createListKategorieZakupu(){
-    produktController.fetchKategorieZakupy();
-    produktController.displayKategorieZakupy.clear();
     if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorieZakupy.length; i++) {
@@ -126,8 +132,6 @@ class _AddProduktState extends State<AddProdukt> {
   }
 
   createListMiary(){
-    produktController.fetchMiary();
-    produktController.displayMiary.clear();
     if(produktController.displayMiary.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.miary.length; i++) {
@@ -140,7 +144,6 @@ class _AddProduktState extends State<AddProdukt> {
 
   @override
   void initState(){
-
     createListKategorieProduktu();
     createListKategorieZakupu();
     createListMiary();
@@ -339,4 +342,4 @@ class _AddProduktState extends State<AddProdukt> {
 
     );
 
-  }}//class AddProdukt
+  }}//class

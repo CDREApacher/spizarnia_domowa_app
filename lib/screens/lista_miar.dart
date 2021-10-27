@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:uuid/uuid.dart';
+
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 
@@ -9,7 +11,11 @@ class ListaMiar extends StatefulWidget {
   _ListaMiar createState() => _ListaMiar();
 }
 
+
+
 class _ListaMiar extends State<ListaMiar> {
+
+  var uuid = Uuid();
 
   final ProduktController produktController = ProduktController.to;
 
@@ -17,19 +23,23 @@ class _ListaMiar extends State<ListaMiar> {
 
   onAddMiaraPressed(){
     Miara miara = new Miara(
+      objectId: uuid.v4(),
       miara: nameController.text,
     );
 
     produktController.addMiary(miara);
+
   }
 
+  /*
   onDeleteMiaraPressed(String objectId){
     produktController.deleteMiary(objectId);
   }
+   */
 
   @override
   void initState(){
-    //produktController.fetchMiary();
+    produktController.fetchMiary();
     super.initState();
   }
 
@@ -51,7 +61,7 @@ class _ListaMiar extends State<ListaMiar> {
               context: context,
               builder: (_) =>
                   AlertDialog(
-                    title: Text("Dodaj nową kategorię: "),
+                    title: Text("Dodaj nową miarę: "),
 
                     content: TextField(
                       controller: nameController,
@@ -63,6 +73,7 @@ class _ListaMiar extends State<ListaMiar> {
                           onPressed: () {
                             // Add new Miara here
                             onAddMiaraPressed();
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                           child: Text('Dodaj')
@@ -86,18 +97,23 @@ class _ListaMiar extends State<ListaMiar> {
               return Card(
                 elevation: 8,
 
+
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: Text(produktController.miary[index].miara),
                     ),
 
 
+                    /*
+
                     IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: (){
+
+                          /*
                           showDialog(
                               context: context,
                               builder: (_) =>
@@ -110,7 +126,7 @@ class _ListaMiar extends State<ListaMiar> {
                                       TextButton(
                                           onPressed: () {
                                             // Delete selected Miara here
-                                            onDeleteMiaraPressed(produktController.miary[index].objectId);
+                                            //onDeleteMiaraPressed(produktController.miary[index].objectId);
                                             Navigator.pop(context);
                                           },
                                           child: Text(
@@ -122,8 +138,14 @@ class _ListaMiar extends State<ListaMiar> {
                                     ],
                                   )
                           );
+                          */
                         }
                     ),
+
+
+                    */
+
+
                   ],
                 ),
 

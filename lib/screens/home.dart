@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:uuid/uuid.dart';
 
 // Custom Widgets
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
@@ -11,6 +12,16 @@ import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 // Modles
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
+
+
+
+import 'package:spizarnia_domowa_app/model/kategoria.dart';
+import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/miara.dart';
+import 'package:spizarnia_domowa_app/model/shopping_list.dart';
+
+
+
 
 // Controller
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -21,6 +32,7 @@ import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 import 'package:spizarnia_domowa_app/screens/produkt_detail.dart';
 import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
 import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
+import 'package:spizarnia_domowa_app/screens/add_existing_produkt.dart';
 
 // Debug
 import 'package:logger/logger.dart';
@@ -28,6 +40,8 @@ import 'package:logger/logger.dart';
 
 
 class Home extends StatelessWidget{
+
+  var uuid = Uuid();
 
   final nameController = TextEditingController();
   final iloscController = TextEditingController();
@@ -46,6 +60,7 @@ class Home extends StatelessWidget{
     produktController.setSelected(produkt);
   }
 
+  /*
   onAddPressed() {
     Produkt produkt = new Produkt(
         nazwaProduktu: nameController.text,
@@ -54,6 +69,7 @@ class Home extends StatelessWidget{
     onClearPressed();
     produktController.addProdukt(produkt);
   }
+  */
 
   onDeletePressed(String id) {
     onClearPressed();
@@ -88,6 +104,8 @@ class Home extends StatelessWidget{
     produktController.fetchProduktyKategorii(kategoria);
   }
 
+
+  /*
   onAddZakupPressed(Produkt produkt) {
     ProduktZakupy zakup = new ProduktZakupy(
 
@@ -100,9 +118,25 @@ class Home extends StatelessWidget{
     );
     produktController.addNewZakup(zakup);
   }
+  */
+
+
+  onAddZakupPressed(Produkt produkt){
+
+    ShoppingList listaZakupow = new ShoppingList(
+      objectId: uuid.v4(),
+      quantityToBuy: int.parse(iloscController.text),
+      produkt: produkt,
+    );
+
+    produktController.addNewZakup(listaZakupow);
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    onRefreshPressed();
+    produktController.update();
     return Scaffold(
 
 //////////////////////////////////////////////////////////
@@ -132,7 +166,7 @@ class Home extends StatelessWidget{
         child: Icon(Icons.add),
         onPressed: () {
           Navigator
-              .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
+              .push(context, MaterialPageRoute(builder: (context) => AddExistingProduct()))
               .then((value) => onRefreshPressed());// Navigator
         },
       ),
@@ -148,7 +182,7 @@ class Home extends StatelessWidget{
 
               elements: produktController.produkty,
               groupBy: (produkt) {
-                return produkt.kategorieProdukty;
+                return produkt.kategorieProdukty.nazwa;
               },
               useStickyGroupSeparators: true,
 
@@ -156,7 +190,7 @@ class Home extends StatelessWidget{
                 padding: const EdgeInsets.all(8.0),
 
                 child: Text(
-                  produkt.kategorieProdukty,
+                  produkt.kategorieProdukty.nazwa,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -177,7 +211,7 @@ class Home extends StatelessWidget{
 
                             showDialog(context: context, builder: (_) =>
                                 AlertDialog(
-                                  title: Text('Dodaj ' + produkt.nazwaProduktu + ' do listy zakupów. (' + produkt.miara + ')'),
+                                  title: Text('Dodaj ' + produkt.nazwaProduktu + ' do listy zakupów. (' + produkt.miara.miara + ')'),
                                   content: SpinBox(
                                     value: 0,
                                     min: 0,
@@ -208,6 +242,7 @@ class Home extends StatelessWidget{
                       Expanded(
                         child: InkWell(
                           onTap: () {
+                            //onRefreshPressed();
                             Navigator
                                 .push(context, MaterialPageRoute(builder: (context) => ProduktDetail(chosen_produkt: produkt)))
                                 .then((value) => onRefreshPressed());
@@ -216,7 +251,7 @@ class Home extends StatelessWidget{
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(produkt.nazwaProduktu + ' : ' + produkt.ilosc.toString() + ' ' + produkt.miara),
+                              Text(produkt.nazwaProduktu + ' : ' + produkt.ilosc.toString() + ' ' + produkt.miara.miara),
                               Icon(Icons.arrow_forward_ios_rounded),
                             ],
                           ),
@@ -302,7 +337,7 @@ class Home extends StatelessWidget{
           ], // children
         ),
       ),
-      
+
     );
   }// Widget build
 
