@@ -20,6 +20,7 @@ import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
 import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
 import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
 import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
+import 'package:spizarnia_domowa_app/screens/lista_grup.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
 // Debug
@@ -61,7 +62,7 @@ class HomeMain extends StatelessWidget{
                   .then((value) => null);
             },
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,7 +82,7 @@ class HomeMain extends StatelessWidget{
                   .then((value) => null);
             },
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -110,7 +111,7 @@ class HomeMain extends StatelessWidget{
 
             },
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -123,10 +124,27 @@ class HomeMain extends StatelessWidget{
               color: Colors.blue,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: const Text(''),
-            color: Colors.white24,
+          InkWell(
+            onTap: () {
+
+              Navigator
+                  .push(context, MaterialPageRoute(builder: (context) => ListaGrup()))
+                  .then((value) => null);// Navigator
+
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.group_rounded, size: 100),
+                  Text("Lista Grup",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              color: Colors.blue,
+            ),
           ),
 
 
