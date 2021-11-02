@@ -14,6 +14,7 @@ import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
 import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
 import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
 import 'package:spizarnia_domowa_app/screens/group_detail.dart';
+import 'package:spizarnia_domowa_app/screens/join_group.dart';
 
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -55,7 +56,7 @@ class _ListaGrupState extends State<ListaGrup> {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator
-              .push(context, MaterialPageRoute(builder: (context) => GroupDetail()))
+              .push(context, MaterialPageRoute(builder: (context) => JoinGroup()))
               .then((value) => null);// Navigator
         },
       ),
