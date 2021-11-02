@@ -5,10 +5,10 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 class GroupDetail extends StatefulWidget {
 
-  final Produkt chosen_produkt;
+  //final Produkt chosen_produkt;
 
 
-  GroupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+  //GroupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
   @override
   _GroupDetailState createState() => _GroupDetailState();
