@@ -2,6 +2,7 @@ import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 class Produkt {
   String objectId;
@@ -13,6 +14,7 @@ class Produkt {
   KategoriaZakupy kategorieZakupy;
   Kategoria kategorieProdukty;
   List <Atrybuty> atrybuty;
+  Grupa grupa;
 
 
   Produkt({
@@ -25,6 +27,7 @@ class Produkt {
     this.kategorieProdukty,
     this.kategorieZakupy,
     this.atrybuty,
+    this.grupa,
   });
 
   /*
@@ -56,6 +59,7 @@ class Produkt {
         atrybuty.add(new Atrybuty.fromJson(v));
       });
     }
+    grupa = Grupa.fromJson(json['group']);
   }
 
 
@@ -76,6 +80,9 @@ class Produkt {
     'id': objectId,
     'productName': nazwaProduktu,
     'quantity' : ilosc,
+
+    'group' : grupa.toJson(),
+
     if (miara != null)
       'measure' : miara.toJson(),
     'autoPurchaseCount' : progAutoZakupu,

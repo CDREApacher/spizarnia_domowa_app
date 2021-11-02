@@ -12,6 +12,8 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
 
+//import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+
 class ProduktRepository{
 
   Dio apiClient;
@@ -284,9 +286,10 @@ class ProduktRepository{
 
   // Grupy
 
-  Future<Grupa> addGrupa(Grupa grupa) async {
-    Response response = await addGrupy(apiClient, grupa.toJson());
+  Future<Grupa> addGrupa(String nazwa) async {
+    Response response = await addGrupy(apiClient, nazwa);
     return Grupa.fromJson(response.data);
+
   }
 
 } // class ProduktRepository

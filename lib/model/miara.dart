@@ -1,10 +1,14 @@
+import 'package:spizarnia_domowa_app/model/grupa.dart';
+
 class Miara {
   String objectId;
   String miara;
+  Grupa grupa;
 
   Miara({
     this.objectId,
     this.miara,
+    this.grupa,
   });
 
   Miara.fromJson(Map<String, dynamic> json){
@@ -12,6 +16,7 @@ class Miara {
     //miara = json['nazwa'];
     objectId = json['id'];
     miara = json['name'];
+    grupa = Grupa.fromJson(json['group']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -19,6 +24,7 @@ class Miara {
     //'nazwa' : miara,
     'id' : objectId,
     'name' : miara,
+    'group' : grupa.toJson(),
   };
 
 } // class Miara

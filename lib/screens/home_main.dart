@@ -26,7 +26,7 @@ import 'package:spizarnia_domowa_app/screens/home.dart';
 
 // Debug
 import 'package:logger/logger.dart';
-
+import 'dart:developer';
 
 
 class HomeMain extends StatelessWidget{
@@ -34,13 +34,15 @@ class HomeMain extends StatelessWidget{
 
   final ProduktController produktController = ProduktController.to;
 
-  // tmp add a group
+  // tmp add a group TODO delete
   dodajGrupe(){
-    Grupa grupa = new Grupa(
-      nazwa_server: "Test_z_Apki",
-    );
+    String nazwa = "Test_z_Apki_LOG";
 
-    produktController.addGrupy(grupa);
+    produktController.addGrupy(nazwa);
+  }
+  pokazGrupy(){
+    log("lista grup po add");
+    log(produktController.listaGrup.toString());
   }
 
 
@@ -59,9 +61,17 @@ class HomeMain extends StatelessWidget{
           IconButton(
             icon: Icon(Icons.group_add),
             onPressed: () => {
-
+              dodajGrupe()
             },
           ),
+          IconButton(
+            icon: Icon(Icons.group),
+            onPressed: () => {
+              pokazGrupy()
+            },
+          ),
+
+
         ],
 
       ),
@@ -147,8 +157,8 @@ class HomeMain extends StatelessWidget{
             onTap: () {
 
               Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => ListaGrup()))
-                  .then((value) => null);// Navigator
+                  .push(context, MaterialPageRoute(builder: (context) => ListaGrup()));
+                  //.then((value) => null);// Navigator
 
             },
             child: Container(
@@ -233,6 +243,7 @@ class HomeMain extends StatelessWidget{
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
                     .then((value) => null);
+
               },
             ),
 

@@ -1,3 +1,5 @@
+//import 'package:spizarnia_domowa_app/model/grupa.dart';
+// I think this is for BE edition of the app - unused in current model
 class ProduktZakupy {
 
   String objectId;
@@ -6,6 +8,8 @@ class ProduktZakupy {
   String miara;
   String nazwaProduktu;
   String objectIdProduktu;
+  //Grupa grupa;
+
 
   ProduktZakupy({
     this.objectId,
@@ -14,6 +18,7 @@ class ProduktZakupy {
     this.miara,
     this.nazwaProduktu,
     this.objectIdProduktu,
+    //this.grupa,
   });
 
   ProduktZakupy.fromJson(Map<String, dynamic> json){
@@ -23,7 +28,7 @@ class ProduktZakupy {
     miara = json['miara'];
     nazwaProduktu = json['nazwaProduktu'];
     objectIdProduktu = json['objectIdProduktu'];
-
+    //grupa = Grupa.fromJson(json['group']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -33,6 +38,7 @@ class ProduktZakupy {
     'miara' : miara,
     'nazwaProduktu': nazwaProduktu,
     'objectIdProduktu' : objectIdProduktu,
+    //'group' : grupa.toJson(),
   };
 
 } //class

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 
@@ -135,17 +136,20 @@ class _ListaGrupState extends State<ListaGrup> {
             ListTile(
               title: Text('Home'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
-                    .then((value) => {});
-                // Go to the new screen lista_zakupow.dart
+                Navigator.pop(context);//Closes the drawer
+
+
                 /*
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
-                    .then((value) => onRefreshPressed());
+                Navigator// Using the navigator here like this crashes when we want to go to product list later
+                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()));
+                    //.then((value) => {});
                 */
+                Get.offAll(HomeMain());
+                /*
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  Navigator.push(context, new MaterialPageRoute(builder: (context) => HomeMain()));
+                });
+                 */
                 /*
                 SchedulerBinding.instance.addPostFrameCallback((_) {
 

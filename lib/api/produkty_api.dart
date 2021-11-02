@@ -218,7 +218,7 @@ Future<Response> deleteMiary(Dio dio, String objectId){
 }
 
 // Grupy
-Future<Response> addGrupy(Dio dio, Map<String, dynamic> dane){
-  return dio.post("/groups", data: dane);
+Future<Response> addGrupy(Dio dio, String nazwa){
+  return dio.post("/groups?name=$nazwa");
 
 }

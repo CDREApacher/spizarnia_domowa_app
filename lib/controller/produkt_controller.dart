@@ -1,3 +1,5 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
@@ -13,6 +15,10 @@ import 'package:spizarnia_domowa_app/repository/produkt_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:logger/logger.dart';
+import 'dart:developer';
 
 class ProduktController extends GetxController {
   List<Produkt> produkty = [];
@@ -46,6 +52,17 @@ class ProduktController extends GetxController {
   ProduktRepository produktRepository = ProduktRepository();
 
   static ProduktController get to => Get.find<ProduktController>();
+
+
+
+
+  Logger logger = Logger();
+
+  Grupa currentlyChosenGroup;
+  String currentlyChosenGroupCode;
+
+  List<dynamic> listaGrup = [];
+
 
 
 
@@ -287,9 +304,58 @@ class ProduktController extends GetxController {
 
   // Grupy
 
-  addGrupy(Grupa grupa) async {
-    await produktRepository.addGrupa(grupa);
+  addGrupy(String nazwa) async {
+
+    // Set the newly made group as the active one
+    currentlyChosenGroup = await produktRepository.addGrupa(nazwa);
+    currentlyChosenGroupCode = currentlyChosenGroup.kod_grupy;
+
+    // Set the group as the current chosen group in persistent storage
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+    sprefs.setString('spidom_current_group', currentlyChosenGroupCode);
+
+    // Add the group to a list of groups saved on the device
+    // listaGrup should be decoded somewhere else before -- at app startup
+
+    String encGroupListString = (sprefs.getString('spidom_group_list') ?? "");
+
+    if(encGroupListString != "") {
+      listaGrup = json.decode(encGroupListString);
+    }
+    //log(listaGrup.toString());
+    listaGrup.add(currentlyChosenGroup);// Right after adding is just an instance of not a readable name and code
+
+    var encodedListaGrup = json.encode(listaGrup);
+
+    await sprefs.setString('spidom_group_list', encodedListaGrup);
+    String testString = sprefs.getString('spidom_group_list');
+    listaGrup = json.decode(testString);
+    //log(listaGrup.toString());
+
+    // Set the newly added group as the default one
+    sprefs.setString('spidom_default_group_name', currentlyChosenGroup.nazwa_server);
+    sprefs.setString('spidom_default_group_code', currentlyChosenGroupCode);
+
+    /* Maybe dont overdo it, check if method above works
+    Map<String, dynamic> toMap(Grupa grupa) => {
+      'name' : grupa.nazwa_server,
+      'code': grupa.kod_grupy,
+    };
+
+    String encode(List<Grupa> grupy) => json.encode(
+      grupy
+          .map<Map<String, dynamic>>((grupa) => toMap(grupa))
+          .toList(),
+    );
+    */
+
     // TODO dodać obsługę grup
+    /*
+    * After receiving a response save the group to a list in Shared Preferences // done
+    * Also set the group as the current used one //done
+    * Also set the current group as the default one to be default in the code for all queries
+    * */
+
   }
 
 

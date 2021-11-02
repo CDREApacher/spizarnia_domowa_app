@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Grupa{
   //String nazwa_local;
   String nazwa_server;
@@ -16,5 +18,8 @@ class Grupa{
 
   Map<String, dynamic> toJson() => {
     'name' : nazwa_server,
+    'code': kod_grupy,
   };
+
+  
 } // Grupa
