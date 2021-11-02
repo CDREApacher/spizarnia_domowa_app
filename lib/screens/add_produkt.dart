@@ -144,9 +144,25 @@ class _AddProduktState extends State<AddProdukt> {
     createListKategorieProduktu();
     createListKategorieZakupu();
     createListMiary();
-    kategoriaProduktyController.text = produktController.displayKategorie.first;
-    kategoriaZakupyController.text = produktController.displayKategorieZakupy.first;
-    miaraController.text = produktController.displayMiary.first;
+
+    //kategoriaProduktyController.text = produktController.displayKategorie.first;
+    if(produktController.displayKategorie.length == 0)
+      {kategoriaProduktyController.text = "Text: kategoria Produkty";}
+    else
+      {kategoriaProduktyController.text = produktController.displayKategorie.first;}
+
+    //kategoriaZakupyController.text = produktController.displayKategorieZakupy.first;
+    if(produktController.displayKategorie.length == 0)
+      {kategoriaZakupyController.text = "Text: kategoria Zakupy";}
+    else
+      {kategoriaZakupyController.text = produktController.displayKategorieZakupy.first;}
+
+    //miaraController.text = produktController.displayMiary.first;
+    if(produktController.displayMiary.length == 0)
+      {miaraController.text = "Text: miara";}
+    else
+      {miaraController.text = produktController.displayMiary.first;}
+
     super.initState();
   }
 
@@ -236,12 +252,24 @@ class _AddProduktState extends State<AddProdukt> {
                     });
                   },
 
+
+
                   items: produktController.displayMiary.map((miara) {
                     return DropdownMenuItem(
                       child: new Text(miara),
                       value: miara,
                     );
-                  }).toList(),
+                  }).toList(), // Items
+
+
+                  /*
+                  items: produktController.displayMiary.map((miara) {
+                    return DropdownMenuItem(
+                      child: new Text(miara),
+                      value: miara,
+                    );
+                  }).toList(), // Items
+                  */
 
                 ),
               ],

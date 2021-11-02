@@ -22,7 +22,7 @@ Future<Response> fetchAll(Dio dio){
 Future<Response> getCount(Dio dio){
   return dio.get("/data/Produkt", queryParameters: {'property' : 'Count(nazwaProduktu)'});
 }
-
+// BE
 Future<Response> fetch(Dio dio, String objectId){
   return dio.get("/data/Produkt/$objectId");
 }
@@ -215,4 +215,10 @@ Future<Response> addMiary(Dio dio, Map<String, dynamic> dane){
 
 Future<Response> deleteMiary(Dio dio, String objectId){
   return dio.delete("/data/Miara/$objectId");
+}
+
+// Grupy
+Future<Response> addGrupy(Dio dio, Map<String, dynamic> dane){
+  return dio.post("/groups", data: dane);
+
 }

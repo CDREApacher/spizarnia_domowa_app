@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
@@ -6,6 +7,7 @@ import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 import 'package:spizarnia_domowa_app/repository/produkt_repository.dart';
 import 'package:dio/dio.dart';
@@ -281,6 +283,13 @@ class ProduktController extends GetxController {
       update();
     }
 
+  }
+
+  // Grupy
+
+  addGrupy(Grupa grupa) async {
+    await produktRepository.addGrupa(grupa);
+    // TODO dodać obsługę grup
   }
 
 

@@ -10,7 +10,7 @@ import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
-
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 class ProduktRepository{
 
@@ -281,5 +281,12 @@ class ProduktRepository{
     );
   }
 */
+
+  // Grupy
+
+  Future<Grupa> addGrupa(Grupa grupa) async {
+    Response response = await addGrupy(apiClient, grupa.toJson());
+    return Grupa.fromJson(response.data);
+  }
 
 } // class ProduktRepository

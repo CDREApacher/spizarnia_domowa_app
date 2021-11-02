@@ -11,6 +11,7 @@ import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 // Modles
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 // Controller
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -32,6 +33,15 @@ class HomeMain extends StatelessWidget{
 
   final ProduktController produktController = ProduktController.to;
 
+  // tmp add a group
+  dodajGrupe(){
+    Grupa grupa = new Grupa(
+      nazwa_server: "Test_z_Apki",
+    );
+
+    produktController.addGrupy(grupa);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +53,15 @@ class HomeMain extends StatelessWidget{
         toolbarHeight: 42.5,
 
         title: Text('Domowa spiżarnia'),
+
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.group_add),
+            onPressed: () => {
+
+            },
+          ),
+        ],
 
       ),
 
