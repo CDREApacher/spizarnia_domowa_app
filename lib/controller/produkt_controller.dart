@@ -1,6 +1,7 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
+
 import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
@@ -14,7 +15,10 @@ import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/repository/produkt_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/instance_manager.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:logger/logger.dart';
@@ -44,7 +48,9 @@ class ProduktController extends GetxController {
 
   List<Atrybuty> atrybuty = [];
 
-  List<Miara> miary = []; // lista_miar.dart
+  RxList<Miara> miary = <Miara>[].obs; // lista_miar.dart
+  //var miary = <Miara>[].obs;
+  //RxList<Miara> miary = (List<Miara>.of([])).obs;
 
   List<String> displayMiary = [];
 
@@ -60,6 +66,7 @@ class ProduktController extends GetxController {
 
   Grupa currentlyChosenGroup;
   String currentlyChosenGroupCode;
+  String currentlyChosenGroupName;
 
   List<dynamic> listaGrup = [];
 
@@ -69,12 +76,20 @@ class ProduktController extends GetxController {
   // Produkty
 
   fetchAllProdukts() async {
-    produkty = await produktRepository.fetchAllProdukts();
+
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+    //sprefs.setString('spidom_current_group', currentlyChosenGroupCode);
+    currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
+
+    produkty = await produktRepository.fetchAllProdukts(currentlyChosenGroupCode);
     update();
   }
 
   refreshAllProdukts() async {
-    produkty = await produktRepository.fetchAllProdukts();
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+    currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
+
+    produkty = await produktRepository.fetchAllProdukts(currentlyChosenGroupCode);
     update();
   }
 
@@ -285,7 +300,8 @@ class ProduktController extends GetxController {
   // Miary
 
   fetchMiary() async {
-    miary = await produktRepository.fetchAllMiary();
+    miary = await produktRepository.fetchAllMiary(currentlyChosenGroupCode);
+    update();
   }
 
   addMiary(Miara miara) async {
@@ -303,6 +319,26 @@ class ProduktController extends GetxController {
   }
 
   // Grupy
+  getDeviceGroupList() async {
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+    String encGroupListString = (sprefs.getString('spidom_group_list') ?? "");
+    if(encGroupListString != "") {
+      listaGrup = json.decode(encGroupListString);
+    }
+  }
+
+  getDefaultDeviceGroup() async {
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+
+    currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
+    currentlyChosenGroupName = sprefs.get('spidom_default_group_name');
+    log("Defaultowo wybrana grupa: kod:");
+    //log(currentlyChosenGroup.nazwa_server);
+    log(currentlyChosenGroupCode);
+    log("Defaultowo wybrana grupa: nazwa:");
+    log(currentlyChosenGroupName);
+
+  }
 
   addGrupy(String nazwa) async {
 

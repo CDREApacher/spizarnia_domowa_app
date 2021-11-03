@@ -9,8 +9,8 @@ Future<Response> fetchAll(Dio dio, int pgOffset){
 }
 */
 // *NEW*
-Future<Response> fetchAll(Dio dio/*, int pgOffset*/){
-  return dio.get("/products/all");
+Future<Response> fetchAll(Dio dio, String kod_grupy){
+  return dio.get("/products/all?code=$kod_grupy");
 }
 
 /* B
@@ -199,8 +199,8 @@ Future<Response> fetchMiary(Dio dio){
 */
 
 // *NEW*
-Future<Response> fetchMiary(Dio dio){
-  return dio.get("/measures/all");
+Future<Response> fetchMiary(Dio dio, String kod_grupy){
+  return dio.get("/measures/all?code=$kod_grupy");
 }
 
 /* BE

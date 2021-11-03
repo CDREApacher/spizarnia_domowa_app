@@ -210,71 +210,45 @@ class _ListaZakupow extends State<ListaZakupow>{
             ),
 
             ListTile(
-              title: Text('Home'),
+              title: Text('Home'),// Here HomeMain
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
+                Get.back();
+                Get.offAll(HomeMain()); // offAll to avoid the weird red bug screen
                 /*
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
                     .then((value) => onRefreshPressed());
                 */
-                /*
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-
-                    // add your code here.
-
-                    Navigator.push(context, new MaterialPageRoute(builder: (context) => Home()));
-                });
-                */
-
               },
             ),
 
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
-                    .then((value) => onRefreshPressed());
+                Get.back();
+                // We are already here
               },
             ),
 
             ListTile(
               title: Text('Miary'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen containing Miary
-
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
-                    .then((value) => null);
-
+                Get.back();
+                Get.to(() => ListaMiar());
               },
             ),
 
             ListTile(
               title: Text('Kategorie'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-                // Go to the new screen lista_kategorii.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
-                    .then((value) => null);
+                Get.back();
+                Get.to(() => ListaKategorii());
               },
             ),
 
           ], // children
         ),
       ),
-
-
 
     );
   }

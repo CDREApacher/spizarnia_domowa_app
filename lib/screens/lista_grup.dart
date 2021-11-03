@@ -136,77 +136,33 @@ class _ListaGrupState extends State<ListaGrup> {
             ListTile(
               title: Text('Home'),
               onTap: () {
-                Navigator.pop(context);//Closes the drawer
-
-
-                /*
-                Navigator// Using the navigator here like this crashes when we want to go to product list later
-                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()));
-                    //.then((value) => {});
-                */
+                Get.back();//Closes the drawer
                 Get.offAll(HomeMain());
-                /*
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  Navigator.push(context, new MaterialPageRoute(builder: (context) => HomeMain()));
-                });
-                 */
-                /*
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-
-                    // add your code here.
-
-                    Navigator.push(context, new MaterialPageRoute(builder: (context) => Home()));
-                });
-                */
-
               },
             ),
 
-            /*ListTile(
-              title: Text('Lista Produktów'),
-              onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => Home()))
-                    .then((value) => {});
-              },
-            ),*/
+
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
-                    .then((value) => {});
+                Get.back();
+                Get.to(() => ListaZakupow());
               },
             ),
 
             ListTile(
               title: Text('Miary'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen containing Miary
-
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
-                    .then((value) => null);
-
+                Get.back();
+                Get.to(() => ListaMiar());
               },
             ),
 
             ListTile(
               title: Text('Kategorie'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-                // Go to the new screen lista_kategorii.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
-                    .then((value) => null);
+                Get.back();
+                Get.to(() => ListaKategorii());
               },
             ),
 

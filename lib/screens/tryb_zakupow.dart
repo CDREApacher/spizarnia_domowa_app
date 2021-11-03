@@ -313,11 +313,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
                               ),
 
 
-
-
                       )
-
-
 
 
               ),
@@ -327,23 +323,6 @@ class _TrybZakupowState extends State<TrybZakupow> {
           ],
         ),
       ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     );

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:spizarnia_domowa_app/api/client.dart';
 import 'package:spizarnia_domowa_app/api/produkty_api.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
@@ -12,9 +13,11 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
 
-//import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 class ProduktRepository{
+
+  //final ProduktController produktController = ProduktController.to;
 
   Dio apiClient;
   // or Database
@@ -27,9 +30,9 @@ class ProduktRepository{
 
   // Produkty
 
-  Future<List<Produkt>> fetchAllProdukts() async {
+  Future<List<Produkt>> fetchAllProdukts(String kod_grupy) async {
 
-    Response response = await fetchAll(apiClient);
+    Response response = await fetchAll(apiClient, kod_grupy);
 
     return List<Produkt>.from(
       (response.data).map((json) => Produkt.fromJson(json))
@@ -241,10 +244,10 @@ class ProduktRepository{
 
   // Miary
 
-  Future<List<Miara>> fetchAllMiary() async {
-    Response response = await fetchMiary(apiClient);
+  Future<RxList<Miara>> fetchAllMiary(String kod_grupy) async {
+    Response response = await fetchMiary(apiClient, kod_grupy);
 
-    return List<Miara>.from(
+    return RxList<Miara>.from(
         (response.data).map((json) => Miara.fromJson(json))
     );
   }

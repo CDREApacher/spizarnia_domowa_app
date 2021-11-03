@@ -108,7 +108,6 @@ class _ListaMiar extends State<ListaMiar> {
 
 
                     /*
-
                     IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: (){
@@ -142,23 +141,16 @@ class _ListaMiar extends State<ListaMiar> {
                         }
                     ),
 
-
                     */
-
-
                   ],
                 ),
 
               );
               }, // itemBuilder
 
-
-
             //separatorBuilder: (context, index) => Divider(
             //  color: Colors.black,
             //),
-
-
 
           ),
       ),

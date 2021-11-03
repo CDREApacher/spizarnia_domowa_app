@@ -43,6 +43,8 @@ class HomeMain extends StatelessWidget{
   pokazGrupy(){
     log("lista grup po add");
     log(produktController.listaGrup.toString());
+    log("Aktualnie wybrana grupa:");
+    log(produktController.currentlyChosenGroupCode);
   }
 
 
@@ -198,12 +200,8 @@ class HomeMain extends StatelessWidget{
             ListTile(
               title: Text('Lista Produktów'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => Home()))
-                    .then((value) => null);
+                Get.back();
+                Get.to(() => Home());
 
               },
             ),
@@ -211,39 +209,30 @@ class HomeMain extends StatelessWidget{
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
-                    .then((value) => null);
+                Get.back();
+                Get.to(() => ListaZakupow());
               },
             ),
 
             ListTile(
               title: Text('Miary'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen containing Miary
-
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
-                    .then((value) => null);
-
+                Get.back();
+                Get.to(() => ListaMiar());
               },
             ),
 
             ListTile(
               title: Text('Kategorie'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
+                /*
                 Navigator.pop(context);
-                // Go to the new screen lista_kategorii.dart
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
                     .then((value) => null);
-
+                */
+                Get.back();
+                Get.to(() => ListaKategorii());
               },
             ),
 

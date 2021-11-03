@@ -287,35 +287,30 @@ class Home extends StatelessWidget{
             ListTile(
               title: Text('Lista Produktów'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Get.back();
                 // We're already here so do nothing but close the drawer
-
               },
             ),
 
             ListTile(
               title: Text('Lista Zakupów'),
               onTap: () {
+                /*
                 Navigator.pop(context);
-                // Go to the new screen lista_zakupow.dart
                 Navigator
                     .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
                     .then((value) => onRefreshPressed());
+                */
+                Get.back();
+                Get.to(() => ListaZakupow());
               },
             ),
 
             ListTile(
               title: Text('Miary'),
               onTap: () {
-                Navigator.pop(context);
-                // Go to the new screen containing Miary
-
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaMiar()))
-                    .then((value) => null);
+                Get.back();
+                Get.to(() => ListaMiar());
 
               },
             ),
@@ -323,14 +318,8 @@ class Home extends StatelessWidget{
             ListTile(
               title: Text('Kategorie'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-                // Go to the new screen lista_kategorii.dart
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
-                    .then((value) => null);
+                Get.back();
+                Get.to(() => ListaKategorii());
               },
             ),
 
