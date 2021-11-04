@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+
 import 'package:uuid/uuid.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
+
 
 class ListaMiar extends StatefulWidget {
   @override
@@ -22,13 +25,19 @@ class _ListaMiar extends State<ListaMiar> {
   final nameController = TextEditingController();
 
   onAddMiaraPressed(){
+    Grupa grupaMiary = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
+
     Miara miara = new Miara(
       objectId: uuid.v4(),
       miara: nameController.text,
+      grupa: grupaMiary,
     );
 
     produktController.addMiary(miara);
-
+    nameController.clear();
   }
 
   /*
@@ -73,8 +82,8 @@ class _ListaMiar extends State<ListaMiar> {
                           onPressed: () {
                             // Add new Miara here
                             onAddMiaraPressed();
-                            Navigator.pop(context);
-                            Navigator.pop(context);
+                            Navigator.pop(context);// Close the popup
+                            //Navigator.pop(context);// Return to previous screen
                           },
                           child: Text('Dodaj')
                       ),

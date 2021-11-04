@@ -83,6 +83,8 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
 
     } // for
+
+
     // Remove all items from doKupienia
     produktController.doKupienia.clear();
     produktController.zakupyWyswietlaj.clear();

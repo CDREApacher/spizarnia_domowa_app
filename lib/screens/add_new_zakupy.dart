@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'dart:async';
+
 
 import 'package:uuid/uuid.dart';
 
@@ -11,9 +13,10 @@ import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
-
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
@@ -45,7 +48,13 @@ class _AddNewZakupState extends State<AddNewZakup> {
 
   onConfirmPressed() {
 
-    List<Atrybuty> atrybutyProduktu = [];
+    Grupa grupaZakupu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
+
+
+    RxList<Atrybuty> atrybutyProduktu = <Atrybuty>[].obs;
 
     int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
     String idMiara = produktController.miary[indexMiara].objectId;
@@ -53,6 +62,7 @@ class _AddNewZakupState extends State<AddNewZakup> {
     Miara miaraProduktu = new Miara(
       objectId: idMiara,
       miara: miaraController.text,
+      grupa: grupaZakupu,
     );
 
     int indexKategoriaProduktu = produktController.kategorie.indexWhere((element) => element.nazwa == kategoriaProduktyController.text);
@@ -61,6 +71,7 @@ class _AddNewZakupState extends State<AddNewZakup> {
     Kategoria kategoriaProduktu = new Kategoria(
       objectId: idKategoriaProduktu,
       nazwa: kategoriaProduktyController.text,
+      grupa: grupaZakupu,
     );
 
     int indexKategoriaZakupu = produktController.kategorieZakupy.indexWhere((element) => element.nazwa == kategoriaZakupyController.text);
@@ -69,6 +80,7 @@ class _AddNewZakupState extends State<AddNewZakup> {
     KategoriaZakupy kategoriaZakupu = new KategoriaZakupy(
       objectId: idKategoriaZakupu,
       nazwa: kategoriaZakupyController.text,
+      grupa: grupaZakupu,
     );
 
     Produkt produkt = new Produkt(
@@ -86,6 +98,8 @@ class _AddNewZakupState extends State<AddNewZakup> {
       kategorieZakupy: kategoriaZakupu,
 
       atrybuty: atrybutyProduktu,
+
+      grupa: grupaZakupu,
     );
 
     produktController.addProdukt(produkt);
@@ -95,9 +109,24 @@ class _AddNewZakupState extends State<AddNewZakup> {
       objectId: uuid.v4(),
       quantityToBuy: int.parse(iloscController.text),
       produkt: produkt,
+      grupa: grupaZakupu,
     );
 
-    produktController.addNewZakup(listaZakupow);
+
+    /*
+    * Ok so the Timer is obviously not the best solution but one that works,
+    * unfortunately we never know how long it will actually take the server to respond,
+    * hopefully the response never reaches the time set in the Duration of the Timer,
+    * Still this is jank
+    * */
+
+    Timer(Duration(seconds: 1), () {
+      produktController.addNewZakup(listaZakupow);
+    });
+
+
+
+    //produktController.addNewZakup(listaZakupow);
   }
 
 
@@ -106,8 +135,6 @@ class _AddNewZakupState extends State<AddNewZakup> {
     nameController.clear();
     iloscController.clear();
   }
-
-
 
   createListKategorieProduktu(){
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
@@ -165,7 +192,12 @@ class _AddNewZakupState extends State<AddNewZakup> {
             icon: Icon(Icons.check),
             onPressed: () => {
               onConfirmPressed(),
-              Navigator.pop(context),
+
+              // One second timer might be too long
+              Timer(Duration(seconds: 1), () {
+                Navigator.pop(context);
+              }),
+
             },
           ),
         ],

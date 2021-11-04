@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 
+
 // Custom Widgets
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 
@@ -13,6 +14,7 @@ import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 // Controller
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -39,6 +41,10 @@ class AddExistingProduct extends StatelessWidget{
 
   onUpdatePressed(Produkt chosen_produkt) {
 
+    Grupa grupaProduktu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
 
     Produkt produkt = new Produkt(
       objectId: chosen_produkt.objectId, //
@@ -53,6 +59,8 @@ class AddExistingProduct extends StatelessWidget{
       kategorieZakupy: chosen_produkt.kategorieZakupy,
 
       atrybuty: chosen_produkt.atrybuty, //
+
+      grupa: grupaProduktu,
     );
 
     //produktController.addProdukt(produkt);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+
 import 'package:uuid/uuid.dart';
 
 // Custom Widgets
@@ -15,7 +16,7 @@ import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
-
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 // Controller
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
@@ -68,10 +69,16 @@ class AddExistingZakupy extends StatelessWidget{
 
   onAddZakupPressed(Produkt produkt){
 
+    Grupa grupaZakupu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
+
     ShoppingList listaZakupow = new ShoppingList(
       objectId: uuid.v4(),
       quantityToBuy: int.parse(iloscController.text),
       produkt: produkt,
+      grupa: grupaZakupu,
     );
 
     produktController.addNewZakup(listaZakupow);

@@ -30,11 +30,11 @@ class ProduktRepository{
 
   // Produkty
 
-  Future<List<Produkt>> fetchAllProdukts(String kod_grupy) async {
+  Future<RxList<Produkt>> fetchAllProdukts(String kod_grupy) async {
 
     Response response = await fetchAll(apiClient, kod_grupy);
 
-    return List<Produkt>.from(
+    return RxList<Produkt>.from(
       (response.data).map((json) => Produkt.fromJson(json))
       ); // Old method that didn't include paging
 
@@ -106,6 +106,7 @@ class ProduktRepository{
 
   // Kategorie
 
+  /* Obsolete
   Future<List<Kategoria>> fetchAllKategorie() async {
     Response response = await fetchKategorie(apiClient);
 
@@ -113,26 +114,22 @@ class ProduktRepository{
         (response.data).map((json) => Kategoria.fromJson(json))
     );
   }
+ */
 
+  //
+  Future<RxList<Kategoria>> fetchKategorieProdukt(String kod_grupy) async {
+    Response response = await fetchKategorieProdukty(apiClient, kod_grupy);
 
-
-
-
-
-  // *NEW*
-  Future<List<Kategoria>> fetchKategorieProdukt() async {
-    Response response = await fetchKategorieProdukty(apiClient);
-
-    return List<Kategoria>.from(
+    return RxList<Kategoria>.from(
         (response.data).map((json) => Kategoria.fromJson(json))
     );
   }
 
   // *NEW*
-  Future<List<KategoriaZakupy>> fetchKategorieZakup() async {
-    Response response = await fetchKategorieZakupy(apiClient);
+  Future<RxList<KategoriaZakupy>> fetchKategorieZakup(String kod_grupy) async {
+    Response response = await fetchKategorieZakupy(apiClient, kod_grupy);
 
-    return List<KategoriaZakupy>.from(
+    return RxList<KategoriaZakupy>.from(
         (response.data).map((json) => KategoriaZakupy.fromJson(json))
     );
   }
@@ -168,10 +165,10 @@ class ProduktRepository{
 
   // Zakupy
 
-  Future<List<ShoppingList>> fetchAllZakupy() async {
-    Response response = await fetchZakupy(apiClient);
+  Future<RxList<ShoppingList>> fetchAllZakupy(String kod_grupy) async {
+    Response response = await fetchZakupy(apiClient, kod_grupy);
 
-    return List<ShoppingList>.from(
+    return RxList<ShoppingList>.from(
         (response.data).map((json) => ShoppingList.fromJson(json))
     );
   }
@@ -201,8 +198,8 @@ class ProduktRepository{
 
 
 
-  Future<Response> updateZakupy(String objectId, ProduktZakupy produktZakup) async {
-    return await updateZakup(apiClient, objectId, produktZakup.toJson());
+  Future<Response> updateZakupy(String objectId, int quantity) async {
+    return await updateZakup(apiClient, objectId, quantity);
   }
 
 
@@ -212,7 +209,7 @@ class ProduktRepository{
   }
 
   // Atrybuty
-
+  //BE Obsolete
   Future<List<Atrybuty>> fetchAtrybuty(String objectId) async {
     Response response = await fetchAtrybutyById(apiClient, objectId);
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:uuid/uuid.dart';
 
 import 'package:grouped_list/grouped_list.dart';
@@ -7,6 +8,7 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 class ListaKategorii extends StatefulWidget{
   @override
@@ -27,7 +29,7 @@ class _ListaKategorii extends State<ListaKategorii>{
 
   onClearPressed() {
     nameController.clear();
-    listaController.clear();
+    //listaController.clear();
   }
 
 
@@ -44,10 +46,16 @@ class _ListaKategorii extends State<ListaKategorii>{
   */
   onAddKategoriaPressed() {
 
+    Grupa grupaKategorii = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
+
     if(listaController.text == "produkty"){
       Kategoria kategoria = new Kategoria(
         objectId: uuid.v4(),
         nazwa: nameController.text,
+        grupa: grupaKategorii,
       );
 
       produktController.addKategoriaProdukty(kategoria);
@@ -59,6 +67,7 @@ class _ListaKategorii extends State<ListaKategorii>{
       KategoriaZakupy kategoriaZakupy = new KategoriaZakupy(
         objectId: uuid.v4(),
         nazwa: nameController.text,
+        grupa: grupaKategorii,
       );
 
       produktController.addKategoriaZakupy(kategoriaZakupy);
@@ -143,6 +152,7 @@ class _ListaKategorii extends State<ListaKategorii>{
                                 listaController.text = newValue;
                                 });
                               },
+
                             items: <String>['produkty', 'zakupy']
                               .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -150,6 +160,7 @@ class _ListaKategorii extends State<ListaKategorii>{
                                   child: Text(value),
                                 );
                               }).toList(),
+
                             ),
 
                           ], // children
@@ -161,7 +172,7 @@ class _ListaKategorii extends State<ListaKategorii>{
                                 // Add new Kategoria here
                                 onAddKategoriaPressed();
                                 Navigator.pop(context);// close popup
-                                Navigator.pop(context);// go back to list of products
+                                //Navigator.pop(context);// go back to list of products
                               },
                               child: Text('Dodaj')
                           ),

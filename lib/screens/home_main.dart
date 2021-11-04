@@ -29,17 +29,22 @@ import 'package:logger/logger.dart';
 import 'dart:developer';
 
 
-class HomeMain extends StatelessWidget{
+class HomeMain extends StatefulWidget{
 
 
+  @override
+  _HomeMainState createState() => _HomeMainState();
+}
+
+class _HomeMainState extends State<HomeMain> {
   final ProduktController produktController = ProduktController.to;
 
-  // tmp add a group TODO delete
   dodajGrupe(){
     String nazwa = "Test_z_Apki_LOG";
 
     produktController.addGrupy(nazwa);
   }
+
   pokazGrupy(){
     log("lista grup po add");
     log(produktController.listaGrup.toString());
@@ -47,6 +52,15 @@ class HomeMain extends StatelessWidget{
     log(produktController.currentlyChosenGroupCode);
   }
 
+  @override
+  void initState(){
+
+    //produktController.fetchKategorieProdukty();
+    //produktController.fetchKategorieZakupy();
+    //produktController.fetchMiary();
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +255,4 @@ class HomeMain extends StatelessWidget{
       ),
 
     );
-  }// Widget build
-
-}// class HomeMain
+  }}// class HomeMain

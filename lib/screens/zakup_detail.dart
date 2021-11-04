@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:uuid/uuid.dart';
+
 
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
@@ -10,22 +12,55 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
-class ZakupDetail extends StatelessWidget{
+
+class ZakupDetail extends StatefulWidget{
 
   final ShoppingList chosen_produkt;
 
+  ZakupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+
+  @override
+  _ZakupDetailState createState() => _ZakupDetailState();
+}
+
+class _ZakupDetailState extends State<ZakupDetail> {
+
   final ProduktController produktController = ProduktController.to;
 
+  var uuid = Uuid();
+
   final nameController = TextEditingController();
+
   final iloscController = TextEditingController();
+
   final miaraController = TextEditingController();
+
   final kategoriaZakupyController = TextEditingController();
 
-
-
   onUpdatePressed(String id) {
+
+
+    Grupa grupaZakupu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
+
+    ShoppingList updatedZakup = new ShoppingList(
+      objectId: widget.chosen_produkt.objectId,
+      quantityToBuy: int.parse(iloscController.text),
+      grupa: grupaZakupu,
+      produkt: widget.chosen_produkt.produkt,
+    );
+
+    int quantity = int.parse(iloscController.text);
+
+    produktController.updateZakup(widget.chosen_produkt.objectId, quantity, updatedZakup);
+
 /*
+    produktController.updateZakup(id, listaZakupow);
+
     ProduktZakupy zakup = new ProduktZakupy(
       objectIdProduktu: chosen_produkt.objectIdProduktu,
 
@@ -35,21 +70,16 @@ class ZakupDetail extends StatelessWidget{
       kategoriaZakupy: chosen_produkt.kategoriaZakupy,
     );
 
-    produktController.updateZakup(id, zakup);
+
 
  */
   }
-
-
-
-
-  ZakupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
 
-    iloscController.text = chosen_produkt.quantityToBuy.toString();
+    iloscController.text = widget.chosen_produkt.quantityToBuy.toString();
 
 
 
@@ -65,7 +95,7 @@ class ZakupDetail extends StatelessWidget{
             icon: Icon(Icons.check),
             onPressed: () => {
 
-              onUpdatePressed(chosen_produkt.objectId),
+              onUpdatePressed(widget.chosen_produkt.objectId),
               Navigator.pop(context),
 
             },
@@ -126,7 +156,7 @@ class ZakupDetail extends StatelessWidget{
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                chosen_produkt.produkt.nazwaProduktu,
+                widget.chosen_produkt.produkt.nazwaProduktu,
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
@@ -134,7 +164,7 @@ class ZakupDetail extends StatelessWidget{
               ),
             ),
 
-            Text("Ilość " + chosen_produkt.produkt.miara.miara + " produktu:"),
+            Text("Ilość " + widget.chosen_produkt.produkt.miara.miara + " produktu:"),
 
             SpinBox(
               value: double.parse(iloscController.text),
@@ -148,7 +178,7 @@ class ZakupDetail extends StatelessWidget{
             ),
 
 
-            Text("Kategoria zakupu " + chosen_produkt.produkt.kategorieZakupy.nazwa,
+            Text("Kategoria zakupu " + widget.chosen_produkt.produkt.kategorieZakupy.nazwa,
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold
@@ -176,7 +206,7 @@ class ZakupDetail extends StatelessWidget{
                         children: [
 
 
-                          Text(chosen_produkt.produkt.atrybuty[index].nazwa),
+                          Text(widget.chosen_produkt.produkt.atrybuty[index].nazwa),
                         ],
 
                       ),
@@ -186,7 +216,7 @@ class ZakupDetail extends StatelessWidget{
                           Divider(color: Colors.black),
 
 
-                      itemCount: chosen_produkt.produkt.atrybuty.length,
+                      itemCount: widget.chosen_produkt.produkt.atrybuty.length,
                     ),
 
                   ),
@@ -205,5 +235,4 @@ class ZakupDetail extends StatelessWidget{
 
     );
   }
-
 }

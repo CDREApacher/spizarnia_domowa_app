@@ -140,9 +140,13 @@ class _TrybZakupowyDetailState extends State<TrybZakupowyDetail> {
 
 
   onCheckUpdatePressed(){
+
     if(widget.chosen_produkt.autoZakup == false){
       onUpdatePressed(widget.chosen_produkt.objectId);
-    }else{
+    }
+    /*
+    else{
+
       if( (int.parse(iloscController.text) >= widget.chosen_produkt.progAutoZakupu) || (widget.chosen_produkt.ilosc <= int.parse(iloscController.text)) ){ // chosen_produkt.ilosc after update >= chosen_produkt.progAutoZakupu
         onUpdatePressed(widget.chosen_produkt.objectId);
       }else{// chosen_produkt.ilosc after update < chosen_produkt.progAutoZakupu
@@ -198,7 +202,9 @@ class _TrybZakupowyDetailState extends State<TrybZakupowyDetail> {
 
     }// First else
 
-  }
+    */
+
+  }//onCheckUpdate pressed
 
   /*
   onScreenOpened(objectId){

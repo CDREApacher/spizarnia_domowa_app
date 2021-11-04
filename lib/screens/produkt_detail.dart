@@ -5,6 +5,7 @@ import 'package:flutter_spinbox/material.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
+
 import 'package:uuid/uuid.dart';
 
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
@@ -14,11 +15,13 @@ import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
-
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
+
+import 'dart:developer';
 
 class ProduktDetail extends StatefulWidget {
 
@@ -81,7 +84,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
     );
 */
 
-
+    Grupa grupaProduktu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
 
     int indexKategoriaProduktu = produktController.kategorie.indexWhere((element) => element.nazwa == kategoriaProduktyController.text);
     String idKategoriaProduktu = produktController.kategorie[indexKategoriaProduktu].objectId;
@@ -89,6 +95,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     Kategoria kategoriaProduktu = new Kategoria(
       objectId: idKategoriaProduktu,
       nazwa: kategoriaProduktyController.text,
+      grupa: grupaProduktu,
     );
 
 
@@ -99,6 +106,17 @@ class _ProduktDetailState extends State<ProduktDetail> {
     KategoriaZakupy kategoriaZakupu = new KategoriaZakupy(
       objectId: idKategoriaZakupu,
       nazwa: kategoriaZakupyController.text,
+      grupa: grupaProduktu
+    );
+
+
+    int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
+    String idMiara = produktController.miary[indexMiara].objectId;
+
+    Miara miaraProduktu = new Miara(
+      objectId: idMiara,
+      miara: miaraController.text,
+      grupa: grupaProduktu,
     );
 
 
@@ -112,11 +130,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
       progAutoZakupu: int.parse(iloscAutoZakupuController.text),
       autoZakup: widget.chosen_produkt.autoZakup, //
 
-      miara: widget.chosen_produkt.miara,
+      //miara: widget.chosen_produkt.miara,
+      miara: miaraProduktu,
       kategorieProdukty: kategoriaProduktu,
       kategorieZakupy: kategoriaZakupu,
 
       atrybuty: widget.chosen_produkt.atrybuty, //
+
+      grupa: grupaProduktu,
     );
 
     //produktController.addProdukt(produkt);
@@ -140,12 +161,18 @@ class _ProduktDetailState extends State<ProduktDetail> {
   */
 
 
-  onCheckUpdatePressed(){
-    if(widget.chosen_produkt.autoZakup == false){
+  onCheckUpdatePressed() {
+    if (widget.chosen_produkt.autoZakup == false) {
       onUpdatePressed(widget.chosen_produkt.objectId);
-    }else{
+    } else {
+
+      /*
+      // This code is for BE legacy -- figure out the one wee need
+
+
       if( (int.parse(iloscController.text) >= widget.chosen_produkt.progAutoZakupu) || (widget.chosen_produkt.ilosc <= int.parse(iloscController.text)) ){ // chosen_produkt.ilosc after update >= chosen_produkt.progAutoZakupu
         onUpdatePressed(widget.chosen_produkt.objectId);
+
       }else{// chosen_produkt.ilosc after update < chosen_produkt.progAutoZakupu
         int index = produktController.findProduktInZakupyList(widget.chosen_produkt.objectId);
 
@@ -188,8 +215,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
           }else{
             zakup.ilosc += wynik;
           }
-
-          produktController.updateZakup(zakup.objectId, zakup); // update zakupy
+          //-------------------------------------------------------------------------------------------------------------------------------------------------------------//
+          //produktController.updateZakup(zakup.objectId, zakup); // update zakupy
 
           onUpdatePressed(widget.chosen_produkt.objectId); // update produkty
 
@@ -199,7 +226,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
     }// First else
 
-  }
+
+
+    */
+
+
+    }
+
+  }//onCheckUpdatePressed
 
   /*
   onScreenOpened(objectId){
@@ -209,18 +243,30 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
   onAddAtributePressed(String nazwa){
+
+    Atrybuty nowyAtrybut = Atrybuty(
+      nazwa: nazwa,
+      objectId: widget.chosen_produkt.objectId, // Nadane przez serwer ID Atrybutu!!! Nie może tak być
+    );
+
+
+    //widget.chosen_produkt.atrybuty.add(nowyAtrybut);
+
+
     String nazwaAtrybutu = nazwa;
     String idProduktu = widget.chosen_produkt.objectId;
 
     produktController.addAtrybut(idProduktu, nazwaAtrybutu);
-    Navigator.pop(context);
+    Navigator.pop(context);// Exit produkt Detail
   }
 
   onDeleteAttributePressed(String atrybutId){
     String produktId = widget.chosen_produkt.objectId;
 
     produktController.deleteAtrybut(produktId, atrybutId);
-    Navigator.pop(context);
+    //Navigator.pop(context);// Exit produkt Detail
+
+    //widget.chosen_produkt.atrybuty.removeWhere((element) => element.objectId == atrybutId);
   }
 
   createListKategorieProduktu(){
@@ -245,13 +291,24 @@ class _ProduktDetailState extends State<ProduktDetail> {
     print(produktController.displayKategorieZakupy);
   }
 
+  createListMiary(){
+    if(produktController.displayMiary.length == 0){
+      for (var i = 0; i < produktController.miary.length; i++) {
+        produktController.displayMiary.add(produktController.miary[i].miara);
+      }
+    }
+    print(produktController.displayMiary);
+  }
+
 
   @override
   void initState() {
     createListKategorieProduktu();
     createListKategorieZakupu();
+    createListMiary();
     kategoriaProduktyController.text = widget.chosen_produkt.kategorieProdukty.nazwa;
     kategoriaZakupyController.text = widget.chosen_produkt.kategorieZakupy.nazwa;
+    miaraController.text = widget.chosen_produkt.miara.miara;
     super.initState();
   }
 
@@ -303,6 +360,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     iloscAutoZakupuController.text = widget.chosen_produkt.progAutoZakupu.toString();
     iloscController.text = widget.chosen_produkt.ilosc.toString();
     nameController.text = widget.chosen_produkt.nazwaProduktu;
+    //miaraController.text = widget.chosen_produkt.miara.miara;
     //onScreenOpened(widget.chosen_produkt.objectId);
 
     return Scaffold(
@@ -451,6 +509,62 @@ class _ProduktDetailState extends State<ProduktDetail> {
               },
             ),
 
+
+
+
+
+
+
+
+
+
+            SizedBox(
+              height: 10,
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Miara produktu: ",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+
+//-------------------------------------------------------------------------------------
+
+                DropdownButton(
+                  value: miaraController.text,
+                  icon: Icon(Icons.arrow_downward_rounded),
+                  iconSize: 15,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+
+                  underline: Container(
+                    height: 2,
+                    color: Colors.blue,
+                  ),
+
+                  onChanged: (String newValueX){
+                    setState(() {
+                      miaraController.text = newValueX;
+                      log("Miara Controller text: " + miaraController.text);
+                    });
+                  },
+
+                  items: produktController.displayMiary.map((miara) {
+                    return DropdownMenuItem(
+                      child: new Text(miara),
+                      value: miara,
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+
+//-------------------------------------------------------------------------------------
+
             SizedBox(
               height: 10,
             ),
@@ -465,7 +579,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
                   ),
                 ),
 
-
                 DropdownButton(
                   value: kategoriaProduktyController.text,
                   icon: Icon(Icons.arrow_downward_rounded),
@@ -478,9 +591,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
                     color: Colors.blue,
                   ),
 
-                  onChanged: (String newValue){
+                  onChanged: (String newValueY){
                     setState(() {
-                      kategoriaProduktyController.text = newValue;
+                      kategoriaProduktyController.text = newValueY;
+                      log("Kategoria Produkty text: " + kategoriaProduktyController.text);
                     });
                   },
 
@@ -528,6 +642,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
                   onChanged: (String newValueZ){
                     setState(() {
                       kategoriaZakupyController.text = newValueZ;
+                      log("Kategoria zakupy text: " + kategoriaZakupyController.text);
                     });
                   },
 
@@ -590,9 +705,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
 
-
-
-
             GetBuilder<ProduktController>(
                 builder: (produktController) =>
 
@@ -627,13 +739,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
                     ),
 
             ),
-
-
-
-
-
-
-
 
           ],
 

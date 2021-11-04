@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 import 'package:uuid/uuid.dart';
 
 // Custom Widgets
@@ -282,6 +283,15 @@ class Home extends StatelessWidget{
               ),
 
               child: Text('Menu'),
+            ),
+
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                Get.back();
+                Get.offAll(HomeMain());
+
+              },
             ),
 
             ListTile(

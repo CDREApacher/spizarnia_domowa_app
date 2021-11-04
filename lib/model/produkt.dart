@@ -4,6 +4,8 @@ import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
 
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 class Produkt {
   String objectId;
   String nazwaProduktu;
@@ -13,7 +15,7 @@ class Produkt {
   bool autoZakup;
   KategoriaZakupy kategorieZakupy;
   Kategoria kategorieProdukty;
-  List <Atrybuty> atrybuty;
+  RxList<Atrybuty> atrybuty;
   Grupa grupa;
 
 
@@ -54,7 +56,7 @@ class Produkt {
     kategorieZakupy = KategoriaZakupy.fromJson(json['categoryShopping']);
     if (json['attributeList'] != null) {
       // ignore: deprecated_member_use
-      atrybuty = new List<Atrybuty>();
+      atrybuty = new RxList<Atrybuty>();
       json['attributeList'].forEach((v) {
         atrybuty.add(new Atrybuty.fromJson(v));
       });

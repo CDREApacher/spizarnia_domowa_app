@@ -8,7 +8,7 @@ Future<Response> fetchAll(Dio dio, int pgOffset){
   return dio.get("/data/Produkt", queryParameters: {'pageSize' : 100, 'offset' : pgOffset});
 }
 */
-// *NEW*
+//
 Future<Response> fetchAll(Dio dio, String kod_grupy){
   return dio.get("/products/all?code=$kod_grupy");
 }
@@ -79,13 +79,13 @@ Future<Response> fetchKategorie(Dio dio){
 
 
 // *NEW*
-Future<Response> fetchKategorieProdukty(Dio dio){
-  return dio.get("/category-product/all");
+Future<Response> fetchKategorieProdukty(Dio dio, String kod_grupy){
+  return dio.get("/category-product/all?code=$kod_grupy");
 }
 
 // *NEW*
-Future<Response> fetchKategorieZakupy(Dio dio){
-  return dio.get("/category-shopping/all");
+Future<Response> fetchKategorieZakupy(Dio dio, String kod_grupy){
+  return dio.get("/category-shopping/all?code=$kod_grupy");
 }
 
 
@@ -122,8 +122,8 @@ Future<Response> fetchZakupy(Dio dio){
   return dio.get("/data/Lista_Zakupow", queryParameters: {'pageSize' : 100});
 }
 */
-Future<Response> fetchZakupy(Dio dio){
-  return dio.get("/shopping-list/all");
+Future<Response> fetchZakupy(Dio dio, String kod_grupy){
+  return dio.get("/shopping-list/all?code=$kod_grupy");
 }
 /*
 Future<Response> addZakup(Dio dio, Map<String, dynamic> dane){
@@ -150,9 +150,14 @@ Future<Response> buyProdukt(Dio dio, String produktId, int quantity) {
 
 
 
-
+/* BE
 Future<Response> updateZakup(Dio dio, String objectId, Map<String, dynamic> dane){
   return dio.put("/data/Lista_Zakupow/$objectId", data: dane);
+}
+*/
+
+Future<Response> updateZakup(Dio dio, String objectId, int quantity){
+  return dio.put("/shopping-list/quantity/$objectId?quantity=$quantity");
 }
 
 /*
@@ -163,7 +168,7 @@ Future<Response> deleteZakupy(Dio dio, String objectId){
 
 
 // Atrybuty
-
+// BE Obsolete
 Future<Response> fetchAtrybutyById(Dio dio, String objectId){
   return dio.get("/data/Atrybuty?where=objectIdProdukt%3D'$objectId'", queryParameters: {'pageSize' : 100});
 }

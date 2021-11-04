@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 
+
 import 'package:uuid/uuid.dart';
 
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
@@ -10,7 +11,7 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
-
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
@@ -44,6 +45,11 @@ class _AddProduktState extends State<AddProdukt> {
 
   onConfirmPressed() {
 
+    Grupa grupaProduktu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode,
+    );
+
     List<Atrybuty> atrybutyProduktu = [];
 
     int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
@@ -52,6 +58,7 @@ class _AddProduktState extends State<AddProdukt> {
     Miara miaraProduktu = new Miara(
       objectId: idMiara,
       miara: miaraController.text,
+      grupa: grupaProduktu,
     );
 
     int indexKategoriaProduktu = produktController.kategorie.indexWhere((element) => element.nazwa == kategoriaProduktyController.text);
@@ -60,6 +67,7 @@ class _AddProduktState extends State<AddProdukt> {
     Kategoria kategoriaProduktu = new Kategoria(
       objectId: idKategoriaProduktu,
       nazwa: kategoriaProduktyController.text,
+      grupa: grupaProduktu,
     );
 
     int indexKategoriaZakupu = produktController.kategorieZakupy.indexWhere((element) => element.nazwa == kategoriaZakupyController.text);
@@ -68,6 +76,7 @@ class _AddProduktState extends State<AddProdukt> {
     KategoriaZakupy kategoriaZakupu = new KategoriaZakupy(
       objectId: idKategoriaZakupu,
       nazwa: kategoriaZakupyController.text,
+      grupa: grupaProduktu
     );
 
     Produkt produkt = new Produkt(
@@ -85,6 +94,8 @@ class _AddProduktState extends State<AddProdukt> {
       kategorieZakupy: kategoriaZakupu,
 
       atrybuty: atrybutyProduktu,
+
+      grupa: grupaProduktu,
     );
 
     produktController.addProdukt(produkt);
