@@ -225,5 +225,9 @@ Future<Response> deleteMiary(Dio dio, String objectId){
 // Grupy
 Future<Response> addGrupy(Dio dio, String nazwa){
   return dio.post("/groups?name=$nazwa");
-
 }
+
+Future<Response> joinGrupy(Dio dio, String kod_grupy){
+  return dio.get("/groups?code=$kod_grupy");
+}
+

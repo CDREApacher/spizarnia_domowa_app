@@ -15,6 +15,7 @@ import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 // Controller
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 // Screens Widgets
 import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
@@ -27,7 +28,8 @@ import 'package:spizarnia_domowa_app/screens/home.dart';
 // Debug
 import 'package:logger/logger.dart';
 import 'dart:developer';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class HomeMain extends StatefulWidget{
 
@@ -45,11 +47,67 @@ class _HomeMainState extends State<HomeMain> {
     produktController.addGrupy(nazwa);
   }
 
-  pokazGrupy(){
+  pokazGrupy() async {
+    //produktController.listaGrup.add(produktController.currentlyChosenGroup);
     log("lista grup po add");
-    log(produktController.listaGrup.toString());
-    log("Aktualnie wybrana grupa:");
+    log(produktController.listaGrup[0].nazwa_server);
+    log("Aktualnie wybrana grupa NAZWA:");
+    log(produktController.currentlyChosenGroupName);
+    log("Aktualnie wybrana grupa KOD:");
     log(produktController.currentlyChosenGroupCode);
+
+    /*
+    Grupa g1 = new Grupa(
+      nazwa_server: "Grupa1",
+      kod_grupy: "11111"
+    );
+
+    Grupa g2 = new Grupa(
+      nazwa_server: "Grupa2",
+      kod_grupy: "22222"
+    );
+
+    produktController.listaGrupTest.add(g1);
+    produktController.listaGrupTest.add(g2);
+
+
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+
+    var encodedListaGrupTest = json.encode(produktController.listaGrupTest);
+
+    await sprefs.setString('spidom_group_list_test', encodedListaGrupTest);
+    */
+
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+
+    String encodedGroupString = sprefs.getString('spidom_group_list');
+    log("Encoded");
+    log(encodedGroupString);
+
+    Iterable l = json.decode(encodedGroupString);
+    produktController.listaGrup = RxList.from(l.map((model) => Grupa.fromJson(model)));
+
+
+    log("lista grup po MAGICZNYCH WIDZIMISIACH");
+
+    produktController.listaGrup.forEach((Grupa grupa) {
+      log(grupa.nazwa_server);
+      log(grupa.kod_grupy);
+    });
+
+
+    /*
+    produktController.listaGrupTest.forEach((Grupa grupa) {
+      log(grupa.nazwa_server);
+      log(grupa.kod_grupy);
+    });
+
+    Grupa app = new Grupa(
+      nazwa_server: "Test_z_Apki_LOG",
+      kod_grupy: "YtUed",
+    );
+    */
+    //produktController.listaGrup.add(app);
   }
 
   @override
@@ -74,6 +132,7 @@ class _HomeMainState extends State<HomeMain> {
         title: Text('Domowa spiżarnia'),
 
         actions: <Widget>[
+          /*
           IconButton(
             icon: Icon(Icons.group_add),
             onPressed: () => {
@@ -86,7 +145,7 @@ class _HomeMainState extends State<HomeMain> {
               pokazGrupy()
             },
           ),
-
+          */
 
         ],
 
@@ -145,9 +204,13 @@ class _HomeMainState extends State<HomeMain> {
 
               produktController.fetchZakupy();
 
+              produktController.doKupienia.clear();
               produktController.zakupyWyswietlaj.clear();
               if(produktController.zakupyWyswietlaj.isEmpty){
-                produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
+                //produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
+                
+                produktController.zakupyWyswietlaj = RxList.from(produktController.listaZakupow);
+                
               }
 
               Navigator
@@ -171,6 +234,12 @@ class _HomeMainState extends State<HomeMain> {
           ),
           InkWell(
             onTap: () {
+
+              /*
+              produktController.listaGrupWyswietlaj = RxList.from(produktController.listaGrup);
+              log(produktController.listaGrup.toString());
+              log(produktController.listaGrupWyswietlaj.toString());
+              */
 
               Navigator
                   .push(context, MaterialPageRoute(builder: (context) => ListaGrup()));

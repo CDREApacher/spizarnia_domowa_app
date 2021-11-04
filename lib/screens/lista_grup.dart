@@ -81,7 +81,7 @@ class _ListaGrupState extends State<ListaGrup> {
                   builder: (produktController) =>
 
                       ListView.builder(
-                          itemCount: produktController.produkty.length,
+                          itemCount: produktController.listaGrup.length,
                           itemBuilder: (context, index) =>
                               Container(
                                 height: 55,
@@ -92,6 +92,12 @@ class _ListaGrupState extends State<ListaGrup> {
                                   child: InkWell(
                                     onTap: () {
 
+
+                                      Navigator
+                                          .push(context, MaterialPageRoute(builder: (context) => GroupDetail(chosen_group: produktController.listaGrup[index])));
+
+
+
                                     },
                                     child:Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,7 +105,7 @@ class _ListaGrupState extends State<ListaGrup> {
                                         Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
                                           child: Text(
-                                              produktController.produkty[index].nazwaProduktu
+                                              produktController.listaGrup[index].nazwa_server
                                           ),
                                         ),
                                         Icon(Icons.add_rounded),

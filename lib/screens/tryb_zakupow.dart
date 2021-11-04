@@ -95,15 +95,9 @@ class _TrybZakupowState extends State<TrybZakupow> {
     produktController.fetchZakupy();
 
 
-    Navigator.pop(context);
-    /*
-    Navigator.pop(context);
-    */
-    /*
-    Navigator
-        .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
-        .then((value) => null);
-    */
+    //Navigator.pop(context);
+    Get.offAll(() => HomeMain());
+
 
 
 
@@ -139,7 +133,10 @@ class _TrybZakupowState extends State<TrybZakupow> {
         ],
 
       ),
-      // TODO get both lists to display
+
+      //  get both lists to display
+
+
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -226,8 +223,8 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                                 IconButton(
                                                     icon: Icon(Icons.add_shopping_cart_rounded),
                                                     onPressed: () {
-                                                      // TODO remove from zakupy list
-                                                      // TODO add to doKupienia list
+                                                      //  remove from zakupy list
+                                                      //  add to doKupienia list
                                                       onAddToCart(zakup);
                                                     }
                                                 ),
@@ -271,7 +268,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
               ),
             ),
 
-            // TODO Display list of produkts added to doKupienia
+            // Display list of produkts added to doKupienia
 
             Expanded(
               child: GetBuilder<ProduktController> (

@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 import 'package:uuid/uuid.dart';
 
@@ -14,6 +17,10 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+
+import 'package:get/get.dart';
+
+import 'dart:developer';
 
 class JoinGroup extends StatefulWidget {
 
@@ -32,29 +39,26 @@ class _JoinGroupState extends State<JoinGroup> {
 
   final nameController = TextEditingController(); //
 
-  final iloscController = TextEditingController(); //
+  final kodController = TextEditingController(); //
 
-  final miaraController = TextEditingController();
+  final qr = TextEditingController();
 
-  final kategoriaProduktyController = TextEditingController();
+  final a = TextEditingController();
 
-  final kategoriaZakupyController = TextEditingController();
 
-  final atrybutController = TextEditingController();
-
-  final iloscAutoZakupuController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   bool _checkbox = false;
 
   String scanResult;
+
+
+
+
 
   Future scanBarcode() async {
     String scanResult;
@@ -87,10 +91,49 @@ class _JoinGroupState extends State<JoinGroup> {
     );
 
     setState(() => this.scanResult = scanResult);
-    atrybutController.text = scanResult;
+
+    if(scanResult != "-1"){
+      kodController.text = scanResult;
+      dolaczDoGrupy();
+    }
+
+
   }
 
 
+
+  void utworzGrupe() {
+
+    log(nameController.text);
+    produktController.addGrupyTest(nameController.text);
+    nameController.clear();
+
+  }
+
+  void dolaczDoGrupy(){
+
+
+    log(kodController.text);
+    produktController.joinGrupyTest(kodController.text);
+    kodController.clear();
+
+
+
+
+    produktController.listaGrup.forEach((Grupa grupa) {
+      log("Lista zapisana");
+      log(grupa.nazwa_server);
+      log(grupa.kod_grupy);
+    });
+
+
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +153,8 @@ class _JoinGroupState extends State<JoinGroup> {
         mainAxisSpacing: 10,
         crossAxisCount: 2,
         children: <Widget>[
+
+
           InkWell(
             onTap: () {
               showDialog(context: context, builder: (_) =>
@@ -117,13 +162,8 @@ class _JoinGroupState extends State<JoinGroup> {
                     title: Text('Dołącz do grupy:'),
 
                     content: TextField(
-                      controller: atrybutController,
+                      controller: kodController,
                       decoration: InputDecoration(hintText: "kod grupy"),
-
-                      /* onChanged: (value) {
-                    String val = value;
-                    atrybutController.text = val;
-                  }, // Allows for spelling backwards */
 
                     ),
 
@@ -133,8 +173,7 @@ class _JoinGroupState extends State<JoinGroup> {
                       TextButton(
                           onPressed: () {
 
-                           // onAddAtributePressed(atrybutController.text);
-                            //onScreenOpened(widget.chosen_produkt.objectId);
+                            dolaczDoGrupy();
                             Navigator.pop(context);
                           },
                           child: Text('Dołącz')),
@@ -159,6 +198,11 @@ class _JoinGroupState extends State<JoinGroup> {
               color: Colors.blue,
             ),
           ),
+
+
+
+
+
           InkWell(
             onTap: () {
               showDialog(context: context, builder: (_) =>
@@ -166,13 +210,8 @@ class _JoinGroupState extends State<JoinGroup> {
                     title: Text('Utwórz grupę:'),
 
                     content: TextField(
-                      controller: atrybutController,
+                      controller: nameController,
                       decoration: InputDecoration(hintText: "Nazwa grupy"),
-
-                      /* onChanged: (value) {
-                    String val = value;
-                    atrybutController.text = val;
-                  }, // Allows for spelling backwards */
 
                     ),
 
@@ -182,8 +221,7 @@ class _JoinGroupState extends State<JoinGroup> {
                       TextButton(
                           onPressed: () {
 
-                            // onAddAtributePressed(atrybutController.text);
-                            //onScreenOpened(widget.chosen_produkt.objectId);
+                            utworzGrupe();
                             Navigator.pop(context);
                           },
                           child: Text('Utwórz')),
@@ -208,6 +246,11 @@ class _JoinGroupState extends State<JoinGroup> {
               color: Colors.blue,
             ),
           ),
+
+
+
+
+
           InkWell(
             onTap: () {
 

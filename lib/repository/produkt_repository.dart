@@ -292,4 +292,17 @@ class ProduktRepository{
 
   }
 
+  Future<Grupa> joinGrupa(String kod_grupy) async {
+    Response response = await joinGrupy(apiClient, kod_grupy);
+
+    return Grupa.fromJson(response.data);
+    /*
+    if(response.data != ""){
+      return Grupa.fromJson(response.data);
+    }else{
+      return null;
+    }
+    */
+  }
+
 } // class ProduktRepository

@@ -15,9 +15,12 @@ import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/repository/produkt_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get_core/get_core.dart';
 
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/instance_manager.dart';
+
+
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -62,6 +65,10 @@ class ProduktController extends GetxController {
 
   List<String> displayMiary = [];
 
+
+  Grupa pobranaGrupa;
+
+
   Produkt selectedProduct;
   ProduktRepository produktRepository = ProduktRepository();
 
@@ -76,9 +83,14 @@ class ProduktController extends GetxController {
   String currentlyChosenGroupCode;
   String currentlyChosenGroupName;
 
-  List<dynamic> listaGrup = [];
+  //RxList<dynamic> listaGrup = <dynamic>[].obs;
+  RxList<Grupa> listaGrup = <Grupa>[].obs;
+
+  RxList<Grupa> listaGrupWyswietlaj = <Grupa>[].obs;
 
 
+
+  RxList<Grupa> listaGrupTest = <Grupa>[].obs;
 
 
   // Produkty
@@ -362,15 +374,59 @@ class ProduktController extends GetxController {
   getDefaultDeviceGroup() async {
     SharedPreferences sprefs = await SharedPreferences.getInstance();
 
+    /*
     currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
     currentlyChosenGroupName = sprefs.getString('spidom_default_group_name');
+    */
+
+    currentlyChosenGroupCode = "fGI57";
+    currentlyChosenGroupName = "Spiżarniowa grupa";
+
     log("Defaultowo wybrana grupa: kod:");
     //log(currentlyChosenGroup.nazwa_server);
     log(currentlyChosenGroupCode);
     log("Defaultowo wybrana grupa: nazwa:");
     log(currentlyChosenGroupName);
-    log("Currently chosen group object");
-    log(currentlyChosenGroup.toString());
+    log("Currently chosen group object"); // will always be null without creating the object
+    log(currentlyChosenGroup.toString()); // will always be null without creating the object
+
+    /*
+    * FOR 5.11
+    * Hardcode a group here that is already created on the server
+    * Forgo SharedPreferences for now
+    *
+    * */
+
+
+    /* Forgo SharedPreferences for now
+
+    String encodedGroupString = sprefs.getString('spidom_group_list');
+    log("Encoded");
+    log(encodedGroupString);
+
+    Iterable l = json.decode(encodedGroupString);
+    listaGrup = RxList.from(l.map((model) => Grupa.fromJson(model)));
+
+    */
+
+    Grupa hardcoded = new Grupa(
+      nazwa_server: currentlyChosenGroupName,
+      kod_grupy: currentlyChosenGroupCode
+    );
+
+    listaGrup.add(hardcoded);
+
+
+    log("lista grup po MAGICZNYCH WIDZIMISIACH juz jako OBIEKTY");
+
+    listaGrup.forEach((Grupa grupa) {
+      log(grupa.nazwa_server);
+      log(grupa.kod_grupy);
+    });
+
+
+
+
 
 
     // HERE call all the functions that download the data from the server. DO NOT do that in initstate of main.dart or homemain.dart
@@ -378,6 +434,21 @@ class ProduktController extends GetxController {
     fetchKategorieProdukty();
     fetchKategorieZakupy();
     fetchAllProdukts();
+    fetchZakupy();
+
+  }
+
+  addGrupyTest(String nazwa) async {
+    pobranaGrupa = await produktRepository.addGrupa(nazwa);
+
+    listaGrup.add(pobranaGrupa);
+
+    listaGrup.forEach((Grupa grupa) {
+      log(grupa.nazwa_server);
+      log(grupa.kod_grupy);
+    });
+
+    update();
 
   }
 
@@ -387,7 +458,10 @@ class ProduktController extends GetxController {
     currentlyChosenGroup = await produktRepository.addGrupa(nazwa);
     currentlyChosenGroupCode = currentlyChosenGroup.kod_grupy;
     currentlyChosenGroupName = currentlyChosenGroup.nazwa_server;
-
+    /*
+    currentlyChosenGroupCode = YtUed;
+    currentlyChosenGroupName = Test_z_Apki_LOG;
+    */
     // Set the group as the current chosen group in persistent storage
     SharedPreferences sprefs = await SharedPreferences.getInstance();
     sprefs.setString('spidom_current_group', currentlyChosenGroupCode);
@@ -398,7 +472,8 @@ class ProduktController extends GetxController {
     String encGroupListString = (sprefs.getString('spidom_group_list') ?? "");
 
     if(encGroupListString != "") {
-      listaGrup = json.decode(encGroupListString);
+      Iterable l = json.decode(encGroupListString);
+      listaGrup = RxList<Grupa>.from(l.map((model) => Grupa.fromJson(model)));
     }
     //log(listaGrup.toString());
     listaGrup.add(currentlyChosenGroup);// Right after adding is just an instance of not a readable name and code
@@ -414,20 +489,9 @@ class ProduktController extends GetxController {
     sprefs.setString('spidom_default_group_name', currentlyChosenGroup.nazwa_server);
     sprefs.setString('spidom_default_group_code', currentlyChosenGroupCode);
 
-    /* Maybe dont overdo it, check if method above works
-    Map<String, dynamic> toMap(Grupa grupa) => {
-      'name' : grupa.nazwa_server,
-      'code': grupa.kod_grupy,
-    };
 
-    String encode(List<Grupa> grupy) => json.encode(
-      grupy
-          .map<Map<String, dynamic>>((grupa) => toMap(grupa))
-          .toList(),
-    );
-    */
 
-    // TODO dodać obsługę grup
+
     /*
     * After receiving a response save the group to a list in Shared Preferences // done
     * Also set the group as the current used one //done
@@ -436,6 +500,26 @@ class ProduktController extends GetxController {
 
   }
 
+  joinGrupyTest(String kod_grupy) async {
+
+    pobranaGrupa = await produktRepository.joinGrupa(kod_grupy);
+    listaGrup.add(pobranaGrupa);
+
+    listaGrup.forEach((Grupa grupa) {
+      log(grupa.nazwa_server);
+      log(grupa.kod_grupy);
+    });
+
+    update();
+
+  }
+
+  joinGrupy(String kod_grupy) async {
+    pobranaGrupa = await produktRepository.joinGrupa(kod_grupy);
+    currentlyChosenGroup = pobranaGrupa;
+    currentlyChosenGroupName = pobranaGrupa.nazwa_server;
+    currentlyChosenGroupCode = pobranaGrupa.kod_grupy;
+  }
 
 
   // Funkcje

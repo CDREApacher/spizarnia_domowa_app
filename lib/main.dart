@@ -36,18 +36,13 @@ class _MyAppState extends State<MyApp> {
     produktController.getDefaultDeviceGroup();
     produktController.getDeviceGroupList();
     super.initState();
-    //produktController.fetchAllProdukts();
 
+    //produktController.fetchAllProdukts();
     //produktController.fetchKategorieProdukty();
     //produktController.fetchKategorieZakupy();
     //produktController.fetchMiary();
-
     //produktController.fetchZakupy();
 
-    //produktController.fetchAllKategorie();
-    //produktController.fetchZakupy();
-
-    //produktController.fetchProduktyKategorii("napoje");
   }
 
   @override

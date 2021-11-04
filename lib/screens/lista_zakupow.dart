@@ -71,10 +71,10 @@ class _ListaZakupow extends State<ListaZakupow>{
               tooltip: "Tryb zakupów",
               onPressed: () {
 
-                //produktController.zakupyWyswietlaj = produktController.zakupy.map((v) => v).toList();
+                produktController.doKupienia.clear();
                 produktController.zakupyWyswietlaj.clear();
                 if(produktController.zakupyWyswietlaj.isEmpty){
-                  produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
+                  produktController.zakupyWyswietlaj = RxList.from(produktController.listaZakupow);
                 }
 
 

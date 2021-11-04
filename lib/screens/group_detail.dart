@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/model/produkt.dart';
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
 class GroupDetail extends StatefulWidget {
 
-  //final Produkt chosen_produkt;
+  final Grupa chosen_group;
 
 
-  //GroupDetail({Key key, @required this.chosen_produkt}) : super(key: key);
+  GroupDetail({Key key, @required this.chosen_group}) : super(key: key);
 
   @override
   _GroupDetailState createState() => _GroupDetailState();
@@ -89,14 +90,17 @@ class _GroupDetailState extends State<GroupDetail> {
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
+            Text("Nazwa Grupy"),
 
             Align(
               alignment: Alignment.center,
-              child:Text(
-                "Nazwa grupy",
+              child:
+
+              Text(
+                widget.chosen_group.nazwa_server,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 42,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold
                 ),
               ),
@@ -104,22 +108,26 @@ class _GroupDetailState extends State<GroupDetail> {
 
 
             SizedBox(height: 36),
-            QrImage(
-              data: "5Bx7p",
-              version: QrVersions.auto,
-              padding: EdgeInsets.all(100),
-            ),
+
+            Text("Kod Grupy"),
 
             Text(
-              "5Bx7p",
+              widget.chosen_group.kod_grupy,
               //textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 80,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold
               ),
             ),
 
+            SizedBox(height: 36),
 
+            QrImage(
+              data: widget.chosen_group.kod_grupy,
+              version: QrVersions.auto,
+              padding: EdgeInsets.fromLTRB(1, 1, 1, 1),
+              size: 400,
+            ),
 
 
           ],
