@@ -14,6 +14,7 @@ import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
@@ -49,8 +50,8 @@ class _AddProduktState extends State<AddProdukt> {
       nazwa_server: produktController.currentlyChosenGroupName,
       kod_grupy: produktController.currentlyChosenGroupCode,
     );
-
-    List<Atrybuty> atrybutyProduktu = [];
+    //----------------------------------------------------------------------------------------------------
+    RxList<Atrybuty> atrybutyProduktu = <Atrybuty>[].obs;
 
     int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
     String idMiara = produktController.miary[indexMiara].objectId;
