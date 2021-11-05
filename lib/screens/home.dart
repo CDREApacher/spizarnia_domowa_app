@@ -20,6 +20,7 @@ import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 
 
@@ -123,11 +124,16 @@ class Home extends StatelessWidget{
 
 
   onAddZakupPressed(Produkt produkt){
+    Grupa grupaProduktu = new Grupa(
+      nazwa_server: produktController.currentlyChosenGroupName,
+      kod_grupy: produktController.currentlyChosenGroupCode
+    );
 
     ShoppingList listaZakupow = new ShoppingList(
       objectId: uuid.v4(),
       quantityToBuy: int.parse(iloscController.text),
       produkt: produkt,
+      grupa: grupaProduktu,
     );
 
     produktController.addNewZakup(listaZakupow);
