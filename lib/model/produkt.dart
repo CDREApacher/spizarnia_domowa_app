@@ -3,6 +3,8 @@ import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
+import 'package:spizarnia_domowa_app/model/kody_kreskowe.dart';
+import 'package:spizarnia_domowa_app/model/expiration_date.dart';
 
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
@@ -18,6 +20,8 @@ class Produkt {
   RxList<Atrybuty> atrybuty;
   Grupa grupa;
 
+  Barcodes kod_kreskowy;
+  ExpirationDate data_waznosci;
 
   Produkt({
     this.objectId,
@@ -30,6 +34,9 @@ class Produkt {
     this.kategorieZakupy,
     this.atrybuty,
     this.grupa,
+
+    this.kod_kreskowy,
+    this.data_waznosci,
   });
 
   /*
@@ -62,6 +69,14 @@ class Produkt {
       });
     }
     grupa = Grupa.fromJson(json['group']);
+
+    if(json['barcode'] != null) {
+      kod_kreskowy = Barcodes.fromJson(json['barcode']);
+    }
+    if(json['expirationDate'] != null) {
+      data_waznosci = ExpirationDate.fromJson(json['expirationDate']);
+    }
+
   }
 
 
@@ -95,6 +110,11 @@ class Produkt {
       'categoryShopping' : kategorieZakupy.toJson(),
     if (atrybuty != null)
       'attributeList' : atrybuty.map((v) => v.toJson()).toList(),
+
+    if (kod_kreskowy != null)
+      'barcode' : kod_kreskowy.toJson(),
+    if (data_waznosci != null)
+      'expirationDate' : data_waznosci.toJson(),
   };
 
 

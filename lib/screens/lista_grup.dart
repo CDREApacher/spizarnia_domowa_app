@@ -11,6 +11,7 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
 import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
 import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
 import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
@@ -36,6 +37,10 @@ class _ListaGrupState extends State<ListaGrup> {
 
   final ProduktController produktController = ProduktController.to;
 
+
+  void swapGroup(Grupa wybranaGrupa){
+    produktController.selectActiveGroup(wybranaGrupa.nazwa_server, wybranaGrupa.kod_grupy);
+  }
 
   @override
   void initState(){
@@ -108,7 +113,13 @@ class _ListaGrupState extends State<ListaGrup> {
                                               produktController.listaGrup[index].nazwa_server
                                           ),
                                         ),
-                                        Icon(Icons.add_rounded),
+                                        //Icon(Icons.add_rounded),
+                                        IconButton(
+                                            icon: Icon(Icons.swap_vert_rounded),
+                                            onPressed: () => {
+                                              swapGroup(produktController.listaGrup[index])
+                                            }
+                                        ),
                                       ],
                                     ),
                                   ),

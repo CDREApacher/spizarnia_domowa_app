@@ -105,16 +105,18 @@ class _JoinGroupState extends State<JoinGroup> {
   void utworzGrupe() {
 
     log(nameController.text);
-    produktController.addGrupyTest(nameController.text);
+    produktController.addGrupy(nameController.text);
     nameController.clear();
 
+    log(produktController.currentlyChosenGroupName);
+    log(produktController.currentlyChosenGroupCode);
   }
 
   void dolaczDoGrupy(){
 
 
     log(kodController.text);
-    produktController.joinGrupyTest(kodController.text);
+    produktController.joinGrupy(kodController.text);
     kodController.clear();
 
 

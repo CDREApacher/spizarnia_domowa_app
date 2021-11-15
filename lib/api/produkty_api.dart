@@ -13,6 +13,10 @@ Future<Response> fetchAll(Dio dio, String kod_grupy){
   return dio.get("/products/all?code=$kod_grupy");
 }
 
+Future<Response> fetch(Dio dio, String id_produktu){
+  return dio.get("/products?id=$id_produktu");
+}
+
 /* B
 Future<Response> fetchAll(Dio dio){
   return dio.get("/data/Produkt", queryParameters: {'pageSize' : 100});
@@ -23,9 +27,11 @@ Future<Response> getCount(Dio dio){
   return dio.get("/data/Produkt", queryParameters: {'property' : 'Count(nazwaProduktu)'});
 }
 // BE
+/*
 Future<Response> fetch(Dio dio, String objectId){
   return dio.get("/data/Produkt/$objectId");
 }
+*/
 /* BE
 Future<Response> add(Dio dio, Map<String, dynamic> dane){
   return dio.post("/data/Produkt", data: dane);
@@ -231,3 +237,12 @@ Future<Response> joinGrupy(Dio dio, String kod_grupy){
   return dio.get("/groups?code=$kod_grupy");
 }
 
+// Barcody
+
+Future<Response> addBarcodes(Dio dio, String barcode, String barcode_id, String name){
+  return dio.put("/products/barcode/$barcode_id?barcode=$barcode&note=$name");
+}
+
+Future<Response> deleteBarcodes(Dio dio, String product_id, String barcode_id){
+  return dio.delete("/products/barcode/$product_id?barcodeId=$barcode_id");
+}

@@ -303,6 +303,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
   @override
   void initState() {
+    // May turn out to be unnecessary
+    //produktController.fetchProdukt(widget.chosen_produkt.objectId);
     createListKategorieProduktu();
     createListKategorieZakupu();
     createListMiary();

@@ -137,6 +137,9 @@ class Home extends StatelessWidget{
     );
 
     produktController.addNewZakup(listaZakupow);
+
+
+
   }
 
 

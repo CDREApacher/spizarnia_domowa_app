@@ -12,6 +12,8 @@ import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/shopping_list.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
+import 'package:spizarnia_domowa_app/model/kody_kreskowe.dart';
+import 'package:spizarnia_domowa_app/model/expiration_date.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 
@@ -57,9 +59,6 @@ class ProduktRepository{
     return listaP;
     */
   }
-
-
-
 
   Future<List<ItemCount>> fetchItemCount(apiClient) async {
     Response response = await getCount(apiClient);
@@ -210,6 +209,7 @@ class ProduktRepository{
 
   // Atrybuty
   //BE Obsolete
+
   Future<List<Atrybuty>> fetchAtrybuty(String objectId) async {
     Response response = await fetchAtrybutyById(apiClient, objectId);
 
@@ -304,5 +304,17 @@ class ProduktRepository{
     }
     */
   }
+
+  // Barcody
+  Future<Barcodes> addBarcodeToObject(String barcode, String barcode_id, String name) async {
+    Response response = await addBarcodes(apiClient, barcode, barcode_id, name);
+
+    return Barcodes.fromJson(response.data);
+  }
+
+  Future<Response> deleteBarcode(String product_id, String barcode_id) async {
+    return await deleteBarcodes(apiClient, product_id, barcode_id);
+  }
+
 
 } // class ProduktRepository
