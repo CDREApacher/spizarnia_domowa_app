@@ -358,6 +358,19 @@ class _ProduktDetailState extends State<ProduktDetail> {
   }
 
   bool _isShowDial = false;
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -419,9 +432,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             FloatingActionButton(
               mini: true,
               child: Icon(Icons.date_range_rounded),
-              onPressed: () {
-
-              },
+              onPressed: () => _selectDate(context),
               backgroundColor: Colors.grey,
             ),
             FloatingActionButton(
