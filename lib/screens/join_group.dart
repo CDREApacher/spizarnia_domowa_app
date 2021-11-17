@@ -56,10 +56,6 @@ class _JoinGroupState extends State<JoinGroup> {
 
   String scanResult;
 
-
-
-
-
   Future scanBarcode() async {
     String scanResult;
 

@@ -1,6 +1,8 @@
 // Built in
 import 'dart:ffi';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -32,11 +34,17 @@ import 'package:logger/logger.dart';
 
 
 
-class AddExistingProduct extends StatelessWidget{
+class AddExistingProduct extends StatefulWidget{
 
 
-  final nameController = TextEditingController(); //
+  @override
+  State<AddExistingProduct> createState() => _AddExistingProductState();
+}
+
+class _AddExistingProductState extends State<AddExistingProduct> {
+  final nameController = TextEditingController();
   final ProduktController produktController = ProduktController.to;
+
   final iloscController = TextEditingController();
 
   onUpdatePressed(Produkt chosen_produkt) {
@@ -67,6 +75,67 @@ class AddExistingProduct extends StatelessWidget{
     produktController.updateProdukt(produkt.objectId, produkt);
   }
 
+  String scanResult;
+
+  Future scanBarcode() async {
+    String scanResult;
+
+    try {
+      scanResult = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666",
+        "Anuluj",
+        false,
+        ScanMode.BARCODE,
+      );
+    } on PlatformException {
+      scanResult = 'Błąd skanowania';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("$scanResult"),
+            duration: Duration(seconds: 2),
+          )
+      );
+
+    }
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$scanResult"),
+          duration: Duration(seconds: 2),
+        )
+    );
+
+    setState(() => this.scanResult = scanResult);
+
+    if(scanResult != "-1"){
+      showDialog(context: context, builder: (_) =>
+          AlertDialog(
+            title: Text('Kod nie powiązany z żadym produktem.'),
+            content: Text('Czy chcesz utworzć nowy produkt?'),
+
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator
+                        .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
+                        .then((value) => null);// Navigator
+
+                  },
+                  child: Text('Dodaj')
+              ),
+            ],
+
+          ),
+      );
+
+
+    }
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +147,15 @@ class AddExistingProduct extends StatelessWidget{
         toolbarHeight: 42.5,
 
         title: Text('Produkty'),
-
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.add_chart),
+              tooltip: "Zeskanuj kod kreskowy",
+              onPressed: () => {
+                scanBarcode()
+              }
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -180,6 +257,4 @@ class AddExistingProduct extends StatelessWidget{
       ),
 /////////////////////////////////////////////////////////////////////////
     );
-  }// Widget build
-
-}// class
+  }}// class

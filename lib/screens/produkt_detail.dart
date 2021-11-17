@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
+import 'package:flutter_arc_speed_dial/flutter_arc_speed_dial.dart';
+import 'package:flutter_arc_speed_dial/flutter_speed_dial_menu_button.dart';
+import 'package:flutter_arc_speed_dial/main_menu_floating_action_button.dart';
 
 import 'package:uuid/uuid.dart';
 
