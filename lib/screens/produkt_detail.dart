@@ -351,10 +351,13 @@ class _ProduktDetailState extends State<ProduktDetail> {
     );
 
     setState(() => this.scanResult = scanResult);
-    atrybutController.text = scanResult;
+    if(scanResult != "-1"){
+
+
+    }
   }
 
-
+  bool _isShowDial = false;
 
   @override
   Widget build(BuildContext context) {
@@ -395,73 +398,76 @@ class _ProduktDetailState extends State<ProduktDetail> {
         ],
       ),
 
+        floatingActionButton:SpeedDialMenuButton(
+          //if needed to close the menu after clicking sub-FAB
+          isShowSpeedDial: _isShowDial,
+          //manually open or close menu
+          updateSpeedDialStatus: (isShow) {
+            //return any open or close change within the widget
+            this._isShowDial = isShow;
+          },
+          //general init
+          isMainFABMini: false,
+          mainMenuFloatingActionButton: MainMenuFloatingActionButton(
+              mini: false,
+              child: Icon(Icons.more_horiz_rounded),
+              onPressed: () {},
+              closeMenuChild: Icon(Icons.close),
+              closeMenuForegroundColor: Colors.blueAccent,
+              closeMenuBackgroundColor: Colors.white),
+          floatingActionButtonWidgetChildren: <FloatingActionButton>[
+            FloatingActionButton(
+              mini: true,
+              child: Icon(Icons.date_range_rounded),
+              onPressed: () {
 
+              },
+              backgroundColor: Colors.grey,
+            ),
+            FloatingActionButton(
+              mini: true,
+              child: Icon(Icons.add_chart_rounded),
+              onPressed: () {
+                scanBarcode();
+              },
+              backgroundColor: Colors.grey,
+            ),
+            FloatingActionButton(
+              mini: true,
+              child: Icon(Icons.add_comment_rounded),
+              onPressed: () {
+                showDialog(context: context, builder: (_) =>
+                    AlertDialog(
+                      title: Text('Dodaj krótką notkę:'),
 
+                      content: TextField(
+                        controller: atrybutController,
+                        decoration: InputDecoration(hintText: "Tutaj dodaj notkę"),
 
+                      ),
 
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_comment_rounded),
-        onPressed: () {
-          //onScreenOpened(widget.chosen_produkt.objectId);
+                      actions: [
 
-          showDialog(context: context, builder: (_) =>
-              AlertDialog(
-                title: Text('Dodaj krótką notkę:'),
+                        TextButton(
+                            onPressed: () {
 
-                content: TextField(
-                  controller: atrybutController,
-                  decoration: InputDecoration(hintText: "Tutaj dodaj notkę"),
+                              onAddAtributePressed(atrybutController.text);
+                              //onScreenOpened(widget.chosen_produkt.objectId);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Dodaj')),
 
-                 /* onChanged: (value) {
-                    String val = value;
-                    atrybutController.text = val;
-                  }, // Allows for spelling backwards */
+                      ],
+                    ),
+                );
+              },
+              backgroundColor: Colors.grey,
+            ),
+          ],
+          isSpeedDialFABsMini: true,
+          paddingBtwSpeedDialButton: 30.0,
+        ),
 
-                ),
-
-                actions: [
-                  IconButton(
-                      icon: Icon(Icons.add_chart),
-                      onPressed: () {
-
-                        scanBarcode();
-                        /*
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Produkt Zaktualizowany"),
-                              duration: Duration(seconds: 2),
-                            )
-                        );
-
-                        Text(
-                          scanResult == null
-                            ? 'scan a code!'
-                            : 'Scan result : $scanResult',
-                        )
-                        */
-
-                      }
-                  ),
-
-                  TextButton(
-                      onPressed: () {
-
-                        onAddAtributePressed(atrybutController.text);
-                        //onScreenOpened(widget.chosen_produkt.objectId);
-                        Navigator.pop(context);
-                      },
-                      child: Text('Dodaj')),
-
-
-
-                ],
-              ),
-          );
-          //Navigator.pop(context);
-        },
-
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
 
 
