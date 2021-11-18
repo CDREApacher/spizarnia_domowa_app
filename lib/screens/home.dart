@@ -1,4 +1,6 @@
 // Built in
+import 'dart:async';
+import 'dart:developer';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,19 +43,22 @@ import 'package:logger/logger.dart';
 
 
 
-class Home extends StatelessWidget{
+class Home extends StatefulWidget{
 
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   var uuid = Uuid();
 
   final nameController = TextEditingController();
+
   final iloscController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
-  // Debug
   Logger logger = Logger();
-  //
-
 
   onItemPressed(Produkt produkt) {
     nameController.text = produkt.nazwaProduktu;
@@ -61,17 +66,6 @@ class Home extends StatelessWidget{
 
     produktController.setSelected(produkt);
   }
-
-  /*
-  onAddPressed() {
-    Produkt produkt = new Produkt(
-        nazwaProduktu: nameController.text,
-        ilosc: int.parse(iloscController.text)
-    );
-    onClearPressed();
-    produktController.addProdukt(produkt);
-  }
-  */
 
   onDeletePressed(String id) {
     onClearPressed();
@@ -106,23 +100,6 @@ class Home extends StatelessWidget{
     produktController.fetchProduktyKategorii(kategoria);
   }
 
-
-  /*
-  onAddZakupPressed(Produkt produkt) {
-    ProduktZakupy zakup = new ProduktZakupy(
-
-        nazwaProduktu: produkt.nazwaProduktu,
-        miara: produkt.miara,
-        kategoriaZakupy: produkt.kategorieZakupy,
-        ilosc: int.parse(iloscController.text),
-        objectIdProduktu : produkt.objectId,
-
-    );
-    produktController.addNewZakup(zakup);
-  }
-  */
-
-
   onAddZakupPressed(Produkt produkt){
     Grupa grupaProduktu = new Grupa(
       nazwa_server: produktController.currentlyChosenGroupName,
@@ -142,6 +119,11 @@ class Home extends StatelessWidget{
 
   }
 
+  @override
+  void initState(){
+    produktController.fetchAllProdukts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,11 +233,18 @@ class Home extends StatelessWidget{
 
                       Expanded(
                         child: InkWell(
-                          onTap: () {
-                            //onRefreshPressed();
-                            Navigator
-                                .push(context, MaterialPageRoute(builder: (context) => ProduktDetail(chosen_produkt: produkt)))
-                                .then((value) => onRefreshPressed());
+                          onTap: ()  {
+                            navigator.push(
+                              MaterialPageRoute(
+                                builder: (_) {
+                                  return ProduktDetail(chosen_produkt: produkt);
+                                },
+                              ),
+                            ).then((value) =>
+                                Timer(Duration(milliseconds: 500), () {
+                                  produktController.fetchAllProdukts();
+                                })
+                            );
                           },
 
                           child: Row(
@@ -347,6 +336,4 @@ class Home extends StatelessWidget{
       ),
 
     );
-  }// Widget build
-
-}// class Home
+  }}// class Home

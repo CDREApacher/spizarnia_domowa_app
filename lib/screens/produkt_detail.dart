@@ -7,6 +7,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_arc_speed_dial/flutter_arc_speed_dial.dart';
 import 'package:flutter_arc_speed_dial/flutter_speed_dial_menu_button.dart';
 import 'package:flutter_arc_speed_dial/main_menu_floating_action_button.dart';
+import 'package:intl/intl.dart';
 
 import 'package:uuid/uuid.dart';
 
@@ -18,6 +19,8 @@ import 'package:spizarnia_domowa_app/model/miara.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
+import 'package:spizarnia_domowa_app/model/kody_kreskowe.dart';
+import 'package:spizarnia_domowa_app/model/expiration_date.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/widget/custom_button.dart';
@@ -55,6 +58,12 @@ class _ProduktDetailState extends State<ProduktDetail> {
   final atrybutController = TextEditingController();
 
   final iloscAutoZakupuController = TextEditingController();
+
+  final nazwaDatyController = TextEditingController();
+
+  final iloscDniPrzypomnieniaController = TextEditingController();
+
+  final nazwaKoduController = TextEditingController();
 
   final ProduktController produktController = ProduktController.to;
 
@@ -121,7 +130,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
       grupa: grupaProduktu,
     );
 
-
+    //RxList<Barcodes> kody_kreskowe_produktu = <Barcodes>[].obs;
+    //RxList<ExpirationDate> daty_waznosci_produktu = <ExpirationDate>[].obs;
 
     Produkt produkt = new Produkt(
       objectId: widget.chosen_produkt.objectId, //
@@ -140,6 +150,10 @@ class _ProduktDetailState extends State<ProduktDetail> {
       atrybuty: widget.chosen_produkt.atrybuty, //
 
       grupa: grupaProduktu,
+
+      kody_kreskowe: widget.chosen_produkt.kody_kreskowe,
+
+      daty_waznosci: widget.chosen_produkt.daty_waznosci,
     );
 
     //produktController.addProdukt(produkt);
@@ -167,6 +181,9 @@ class _ProduktDetailState extends State<ProduktDetail> {
     if (widget.chosen_produkt.autoZakup == false) {
       onUpdatePressed(widget.chosen_produkt.objectId);
     } else {
+
+      // OK so pretty sure the server handles creating of shopping list items
+      // So if true just also fire onUpdatePressed()
 
       /*
       // This code is for BE legacy -- figure out the one wee need
@@ -237,39 +254,46 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
   }//onCheckUpdatePressed
 
-  /*
-  onScreenOpened(objectId){
-    produktController.fetchAtrybuty(objectId);
-  }
-  */
-
 
   onAddAtributePressed(String nazwa){
-
-    Atrybuty nowyAtrybut = Atrybuty(
-      nazwa: nazwa,
-      objectId: widget.chosen_produkt.objectId, // Nadane przez serwer ID Atrybutu!!! Nie może tak być
-    );
-
-
-    //widget.chosen_produkt.atrybuty.add(nowyAtrybut);
-
 
     String nazwaAtrybutu = nazwa;
     String idProduktu = widget.chosen_produkt.objectId;
 
     produktController.addAtrybut(idProduktu, nazwaAtrybutu);
-    Navigator.pop(context);// Exit produkt Detail
+
+    Get.back();// Exit produkt Detail
   }
 
   onDeleteAttributePressed(String atrybutId){
     String produktId = widget.chosen_produkt.objectId;
 
     produktController.deleteAtrybut(produktId, atrybutId);
-    //Navigator.pop(context);// Exit produkt Detail
-
-    //widget.chosen_produkt.atrybuty.removeWhere((element) => element.objectId == atrybutId);
   }
+
+
+  onAddDatePressed(){
+    produktController.addExpDates(
+        widget.chosen_produkt.objectId,
+        produktController.data_produktu_poprawny_format,
+        int.parse(iloscDniPrzypomnieniaController.text),
+        nazwaDatyController.text
+    );
+    Get.back();
+  }
+
+  onDeleteDatePressed(String expDate_id){
+    String produktId = widget.chosen_produkt.objectId;
+
+    produktController.deleteExpDates(produktId, expDate_id);
+  }
+
+  onAddBarcodePressed(String barcode){
+    String produktId = widget.chosen_produkt.objectId;
+
+    produktController.addBarcodes(barcode, produktId, nazwaKoduController.text);
+  }
+
 
   createListKategorieProduktu(){
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
@@ -352,6 +376,55 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
     setState(() => this.scanResult = scanResult);
     if(scanResult != "-1"){
+      log(scanResult);
+      // If we got a scan result
+      // Add the barcode to the product
+
+
+
+      showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text("Kod kreskowy"),
+          content: Column(
+            children: [
+
+              Text("Nazwa dla kodu"),
+
+              TextField(
+                controller: nazwaKoduController,
+                decoration: InputDecoration(hintText: "nazwa"),
+                textAlign: TextAlign.center,
+              ),
+
+            ],
+
+          ),
+
+          actions: [
+            TextButton(
+                onPressed: () {
+
+                  // Add the barcode to the product
+                  onAddBarcodePressed(scanResult);
+                  Get.back();
+
+                },
+                child: Text('Dodaj')
+            ),
+          ],
+
+        ),
+      );
+
+
+
+
+
+
+
+
+
+
 
 
     }
@@ -359,21 +432,86 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
   bool _isShowDial = false;
   DateTime selectedDate = DateTime.now();
+  String formatedDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
+
+        helpText: "Wyberz date ",
+        cancelText: "Anuluj",
+        confirmText: "Wybierz",
         initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
+        firstDate: DateTime(2021, 8),
+        lastDate: DateTime(2041));
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+
+        formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+        produktController.data_produktu_poprawny_format = formatedDate;
       });
+
+      showDialog(context: context, builder: (_) =>
+          AlertDialog(
+            title: Text('Szczegóły daty spożycia'),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                Text("Nazwa dla daty"),
+
+                TextField(
+                  controller: nazwaDatyController,
+                  decoration: InputDecoration(hintText: "nazwa"),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: 16),
+
+                Text("Ile dni wcześniej przypomnieć?"),
+
+                SpinBox(
+                  value: 0,
+                  min: 0,
+                  max: 2048,
+                  onChanged: (value) {
+                    print(value);
+                    int val = value.toInt();
+                    iloscDniPrzypomnieniaController.text = val.toString();
+                  },
+                ),
+
+
+              ],
+            ),
+
+
+
+            actions: [
+              TextButton(
+                  onPressed: () {
+
+                    // Add the date to the product
+                    onAddDatePressed();
+                    Get.back();
+                    //Get.back();
+                  },
+                  child: Text('Dodaj')
+              ),
+            ],
+
+          ),
+      );
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
 
   _checkbox = widget.chosen_produkt.autoZakup;
 
@@ -724,14 +862,15 @@ class _ProduktDetailState extends State<ProduktDetail> {
                 },
             ),
 
-
+            Text("Atrybuty produktu"),
 
             GetBuilder<ProduktController>(
                 builder: (produktController) =>
 
-                    Expanded(
-
-                      child: ListView.separated(
+                    SizedBox(
+                      width: screenWidth,
+                      height: 100,
+                        child: ListView.separated(
 
                           itemBuilder: (context, index) => Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -751,15 +890,57 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
                           separatorBuilder: (context, index) =>
-                            Divider(color: Colors.black),
+                              Divider(color: Colors.black),
 
 
                           itemCount: widget.chosen_produkt.atrybuty.length,
-                      ),
-
+                        ),
                     ),
 
             ),
+
+            Text("Daty ważności"),
+
+            GetBuilder<ProduktController>(
+              builder: (produktController) =>
+
+                  SizedBox(
+                    width: screenWidth,
+                    height: 100,
+                    child: ListView.separated(
+
+                      itemBuilder: (context, index) => Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+
+                        children: [
+                          IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: (){
+                                onDeleteDatePressed(widget.chosen_produkt.daty_waznosci[index].id);
+                              }
+                          ),
+                          Text(widget.chosen_produkt.daty_waznosci[index].exp_date),
+                          Text("   "),
+                          Text(widget.chosen_produkt.daty_waznosci[index].nazwa),
+
+                        ],
+
+                      ),
+
+
+                      separatorBuilder: (context, index) =>
+                          Divider(color: Colors.black),
+
+
+                      itemCount: widget.chosen_produkt.daty_waznosci.length,
+                    ),
+                  ),
+
+            ),
+
+
+
+
 
           ],
 

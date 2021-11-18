@@ -95,6 +95,11 @@ class ProduktController extends GetxController {
   RxList<Grupa> listaGrupTest = <Grupa>[].obs;
 
 
+
+  String kod_kreskowy_nowego_produktu;
+  String data_produktu_poprawny_format;
+
+
   // Produkty
 
   fetchAllProdukts() async {
@@ -104,6 +109,7 @@ class ProduktController extends GetxController {
     currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
     */
     produkty = await produktRepository.fetchAllProdukts(currentlyChosenGroupCode);
+
     update();
   }
 
@@ -313,13 +319,20 @@ class ProduktController extends GetxController {
   }
 */
   addAtrybut(String idProduktu, String nazwaAtrybutu) async {
-    //atrybuty.add(await produktRepository.addAtrybutToObject(idProduktu, nazwaAtrybutu));
-    Atrybuty nowyAtrybut = await produktRepository.addAtrybutToObject(idProduktu, nazwaAtrybutu);
+
+    int index = produkty.indexWhere((element) => element.objectId == idProduktu);
+    Produkt tenProdukt = produkty[index];
+    tenProdukt.atrybuty.add(await produktRepository.addAtrybutToObject(idProduktu, nazwaAtrybutu));
+
 /*
+    Atrybuty nowyAtrybut = await produktRepository.addAtrybutToObject(idProduktu, nazwaAtrybutu);
+
     int index = produkty.indexWhere((element) => element.objectId == idProduktu);
     Produkt tenProdukt = produkty[index];
     tenProdukt.atrybuty.add(nowyAtrybut);
 */
+
+
     update();
   }
 
@@ -611,8 +624,8 @@ class ProduktController extends GetxController {
 
   // Barcody
 
-  addBarcodes(String barcode, String barcode_id, String name) async {
-    Barcodes newBarcode = await produktRepository.addBarcodeToObject(barcode, barcode_id, name);
+  addBarcodes(String barcode, String product_id, String name) async {
+    Barcodes newBarcode = await produktRepository.addBarcodeToObject(barcode, product_id, name);
     update();
   }
 

@@ -12,9 +12,12 @@ import 'package:spizarnia_domowa_app/model/kategoria_zakupy.dart';
 import 'package:spizarnia_domowa_app/model/kategoria.dart';
 import 'package:spizarnia_domowa_app/model/atrybuty.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
+import 'package:spizarnia_domowa_app/model/kody_kreskowe.dart';
+import 'package:spizarnia_domowa_app/model/expiration_date.dart';
 
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 
 import 'package:spizarnia_domowa_app/screens/home.dart';
 
@@ -80,6 +83,12 @@ class _AddProduktState extends State<AddProdukt> {
       grupa: grupaProduktu
     );
 
+    RxList<Barcodes> kody_kreskowe_produktu = <Barcodes>[].obs;
+    // need a check if we have a barcode in productcontroller to already assign
+
+    RxList<ExpirationDate> daty_waznosci_produktu = <ExpirationDate>[].obs;
+    // need a check if we have a date and already assign it
+
     Produkt produkt = new Produkt(
       objectId: uuid.v4(),
       nazwaProduktu: nameController.text,
@@ -97,9 +106,28 @@ class _AddProduktState extends State<AddProdukt> {
       atrybuty: atrybutyProduktu,
 
       grupa: grupaProduktu,
+
+      kody_kreskowe: kody_kreskowe_produktu,
+
+      daty_waznosci: daty_waznosci_produktu,
     );
 
     produktController.addProdukt(produkt);
+
+
+
+    // Do this stuff here ONLY if we have a barcode
+
+
+
+    String produktId = produkt.objectId;
+
+    produktController.addBarcodes(
+        produktController.kod_kreskowy_nowego_produktu,
+        produktId,
+        // Default here for now
+        nameController.text);
+
   }
 
 

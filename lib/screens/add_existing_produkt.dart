@@ -1,4 +1,5 @@
 // Built in
+import 'dart:async';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -69,6 +70,10 @@ class _AddExistingProductState extends State<AddExistingProduct> {
       atrybuty: chosen_produkt.atrybuty, //
 
       grupa: grupaProduktu,
+
+      kody_kreskowe: chosen_produkt.kody_kreskowe,
+
+      daty_waznosci: chosen_produkt.daty_waznosci,
     );
 
     //produktController.addProdukt(produkt);
@@ -118,9 +123,24 @@ class _AddExistingProductState extends State<AddExistingProduct> {
             actions: [
               TextButton(
                   onPressed: () {
+                    /*
                     Navigator
                         .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
                         .then((value) => null);// Navigator
+                    */
+
+                    navigator.push(
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return AddProdukt();
+                        },
+                      ),
+                    ).then((value) =>
+                        Timer(Duration(milliseconds: 500), () {
+                          produktController.fetchAllProdukts();
+                        })
+                    );
+
 
                   },
                   child: Text('Dodaj')
