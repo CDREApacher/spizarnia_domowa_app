@@ -170,6 +170,8 @@ class _AddExistingProductState extends State<AddExistingProduct> {
                       TextButton(
                           onPressed: () {
 
+                            Get.back();
+
 
                             navigator.push(
                               MaterialPageRoute(
