@@ -144,19 +144,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
           children: [
 
-            Card(
-              elevation: 5.0,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-              color: Colors.yellowAccent,
 
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
-                child: Text(
-                  "Lista rzeczy do kupienia",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
 
             SizedBox(
 
@@ -254,19 +242,6 @@ class _TrybZakupowState extends State<TrybZakupow> {
 
 
 
-            Card(
-              elevation: 5.0,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-              color: Colors.lightGreen,
-
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
-                child: Text(
-                  "Lista rzeczy w koszyku",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
 
             // Display list of produkts added to doKupienia
 
@@ -302,6 +277,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                                 + " : "
                                                 + produktController.doKupienia[index].quantityToBuy.toString()
                                                 + produktController.doKupienia[index].produkt.miara.miara
+                                        ,style: TextStyle(decoration: TextDecoration.lineThrough),
                                         ),
                                       ),
 
