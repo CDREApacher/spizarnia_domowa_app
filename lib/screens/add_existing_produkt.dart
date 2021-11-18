@@ -7,6 +7,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:spizarnia_domowa_app/model/kody_kreskowe.dart';
 
 
 // Custom Widgets
@@ -80,6 +81,8 @@ class _AddExistingProductState extends State<AddExistingProduct> {
     produktController.updateProdukt(produkt.objectId, produkt);
   }
 
+
+
   String scanResult;
 
   Future scanBarcode() async {
@@ -115,40 +118,92 @@ class _AddExistingProductState extends State<AddExistingProduct> {
     setState(() => this.scanResult = scanResult);
 
     if(scanResult != "-1"){
-      showDialog(context: context, builder: (_) =>
-          AlertDialog(
-            title: Text('Kod nie powiązany z żadym produktem.'),
-            content: Text('Czy chcesz utworzć nowy produkt?'),
 
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    /*
-                    Navigator
-                        .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
-                        .then((value) => null);// Navigator
-                    */
 
-                    navigator.push(
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return AddProdukt();
-                        },
+      // Here we need to check if a barcode such as this already exists
+
+      // Make a list of all the barcodes of all the products
+      // OR ALTERNATELY check inside the loop
+
+      //List<String> wszystkieBarcody = [];
+
+
+        for (var i = 0; i < produktController.produkty.length; i++){
+          for (var j = 0; j < produktController.produkty[i].kody_kreskowe.length; j++){
+
+            if(produktController.produkty[i].kody_kreskowe[j].barcode_code == scanResult){
+
+              // Means this product exists
+              // So just popup that it exists
+
+              showDialog(context: context, builder: (_) =>
+                  AlertDialog(
+                    title: Text('Produkt z takim kodem już istnieje.'),
+                    //content: Text(''),
+
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text('OK')
                       ),
-                    ).then((value) =>
-                        Timer(Duration(milliseconds: 500), () {
-                          produktController.fetchAllProdukts();
-                        })
-                    );
+                    ],
+                  ),
+              );
+
+            }else{
+
+              // Means we didn't find this barcode
+              // So now remember the code
+              produktController.kod_kreskowy_nowego_produktu = scanResult;
+              // Take us to the add product screen
+              // Add a product AND right after add this barcode
 
 
-                  },
-                  child: Text('Dodaj')
-              ),
-            ],
+              showDialog(context: context, builder: (_) =>
+                  AlertDialog(
+                    title: Text('Kod nie powiązany z żadym produktem.'),
+                    content: Text('Czy chcesz utworzć nowy produkt?'),
 
-          ),
-      );
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+
+
+                            navigator.push(
+                              MaterialPageRoute(
+                                builder: (_) {
+                                  return AddProdukt();
+                                },
+                              ),
+                            ).then((value) =>
+                                Timer(Duration(milliseconds: 500), () {
+                                  produktController.fetchAllProdukts();
+                                })
+                            );
+
+
+                          },
+                          child: Text('Dodaj')
+                      ),
+                    ],
+
+                  ),
+              );
+
+
+            }
+
+          }
+        }
+
+
+
+
+
+
+
 
 
     }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinbox/material.dart';
@@ -117,26 +119,30 @@ class _AddProduktState extends State<AddProdukt> {
 
 
     // Do this stuff here ONLY if we have a barcode
+    // And do this after a delay
+    // for the sake of the server already having the product
+    // and not throwing an error for "no product with this ID"
 
+    if(produktController.kod_kreskowy_nowego_produktu != null) {
 
+      Timer(Duration(seconds: 1), () {
+        produktController.addBarcodes(
+            produktController.kod_kreskowy_nowego_produktu,
+            produkt.objectId,
+            // Default here for now
+            nameController.text);
 
-    String produktId = produkt.objectId;
+        produktController.kod_kreskowy_nowego_produktu = null;
+      });
 
-    produktController.addBarcodes(
-        produktController.kod_kreskowy_nowego_produktu,
-        produktId,
-        // Default here for now
-        nameController.text);
+    } //endif
 
-  }
-
-
+  }// onConfirmedPressed
 
   onClearPressed() {
     nameController.clear();
     iloscController.clear();
   }
-
 
 
   createListKategorieProduktu(){
