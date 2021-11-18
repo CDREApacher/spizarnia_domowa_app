@@ -296,6 +296,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
   createListKategorieProduktu(){
+    produktController.displayKategorie.clear();
     if(produktController.displayKategorie.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorie.length; i++) {
@@ -307,6 +308,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
   }
 
   createListKategorieZakupu(){
+    produktController.displayKategorieZakupy.clear();
     if(produktController.displayKategorieZakupy.length == 0) { // check to see if it was already created
 
       for (var i = 0; i < produktController.kategorieZakupy.length; i++) {
@@ -318,6 +320,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
   }
 
   createListMiary(){
+    produktController.displayMiary.clear();
     if(produktController.displayMiary.length == 0){
       for (var i = 0; i < produktController.miary.length; i++) {
         produktController.displayMiary.add(produktController.miary[i].miara);
