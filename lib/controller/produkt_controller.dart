@@ -619,12 +619,27 @@ class ProduktController extends GetxController {
   deleteBarcodes(String product_id, String barcode_id) async {
     Response response = await produktRepository.deleteBarcode(product_id, barcode_id);
 
-    // Need to remove the barcode from the product but only remotely or locally ???
     int index = produkty.indexWhere((element) => element.objectId == product_id);
     Produkt tenProdukt = produkty[index];
-    tenProdukt.kod_kreskowy = null; // Will this even work ???
+    tenProdukt.kody_kreskowe.removeWhere((element2) => element2.id == barcode_id);
 
-    update(); // Should take care of removing the barcode
+    update();
+  }
+
+  // Daty spożycia
+  addExpDates(String product_id, String expDate, int remindDays, String nazwa) async {
+    ExpirationDate newExpDate = await produktRepository.addExpDateToObject(product_id, expDate, remindDays, nazwa);
+    update();
+  }
+
+  deleteExpDates(String product_id, String expDate_id) async {
+    Response response = await produktRepository.deleteExpDate(product_id, expDate_id);
+
+    int index = produkty.indexWhere((element) => element.objectId == product_id);
+    Produkt tenProdukt = produkty[index];
+    tenProdukt.daty_waznosci.removeWhere((element2) => element2.id == expDate_id);
+
+    update();
   }
 
   // Funkcje

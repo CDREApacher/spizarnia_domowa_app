@@ -20,8 +20,8 @@ class Produkt {
   RxList<Atrybuty> atrybuty;
   Grupa grupa;
 
-  Barcodes kod_kreskowy;
-  ExpirationDate data_waznosci;
+  RxList<Barcodes> kody_kreskowe;
+  RxList<ExpirationDate> daty_waznosci;
 
   Produkt({
     this.objectId,
@@ -35,8 +35,8 @@ class Produkt {
     this.atrybuty,
     this.grupa,
 
-    this.kod_kreskowy,
-    this.data_waznosci,
+    this.kody_kreskowe,
+    this.daty_waznosci,
   });
 
   /*
@@ -70,13 +70,19 @@ class Produkt {
     }
     grupa = Grupa.fromJson(json['group']);
 
-    if(json['barcode'] != null) {
-      kod_kreskowy = Barcodes.fromJson(json['barcode']);
-    }
-    if(json['expirationDate'] != null) {
-      data_waznosci = ExpirationDate.fromJson(json['expirationDate']);
-    }
+    if(json['barcodeList'] != null) {
+      kody_kreskowe = new RxList<Barcodes>();
+      json['barcodeList'].forEach((v) {
+        kody_kreskowe.add(new Barcodes.fromJson(v));
+      });
 
+    }
+    if(json['expirationDateList'] != null) {
+      daty_waznosci = new RxList<ExpirationDate>();
+      json['expirationDateList'].forEach((v) {
+        daty_waznosci.add(new ExpirationDate.fromJson(v));
+      });
+    }
   }
 
 
@@ -111,10 +117,11 @@ class Produkt {
     if (atrybuty != null)
       'attributeList' : atrybuty.map((v) => v.toJson()).toList(),
 
-    if (kod_kreskowy != null)
-      'barcode' : kod_kreskowy.toJson(),
-    if (data_waznosci != null)
-      'expirationDate' : data_waznosci.toJson(),
+    if (kody_kreskowe != null)
+      'barcodeList' : kody_kreskowe.toJson(),
+
+    if (daty_waznosci != null)
+      'expirationDateList' : daty_waznosci.toJson(),
   };
 
 

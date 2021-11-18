@@ -223,7 +223,7 @@ Future<Response> addMiary(Dio dio, Map<String, dynamic> dane){
 Future<Response> addMiary(Dio dio, Map<String, dynamic> dane){
   return dio.post("/measures", data: dane);
 }
-
+// BE
 Future<Response> deleteMiary(Dio dio, String objectId){
   return dio.delete("/data/Miara/$objectId");
 }
@@ -239,10 +239,20 @@ Future<Response> joinGrupy(Dio dio, String kod_grupy){
 
 // Barcody
 
-Future<Response> addBarcodes(Dio dio, String barcode, String barcode_id, String name){
-  return dio.put("/products/barcode/$barcode_id?barcode=$barcode&note=$name");
+Future<Response> addBarcodes(Dio dio, String barcode, String product_id, String name){
+  return dio.put("/products/barcode/$product_id?barcode=$barcode&note=$name");
 }
 
 Future<Response> deleteBarcodes(Dio dio, String product_id, String barcode_id){
   return dio.delete("/products/barcode/$product_id?barcodeId=$barcode_id");
+}
+
+// Daty przydatności
+
+Future<Response> addExpDates(Dio dio, String product_id, String expDate, int remindDays, String nazwa){
+  return dio.put("/products/exp-date/$product_id?date=$expDate&days=$remindDays&note=$nazwa");
+}
+
+Future<Response> deleteExpDates(Dio dio, String product_id, String expDate_id){
+  return dio.delete("/products/exp-date/$product_id?expirationDateId=$expDate_id");
 }

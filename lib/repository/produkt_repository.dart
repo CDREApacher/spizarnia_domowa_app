@@ -306,14 +306,26 @@ class ProduktRepository{
   }
 
   // Barcody
-  Future<Barcodes> addBarcodeToObject(String barcode, String barcode_id, String name) async {
-    Response response = await addBarcodes(apiClient, barcode, barcode_id, name);
+  Future<Barcodes> addBarcodeToObject(String barcode, String product_id, String name) async {
+    Response response = await addBarcodes(apiClient, barcode, product_id, name);
 
     return Barcodes.fromJson(response.data);
   }
 
   Future<Response> deleteBarcode(String product_id, String barcode_id) async {
     return await deleteBarcodes(apiClient, product_id, barcode_id);
+  }
+
+  // Daty przydatności
+
+  Future<ExpirationDate> addExpDateToObject(String product_id, String expDate, int remindDays, String nazwa ) async {
+    Response response = await addExpDates(apiClient, product_id, expDate, remindDays, nazwa);
+
+    return ExpirationDate.fromJson(response.data);
+  }
+
+  Future<Response> deleteExpDate(String product_id, String expDate_id) async {
+    return await deleteExpDates(apiClient, product_id, expDate_id);
   }
 
 
