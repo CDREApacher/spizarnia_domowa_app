@@ -40,6 +40,21 @@ class _ListaGrupState extends State<ListaGrup> {
 
   void swapGroup(Grupa wybranaGrupa){
     produktController.selectActiveGroup(wybranaGrupa.nazwa_server, wybranaGrupa.kod_grupy);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Wybrano grupę " + wybranaGrupa.nazwa_server),
+          duration: Duration(seconds: 2),
+        )
+    );
+
+    // Clear displayKategorieZakupy
+    produktController.displayKategorieZakupy.clear();
+    // Clear displayKategorie
+    produktController.displayKategorie.clear();
+    // Clear displayMiary
+    produktController.displayMiary.clear();
+
   }
 
   @override

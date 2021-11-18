@@ -152,6 +152,8 @@ class _AddExistingProductState extends State<AddExistingProduct> {
                   ),
               );
 
+              // Try to go to the productDetail screen of the product with this code
+
             }else{
 
               // Means we didn't find this barcode

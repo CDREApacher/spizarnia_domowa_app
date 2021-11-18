@@ -575,7 +575,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
             FloatingActionButton(
               mini: true,
-              child: Icon(Icons.add_chart_rounded), // Wtf is wrong with the Icon name between this and Co-contributor versions? add_chart_rounded vs addchart_rounded
+              child: Icon(Icons.addchart_rounded), // Wtf is wrong with the Icon name between this and Co-contributor versions? add_chart_rounded vs addchart_rounded
               onPressed: () {
                 scanBarcode();
               },
