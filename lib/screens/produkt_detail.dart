@@ -140,7 +140,8 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
       //progAutoZakupu: widget.chosen_produkt.progAutoZakupu, //
       progAutoZakupu: int.parse(iloscAutoZakupuController.text),
-      autoZakup: widget.chosen_produkt.autoZakup, //
+      //autoZakup: widget.chosen_produkt.autoZakup, //
+      autoZakup: _checkbox,
 
       //miara: widget.chosen_produkt.miara,
       miara: miaraProduktu,
@@ -181,6 +182,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     if (widget.chosen_produkt.autoZakup == false) {
       onUpdatePressed(widget.chosen_produkt.objectId);
     } else {
+      onUpdatePressed(widget.chosen_produkt.objectId);
 
       // OK so pretty sure the server handles creating of shopping list items
       // So if true just also fire onUpdatePressed()
@@ -340,10 +342,11 @@ class _ProduktDetailState extends State<ProduktDetail> {
     kategoriaProduktyController.text = widget.chosen_produkt.kategorieProdukty.nazwa;
     kategoriaZakupyController.text = widget.chosen_produkt.kategorieZakupy.nazwa;
     miaraController.text = widget.chosen_produkt.miara.miara;
+
     super.initState();
   }
 
-  bool _checkbox = false;
+  bool _checkbox;
 
   String scanResult;
 
@@ -510,7 +513,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
     }
   }
 
-
+  var myFormat = DateFormat('yyyy-MM-dd');
 
   @override
   Widget build(BuildContext context) {
@@ -851,6 +854,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
                             TextButton(
                                 onPressed: () {
                                   //onAddZakupPressed(produkt);
+                                  log(_checkbox.toString());
                                   Navigator.pop(context);
                                 },
                                 child: Text('Zatwierdź')
@@ -922,7 +926,9 @@ class _ProduktDetailState extends State<ProduktDetail> {
                                 onDeleteDatePressed(widget.chosen_produkt.daty_waznosci[index].id);
                               }
                           ),
-                          Text(widget.chosen_produkt.daty_waznosci[index].exp_date),
+
+                          Text(widget.chosen_produkt.daty_waznosci[index].exp_date.toString()),
+                          //Text(myFormat.format(widget.chosen_produkt.daty_waznosci[index].exp_date)),
                           Text("   "),
                           Text(widget.chosen_produkt.daty_waznosci[index].nazwa),
 

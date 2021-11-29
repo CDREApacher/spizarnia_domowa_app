@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class ExpirationDate{
   String nazwa;
   String exp_date;
@@ -12,6 +14,7 @@ class ExpirationDate{
   });
 
   ExpirationDate.fromJson(Map<String, dynamic> json){
+    //exp_date = DateTime.parse(json['date']);
     exp_date = json['date'];
     id = json['id'];
     remainder_days = json['remainderDays'];

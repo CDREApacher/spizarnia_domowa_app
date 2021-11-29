@@ -304,6 +304,7 @@ class ProduktController extends GetxController {
     }
     */
     zakupy.removeWhere((element) => element.objectId == objectId);
+    listaZakupow.removeWhere((element) => element.objectId == objectId);
     update();
   }
 

@@ -45,7 +45,7 @@ class _ListaZakupow extends State<ListaZakupow>{
 
   onDeleteZakup(String objectId){
     produktController.deleteZakup(objectId);
-    Navigator.pop(context);
+    //Navigator.pop(context);
   }
 
 
