@@ -1,4 +1,4 @@
-## PRIVACY POLICY MODEL FOR MOBILE APPLICATIONS
+## PRIVACY POLICY MODEL FOR SPIŻARNIA DOMOWA MOBILE APPLICATION
 
 This privacy policy governs your use of the software application Spiżarnia Domowa (&quot;Application&quot;) for mobile devices that was created by Zofia Bączyk and Marek Gulawski. The Application is made to make your shopping list easy and simple with online access and team work. It allows you to keep track of items in your pantry, keep up to date with expiration dates ect. The app has been made as out university project.
 
