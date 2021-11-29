@@ -2,7 +2,7 @@
     package="com.example.spizarnia_domowa_app">
    <application
         android:networkSecurityConfig="@xml/network_security_config"
-        android:label="spizarnia_domowa_app"
+        android:label="Spiżarnia Domowa"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
