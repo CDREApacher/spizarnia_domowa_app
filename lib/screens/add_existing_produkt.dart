@@ -237,7 +237,9 @@ class _AddExistingProductState extends State<AddExistingProduct> {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 15.0),
+        child: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Navigator
@@ -245,6 +247,7 @@ class _AddExistingProductState extends State<AddExistingProduct> {
               .then((value) => null);// Navigator
         },
       ),
+    ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 //////////////////////////////////////////////////////////
       body: Container(

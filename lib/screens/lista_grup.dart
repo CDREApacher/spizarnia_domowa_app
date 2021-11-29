@@ -73,13 +73,16 @@ class _ListaGrupState extends State<ListaGrup> {
         title: Text('Lista Grup'),
 
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator
-              .push(context, MaterialPageRoute(builder: (context) => JoinGroup()))
-              .then((value) => null);// Navigator
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 15.0),
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator
+                .push(context, MaterialPageRoute(builder: (context) => JoinGroup()))
+                .then((value) => null);// Navigator
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       body: Container(
@@ -95,6 +98,22 @@ class _ListaGrupState extends State<ListaGrup> {
           onPressed:() {
           },
         ),*/
+            new Container(
+              padding: const EdgeInsets.all(10.0),
+              color: Colors.transparent,
+              child: new Container(
+                  decoration: new BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: new BorderRadius.all(
+                        const Radius.circular(40.0)
+                      )
+                  ),
+                  child: new Center(
+                    child: new Text(produktController.currentlyChosenGroupName,
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white), ),
+                  )
+              ),
+            ),
 
             Expanded(
               child: GetBuilder<ProduktController> (

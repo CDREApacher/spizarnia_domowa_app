@@ -1,121 +1,116 @@
 // Built in
-import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_spinbox/material.dart';
-import 'package:grouped_list/grouped_list.dart';
-
-// Custom Widgets
-import 'package:spizarnia_domowa_app/widget/custom_button.dart';
-
-// Modles
-import 'package:spizarnia_domowa_app/model/produkt.dart';
-import 'package:spizarnia_domowa_app/model/produkt_zakupy.dart';
-import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 // Controller
 import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:async';
 
-// Screens Widgets
-import 'package:spizarnia_domowa_app/screens/lista_kategorii.dart';
-import 'package:spizarnia_domowa_app/screens/lista_zakupow.dart';
-import 'package:spizarnia_domowa_app/screens/lista_miar.dart';
-import 'package:spizarnia_domowa_app/screens/tryb_zakupow.dart';
-import 'package:spizarnia_domowa_app/screens/lista_grup.dart';
-import 'package:spizarnia_domowa_app/screens/home.dart';
 
-// Debug
-import 'package:logger/logger.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:spizarnia_domowa_app/model/grupa.dart';
+
+
 import 'dart:developer';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
-class HomeMain extends StatefulWidget{
+class Witaj extends StatefulWidget{
 
 
   @override
-  _HomeMainState createState() => _HomeMainState();
+  _WitajState createState() => _WitajState();
 }
 
-class _HomeMainState extends State<HomeMain> {
+class _WitajState extends State<Witaj> {
   final ProduktController produktController = ProduktController.to;
+  var uuid = Uuid();
 
-  dodajGrupe(){
-    String nazwa = "Test_z_Apki_LOG";
+  final nameController = TextEditingController(); //
 
-    produktController.addGrupy(nazwa);
+  final kodController = TextEditingController(); //
+
+  final qr = TextEditingController();
+
+  final a = TextEditingController();
+
+  bool _checkbox = false;
+
+  String scanResult;
+
+  Future scanBarcode() async {
+    String scanResult;
+
+    try {
+      scanResult = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666",
+        "Anuluj",
+        false,
+        ScanMode.QR,
+      );
+    } on PlatformException {
+      scanResult = 'Błąd skanowania';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("$scanResult"),
+            duration: Duration(seconds: 2),
+          )
+      );
+
+    }
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$scanResult"),
+          duration: Duration(seconds: 2),
+        )
+    );
+
+    setState(() => this.scanResult = scanResult);
+
+    if(scanResult != "-1"){
+      kodController.text = scanResult;
+      dolaczDoGrupy();
+    }
+
+
   }
 
-  pokazGrupy() async {
-    //produktController.listaGrup.add(produktController.currentlyChosenGroup);
-    log("lista grup po add");
-    log(produktController.listaGrup[0].nazwa_server);
-    log("Aktualnie wybrana grupa NAZWA:");
+
+
+  void utworzGrupe() {
+
+    log(nameController.text);
+    produktController.addGrupy(nameController.text);
+    nameController.clear();
+
     log(produktController.currentlyChosenGroupName);
-    log("Aktualnie wybrana grupa KOD:");
     log(produktController.currentlyChosenGroupCode);
+  }
 
-    /*
-    Grupa g1 = new Grupa(
-      nazwa_server: "Grupa1",
-      kod_grupy: "11111"
-    );
-
-    Grupa g2 = new Grupa(
-      nazwa_server: "Grupa2",
-      kod_grupy: "22222"
-    );
-
-    produktController.listaGrupTest.add(g1);
-    produktController.listaGrupTest.add(g2);
+  void dolaczDoGrupy(){
 
 
-    SharedPreferences sprefs = await SharedPreferences.getInstance();
-
-    var encodedListaGrupTest = json.encode(produktController.listaGrupTest);
-
-    await sprefs.setString('spidom_group_list_test', encodedListaGrupTest);
-    */
-
-    SharedPreferences sprefs = await SharedPreferences.getInstance();
-
-    String encodedGroupString = sprefs.getString('spidom_group_list');
-    log("Encoded");
-    log(encodedGroupString);
-
-    Iterable l = json.decode(encodedGroupString);
-    produktController.listaGrup = RxList.from(l.map((model) => Grupa.fromJson(model)));
+    log(kodController.text);
+    produktController.joinGrupy(kodController.text);
+    kodController.clear();
 
 
-    log("lista grup po MAGICZNYCH WIDZIMISIACH");
+
 
     produktController.listaGrup.forEach((Grupa grupa) {
+      log("Lista zapisana");
       log(grupa.nazwa_server);
       log(grupa.kod_grupy);
     });
 
 
-    /*
-    produktController.listaGrupTest.forEach((Grupa grupa) {
-      log(grupa.nazwa_server);
-      log(grupa.kod_grupy);
-    });
-
-    Grupa app = new Grupa(
-      nazwa_server: "Test_z_Apki_LOG",
-      kod_grupy: "YtUed",
-    );
-    */
-    //produktController.listaGrup.add(app);
   }
 
   @override
   void initState(){
 
-    //produktController.fetchKategorieProdukty();
-    //produktController.fetchKategorieZakupy();
-    //produktController.fetchMiary();
     super.initState();
 
   }
@@ -123,127 +118,75 @@ class _HomeMainState extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-//////////////////////////////////////////////////////////
-      appBar: AppBar(
-
-        toolbarHeight: 42.5,
-
-        title: Text('Domowa spiżarnia'),
-
-        actions: <Widget>[
-          /*
-          IconButton(
-            icon: Icon(Icons.group_add),
-            onPressed: () => {
-              dodajGrupe()
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.group),
-            onPressed: () => {
-              pokazGrupy()
-            },
-          ),
-          */
-
-        ],
-
-      ),
-
-//////////////////////////////////////////////////////////
+      backgroundColor: Colors.white,
       body: GridView.count(
         primary: false,
-        padding: const EdgeInsets.all(20),
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        padding: const EdgeInsets.only(left: 10.0, top:60.0, right: 10.0),
+        crossAxisSpacing: 15,
+        mainAxisSpacing: 15,
         crossAxisCount: 2,
         children: <Widget>[
+
+
           InkWell(
             onTap: () {
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => Home()))
-                  .then((value) => null);
+              showDialog(context: context, builder: (_) =>
+                  AlertDialog(
+                    title: Text('Dołącz do grupy:'),
+
+                    content: TextField(
+                      controller: kodController,
+                      decoration: InputDecoration(hintText: "kod grupy"),
+
+                    ),
+
+                    actions: [
+
+
+                      TextButton(
+                          onPressed: () {
+
+                            dolaczDoGrupy();
+                            Navigator.pop(context);
+                          },
+                          child: Text('Dołącz')
+
+
+                      ),
+
+
+
+                    ],
+                  ),
+              );
             },
             child: Container(
               padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+
                 children: [
-                  Icon(Icons.article, size: 100),
-                  Text("Lista Produktów",
-                    style: TextStyle(fontSize: 18),
+                  Icon(Icons.group_rounded, size: 80, color: Colors.white),
+                  Text("Dołącz do grupy",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
-                  .then((value) => null);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.assignment_outlined, size: 100),
-                  Text("Lista Zakupów",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
               ),
-              color: Colors.blue,
             ),
           ),
+
           InkWell(
             onTap: () {
 
-              produktController.fetchZakupy();
-
-              produktController.doKupienia.clear();
-              produktController.zakupyWyswietlaj.clear();
-              if(produktController.zakupyWyswietlaj.isEmpty){
-                //produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
-
-                produktController.zakupyWyswietlaj = RxList.from(produktController.listaZakupow);
-
-              }
-
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))
-                  .then((value) => null);// Navigator
-
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.shopping_cart_rounded, size: 100),
-                  Text("Tryb Zakupowy",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-              color: Colors.blue,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-
-              /*
-              produktController.listaGrupWyswietlaj = RxList.from(produktController.listaGrup);
-              log(produktController.listaGrup.toString());
-              log(produktController.listaGrupWyswietlaj.toString());
-              */
-
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => ListaGrup()));
-              //.then((value) => null);// Navigator
+              scanBarcode();
 
             },
             child: Container(
@@ -251,77 +194,77 @@ class _HomeMainState extends State<HomeMain> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.group_rounded, size: 100),
-                  Text("Lista Grup",
-                    style: TextStyle(fontSize: 18),
+                  Icon(Icons.qr_code_scanner_rounded, size: 80, color: Colors.white),
+                  Text("Dołącz z QR",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
+
+          InkWell(
+            onTap: () {
+              showDialog(context: context, builder: (_) =>
+                  AlertDialog(
+                    title: Text('Utwórz grupę:'),
+
+                    content: TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(hintText: "Nazwa grupy"),
+
+                    ),
+
+                    actions: [
+
+
+                      TextButton(
+                          onPressed: () {
+
+                            utworzGrupe();
+                            Navigator.pop(context);
+                          },
+                          child: Text('Utwórz')),
+
+
+
+                    ],
+                  ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.group_add_rounded, size: 80, color: Colors.white),
+                  Text("Utwórz grupę",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+
 
 
         ],
       ),
-/////////////////////////////////////////////////////////////////////////
-      drawer: Drawer(
-
-        child: ListView(
-          padding: EdgeInsets.zero,
-
-          children: <Widget>[
-
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-
-              child: Text('Menu'),
-            ),
-
-            ListTile(
-              title: Text('Lista Produktów'),
-              onTap: () {
-                Get.back();
-                Get.to(() => Home());
-
-              },
-            ),
-
-            ListTile(
-              title: Text('Lista Zakupów'),
-              onTap: () {
-                Get.back();
-                Get.to(() => ListaZakupow());
-              },
-            ),
-
-            ListTile(
-              title: Text('Miary'),
-              onTap: () {
-                Get.back();
-                Get.to(() => ListaMiar());
-              },
-            ),
-
-            ListTile(
-              title: Text('Kategorie'),
-              onTap: () {
-                /*
-                Navigator.pop(context);
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => ListaKategorii()))
-                    .then((value) => null);
-                */
-                Get.back();
-                Get.to(() => ListaKategorii());
-              },
-            ),
-
-          ], // children
-        ),
-      ),
-
     );
   }}// class HomeMain

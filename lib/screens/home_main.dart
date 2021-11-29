@@ -170,13 +170,21 @@ class _HomeMainState extends State<HomeMain> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.article, size: 100),
+                  Icon(Icons.article, size: 80, color: Colors.white),
                   Text("Lista Produktów",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
+
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
           InkWell(
@@ -190,13 +198,21 @@ class _HomeMainState extends State<HomeMain> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.assignment_outlined, size: 100),
+                  Icon(Icons.assignment_outlined, size: 80, color: Colors.white),
                   Text("Lista Zakupów",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
+
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
           InkWell(
@@ -223,13 +239,21 @@ class _HomeMainState extends State<HomeMain> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart_rounded, size: 100),
+                  Icon(Icons.shopping_cart_rounded, size: 80, color: Colors.white),
                   Text("Tryb Zakupowy",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
+
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
           InkWell(
@@ -251,13 +275,21 @@ class _HomeMainState extends State<HomeMain> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.group_rounded, size: 100),
+                  Icon(Icons.group_rounded, size: 80, color: Colors.white),
                   Text("Lista Grup",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
+
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
 

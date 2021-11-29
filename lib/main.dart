@@ -8,6 +8,8 @@ import 'package:spizarnia_domowa_app/screens/screen_choice.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
+import 'package:spizarnia_domowa_app/screens/witaj.dart';
+
 void main() {
   Get.put(ProduktController());
   runApp(MyApp());

@@ -620,7 +620,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
             ),
           ],
           isSpeedDialFABsMini: true,
-          paddingBtwSpeedDialButton: 30.0,
+          paddingBtwSpeedDialButton: 15.0,
         ),
 
 

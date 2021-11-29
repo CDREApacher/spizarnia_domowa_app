@@ -146,9 +146,9 @@ class _JoinGroupState extends State<JoinGroup> {
       ),
       body: GridView.count(
         primary: false,
-        padding: const EdgeInsets.all(20),
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        padding: const EdgeInsets.only(left: 10.0, top:60.0, right: 10.0),
+        crossAxisSpacing: 15,
+        mainAxisSpacing: 15,
         crossAxisCount: 2,
         children: <Widget>[
 
@@ -174,7 +174,10 @@ class _JoinGroupState extends State<JoinGroup> {
                             dolaczDoGrupy();
                             Navigator.pop(context);
                           },
-                          child: Text('Dołącz')),
+                          child: Text('Dołącz')
+
+
+                      ),
 
 
 
@@ -186,20 +189,52 @@ class _JoinGroupState extends State<JoinGroup> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+
                 children: [
-                  Icon(Icons.group_rounded, size: 100),
+                  Icon(Icons.group_rounded, size: 80, color: Colors.white),
                   Text("Dołącz do grupy",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
 
+          InkWell(
+            onTap: () {
 
+              scanBarcode();
 
-
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.qr_code_scanner_rounded, size: 80, color: Colors.white),
+                  Text("Dołącz z QR",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
 
           InkWell(
             onTap: () {
@@ -235,48 +270,27 @@ class _JoinGroupState extends State<JoinGroup> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.group_add_rounded, size: 100),
+                  Icon(Icons.group_add_rounded, size: 80, color: Colors.white),
                   Text("Utwórz grupę",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
-              color: Colors.blue,
-            ),
-          ),
-
-
-
-
-
-          InkWell(
-            onTap: () {
-
-              scanBarcode();
-
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.qr_code_scanner_rounded, size: 100),
-                  Text("Dołącz z QR",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.blue, Colors.blueAccent],
+                ),
+                shape: BoxShape.circle,
               ),
-              color: Colors.blue,
             ),
           ),
-          Container(
 
-          ),
 
 
         ],
       ),
-
     );
 
   }

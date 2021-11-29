@@ -86,7 +86,9 @@ class _ListaZakupow extends State<ListaZakupow>{
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 15.0),
+        child: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
 
@@ -97,6 +99,7 @@ class _ListaZakupow extends State<ListaZakupow>{
 
         },
       ),
+    ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
 

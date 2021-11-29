@@ -154,7 +154,9 @@ class _HomeState extends State<Home> {
 
 //////////////////////////////////////////////////////////
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 15.0),
+        child: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Navigator
@@ -162,6 +164,7 @@ class _HomeState extends State<Home> {
               .then((value) => onRefreshPressed());// Navigator
         },
       ),
+    ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
 ///////////////////////////////////////////////////////////

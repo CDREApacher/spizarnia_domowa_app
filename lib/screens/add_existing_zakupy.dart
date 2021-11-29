@@ -99,7 +99,9 @@ class AddExistingZakupy extends StatelessWidget{
 
       ),
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Padding(
+      padding: const EdgeInsets.only(bottom: 15.0),
+      child: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Navigator
@@ -107,6 +109,7 @@ class AddExistingZakupy extends StatelessWidget{
               .then((value) => null);// Navigator
         },
       ),
+    ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 //////////////////////////////////////////////////////////
       body: Container(
