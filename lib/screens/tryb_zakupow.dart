@@ -119,163 +119,172 @@ class _TrybZakupowState extends State<TrybZakupow> {
       //  get both lists to display
 
 
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //crossAxisAlignment: CrossAxisAlignment.start,
 
-          children: [
+            children: [
 
 
 
-            SizedBox(
 
-              height: 300,
 
-              child: Expanded(
-                child: GetBuilder<ProduktController>(
-                  builder: (produktController) =>
-                      GroupedListView<ShoppingList, String>(
 
-                        elements: produktController.zakupyWyswietlaj,
-                        groupBy: (zakup) {
-                          return zakup.produkt.kategorieZakupy.nazwa;
-                        },
-                        useStickyGroupSeparators: false,
+                  GetBuilder<ProduktController>(
+                    builder: (produktController) =>
+                        GroupedListView<ShoppingList, String>(
 
-                        groupHeaderBuilder: (ShoppingList zakup) => Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          shrinkWrap: true,
+                          primary: false,
 
-                          child: Text(
-                            zakup.produkt.kategorieZakupy.nazwa,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          elements: produktController.zakupyWyswietlaj,
+                          groupBy: (zakup) {
+                            return zakup.produkt.kategorieZakupy.nazwa;
+                          },
+                          useStickyGroupSeparators: false,
+
+                          groupHeaderBuilder: (ShoppingList zakup) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+
+                            child: Text(
+                              zakup.produkt.kategorieZakupy.nazwa,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
 
-                        itemBuilder: (context, ShoppingList zakup) {
-                          return Container(
-                            height: 60,
-                            child: Card(
+                          itemBuilder: (context, ShoppingList zakup) {
+                            return Container(
+                              height: 60,
+                              child: Card(
 
-                              elevation: 5.0,
-                              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                elevation: 5.0,
+                                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
 
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
 
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
 
-                                        Get.to(TrybZakupowyDetail(chosen_produkt: zakup.produkt));
+                                          Get.to(TrybZakupowyDetail(chosen_produkt: zakup.produkt));
 
-                                      },
+                                        },
 
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
 
 
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                                  child: Text(zakup.produkt.nazwaProduktu + ' : ' + zakup.quantityToBuy.toString() + ' ' + zakup.produkt.miara.miara),
-                                                ),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                                    child: Text(zakup.produkt.nazwaProduktu + ' : ' + zakup.quantityToBuy.toString() + ' ' + zakup.produkt.miara.miara),
+                                                  ),
 
-                                                IconButton(
-                                                    icon: Icon(Icons.add_shopping_cart_rounded),
-                                                    onPressed: () {
-                                                      //  remove from zakupy list
-                                                      //  add to doKupienia list
-                                                      onAddToCart(zakup);
-                                                    }
-                                                ),
+                                                  IconButton(
+                                                      icon: Icon(Icons.add_shopping_cart_rounded),
+                                                      onPressed: () {
+                                                        //  remove from zakupy list
+                                                        //  add to doKupienia list
+                                                        onAddToCart(zakup);
+                                                      }
+                                                  ),
 
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
 
-                                        ],
+                                          ],
+                                        ),
+
                                       ),
-
                                     ),
-                                  ),
 
-                                ],
+                                  ],
+                                ),
+
                               ),
 
-                            ),
+                            );
 
-                          );
-
-                        }, // itemBuilder
-                      ),
-                ),
-              ),
-            ),
+                          }, // itemBuilder
+                        ),
+                  ),
 
 
 
 
-            // Display list of produkts added to doKupienia
 
-            Expanded(
-              child: GetBuilder<ProduktController> (
-                  builder: (produktController) =>
+
+              // Display list of produkts added to doKupienia
+
+
+
+                  GetBuilder<ProduktController> (
+                      builder: (produktController) =>
                       //Text("TEXT ADDED BY THE SECOND GETBUILDER"),
 
 
                       ListView.builder(
-                          itemCount: produktController.doKupienia.length,
 
-                          //separatorBuilder: (context, index) =>
-                          //    Divider(color: Colors.black),
+                        shrinkWrap: true,
+                        primary: false,
 
-                          itemBuilder: (context, index) =>
+                        itemCount: produktController.doKupienia.length,
 
-                              Container(
-                                height: 55,
-                                child: Card(
-                                  elevation: 5.0,
-                                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                        //separatorBuilder: (context, index) =>
+                        //    Divider(color: Colors.black),
+
+                        itemBuilder: (context, index) =>
+
+                            Container(
+                              height: 55,
+                              child: Card(
+                                elevation: 5.0,
+                                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
 
 
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
 
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
-                                        child: Text(
-                                            produktController.doKupienia[index].produkt.nazwaProduktu
-                                                + " : "
-                                                + produktController.doKupienia[index].quantityToBuy.toString()
-                                                + " "
-                                                + produktController.doKupienia[index].produkt.miara.miara
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
+                                      child: Text(
+                                        produktController.doKupienia[index].produkt.nazwaProduktu
+                                            + " : "
+                                            + produktController.doKupienia[index].quantityToBuy.toString()
+                                            + " "
+                                            + produktController.doKupienia[index].produkt.miara.miara
                                         ,style: TextStyle(decoration: TextDecoration.lineThrough),
-                                        ),
                                       ),
+                                    ),
 
 
-                                    ],
-                                  ),
+                                  ],
                                 ),
                               ),
+                            ),
 
 
                       )
 
 
-              ),
-            ),
+                  ),
 
-            //Text("TEST TEST"),
-          ],
+
+
+              //Text("TEST TEST"),
+            ],
+          ),
         ),
       ),
 
