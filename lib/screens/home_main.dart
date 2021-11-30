@@ -1,4 +1,5 @@
 // Built in
+import 'dart:async';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -177,7 +178,6 @@ class _HomeMainState extends State<HomeMain> {
 
           InkWell(
             onTap: () {
-
               /*
               produktController.fetchZakupy();
 
@@ -190,6 +190,9 @@ class _HomeMainState extends State<HomeMain> {
 
               //Get.to(TrybZakupow());
 
+              /*
+              * Cannot figure out why lista_zakupow works but this not
+              * */
               Get.snackbar(
                   "Dostępny z ekranu Listy Zakupów",
                   "W tej wersji przejście dostępne z Listy Zakupów",
