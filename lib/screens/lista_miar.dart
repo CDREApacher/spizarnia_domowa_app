@@ -10,8 +10,10 @@ import 'package:spizarnia_domowa_app/model/grupa.dart';
 
 
 class ListaMiar extends StatefulWidget {
+
   @override
   _ListaMiar createState() => _ListaMiar();
+
 }
 
 
@@ -25,26 +27,61 @@ class _ListaMiar extends State<ListaMiar> {
   final nameController = TextEditingController();
 
   onAddMiaraPressed(){
-    Grupa grupaMiary = new Grupa(
-      nazwa_server: produktController.currentlyChosenGroupName,
-      kod_grupy: produktController.currentlyChosenGroupCode,
-    );
 
-    Miara miara = new Miara(
-      objectId: uuid.v4(),
-      miara: nameController.text,
-      grupa: grupaMiary,
-    );
+    List<String> miaraCheck = [];
+    produktController.miary.forEach((element) {miaraCheck.add(element.miara);});
 
-    produktController.addMiary(miara);
-    nameController.clear();
+    if(miaraCheck.contains(nameController.text)){
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Taka miara już istnieje!"),
+            duration: Duration(seconds: 2),
+          )
+      );
+      nameController.clear();
+
+    }else{
+      Grupa grupaMiary = new Grupa(
+        nazwa_server: produktController.currentlyChosenGroupName,
+        kod_grupy: produktController.currentlyChosenGroupCode,
+      );
+
+      Miara miara = new Miara(
+        objectId: uuid.v4(),
+        miara: nameController.text,
+        grupa: grupaMiary,
+      );
+
+      produktController.addMiary(miara);
+      nameController.clear();
+    }
   }
 
-  /*
   onDeleteMiaraPressed(String objectId){
-    produktController.deleteMiary(objectId);
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text('Czy na pewno usunąć miarę?'),
+
+          actions: [
+            TextButton(
+                onPressed: () {
+                  produktController.deleteMiary(objectId);
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Usuń')
+            ),
+
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Anuluj')
+            ),
+          ],
+        ),
+    );
   }
-   */
 
   @override
   void initState(){
@@ -90,9 +127,7 @@ class _ListaMiar extends State<ListaMiar> {
                     ],
                   )
           );
-
         },
-
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -106,60 +141,36 @@ class _ListaMiar extends State<ListaMiar> {
               return Card(
                 elevation: 8,
 
-
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+
+                    if(produktController.miary[index].miara != 'Inne')
+                      IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => {
+                            onDeleteMiaraPressed(produktController.miary[index].objectId)
+                          }),
+
+                    if(produktController.miary[index].miara == 'Inne')
+                      Opacity(
+                        opacity: 0.0,
+                        child: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => {},
+                        ),
+                      ),
+
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: Text(produktController.miary[index].miara),
                     ),
 
-
-                    /*
-                    IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: (){
-
-                          /*
-                          showDialog(
-                              context: context,
-                              builder: (_) =>
-                                  AlertDialog(
-                                    title: Text('Usunąć kategorię: "' + produktController.miary[index].miara + '"'),
-
-                                    //content: ,
-
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            // Delete selected Miara here
-                                            //onDeleteMiaraPressed(produktController.miary[index].objectId);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            'Usuń',
-                                            style: TextStyle(
-                                                color: Colors.red),
-                                          )
-                                      ),
-                                    ],
-                                  )
-                          );
-                          */
-                        }
-                    ),
-
-                    */
                   ],
                 ),
 
               );
               }, // itemBuilder
-
-            //separatorBuilder: (context, index) => Divider(
-            //  color: Colors.black,
-            //),
 
           ),
       ),

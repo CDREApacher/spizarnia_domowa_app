@@ -28,15 +28,19 @@ import 'package:spizarnia_domowa_app/screens/home.dart';
 
 import 'dart:developer';
 
+import '../model/shopping_list.dart';
+import '../model/shopping_list.dart';
+import '../model/shopping_list.dart';
+
 class ProduktDetail extends StatefulWidget {
 
   final Produkt chosen_produkt;
-
 
   ProduktDetail({Key key, @required this.chosen_produkt}) : super(key: key);
 
   @override
   _ProduktDetailState createState() => _ProduktDetailState();
+
 }
 
 
@@ -68,32 +72,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
   final ProduktController produktController = ProduktController.to;
 
   onUpdatePressed(String id) {
-  /*
-    Produkt produkt = new Produkt(
-      autoZakup: widget.chosen_produkt.autoZakup,
-      progAutoZakupu: int.parse(iloscAutoZakupuController.text),
-
-      //nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
-      nazwaProduktu: nameController.text,
-
-      ilosc: int.parse(iloscController.text),
-      miara: widget.chosen_produkt.miara,
-      //kategorieProdukty: kategoriaProduktyController.text,
-      //kategorieZakupy: widget.chosen_produkt.kategorieProdukty,
-    );
-
-    produktController.updateProdukt(id, produkt);
-   */
-
-/*
-    int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
-    String idMiara = produktController.miary[indexMiara].objectId;
-
-    Miara miaraProduktu = new Miara(
-      objectId: idMiara,
-      miara: miaraController.text,
-    );
-*/
 
     Grupa grupaProduktu = new Grupa(
       nazwa_server: produktController.currentlyChosenGroupName,
@@ -109,8 +87,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
       grupa: grupaProduktu,
     );
 
-
-
     int indexKategoriaZakupu = produktController.kategorieZakupy.indexWhere((element) => element.nazwa == kategoriaZakupyController.text);
     String idKategoriaZakupu = produktController.kategorieZakupy[indexKategoriaZakupu].objectId;
 
@@ -119,7 +95,6 @@ class _ProduktDetailState extends State<ProduktDetail> {
       nazwa: kategoriaZakupyController.text,
       grupa: grupaProduktu
     );
-
 
     int indexMiara = produktController.miary.indexWhere((element) => element.miara == miaraController.text);
     String idMiara = produktController.miary[indexMiara].objectId;
@@ -130,20 +105,15 @@ class _ProduktDetailState extends State<ProduktDetail> {
       grupa: grupaProduktu,
     );
 
-    //RxList<Barcodes> kody_kreskowe_produktu = <Barcodes>[].obs;
-    //RxList<ExpirationDate> daty_waznosci_produktu = <ExpirationDate>[].obs;
-
     Produkt produkt = new Produkt(
       objectId: widget.chosen_produkt.objectId, //
       nazwaProduktu: nameController.text, //
       ilosc: int.parse(iloscController.text), //
 
-      //progAutoZakupu: widget.chosen_produkt.progAutoZakupu, //
       progAutoZakupu: int.parse(iloscAutoZakupuController.text),
-      //autoZakup: widget.chosen_produkt.autoZakup, //
+
       autoZakup: _checkbox,
 
-      //miara: widget.chosen_produkt.miara,
       miara: miaraProduktu,
       kategorieProdukty: kategoriaProduktu,
       kategorieZakupy: kategoriaZakupu,
@@ -157,100 +127,92 @@ class _ProduktDetailState extends State<ProduktDetail> {
       daty_waznosci: widget.chosen_produkt.daty_waznosci,
     );
 
-    //produktController.addProdukt(produkt);
     produktController.updateProdukt(produkt.objectId, produkt);
   }
 
 
-  /*
-  onAddZakupPressed(Produkt produkt) {
-    ProduktZakupy zakup = new ProduktZakupy(
-
-      nazwaProduktu: produkt.nazwaProduktu,
-      //miara: produkt.miara,
-      //kategoriaZakupy: produkt.kategorieZakupy,
-      ilosc: int.parse(iloscController.text),
-      objectIdProduktu : produkt.objectId,
-
-    );
-    produktController.addNewZakup(zakup);
-  }
-  */
-
-
   onCheckUpdatePressed() {
     if (widget.chosen_produkt.autoZakup == false) {
+
       onUpdatePressed(widget.chosen_produkt.objectId);
+
     } else {
-      onUpdatePressed(widget.chosen_produkt.objectId);
+      // autoZakup == true
 
-      // OK so pretty sure the server handles creating of shopping list items
-      // So if true just also fire onUpdatePressed()
+      //first check if progAutoZakupu < produkt.ilosc
 
-      /*
-      // This code is for BE legacy -- figure out the one wee need
+      if (int.parse(iloscController.text) < widget.chosen_produkt.progAutoZakupu) {
+        /*
+        * Here the new ammount will be smaller than progAutoZakupu
+        * Update the product anyway
+        * Also create a Zakup and add it to lista zakupow
+        * */
+
+        /*
+        * Firs we should check if a zakup already exists
+        * if it does for now dont do anything
+        * */
+
+        bool foundZakup = false;
+        ShoppingList znalezionyZakup;
+
+        breaklabel:
+        for (var i = 0 ; i < produktController.listaZakupow.length ; i++) {
+          if (produktController.listaZakupow[i].produkt.objectId == widget.chosen_produkt.objectId) {
+            znalezionyZakup = produktController.listaZakupow[i];
+            foundZakup = true;
+            break breaklabel;
+          } // if
+        } // for
+
+        if (foundZakup){
+          log("WE HAVE FOUND THE ZAKUP !!!");
+          // We found that a zakup for this product exists so just update the product
+          onUpdatePressed(widget.chosen_produkt.objectId);
+          // We could also update the Zakup ammount
+
+          ShoppingList nowyZakup = new ShoppingList(
+            objectId: znalezionyZakup.objectId,
+            quantityToBuy: znalezionyZakup.quantityToBuy + (widget.chosen_produkt.ilosc - int.parse(iloscController.text)),
+            produkt: znalezionyZakup.produkt,
+            grupa: znalezionyZakup.grupa,
+          );
+
+          produktController.updateZakup(nowyZakup.objectId, nowyZakup.quantityToBuy, nowyZakup);
 
 
-      if( (int.parse(iloscController.text) >= widget.chosen_produkt.progAutoZakupu) || (widget.chosen_produkt.ilosc <= int.parse(iloscController.text)) ){ // chosen_produkt.ilosc after update >= chosen_produkt.progAutoZakupu
-        onUpdatePressed(widget.chosen_produkt.objectId);
-
-      }else{// chosen_produkt.ilosc after update < chosen_produkt.progAutoZakupu
-        int index = produktController.findProduktInZakupyList(widget.chosen_produkt.objectId);
-
-        int naszProg = widget.chosen_produkt.progAutoZakupu;
-        int staraWartosc = widget.chosen_produkt.ilosc;
-        int nowaWartosc = int.parse(iloscController.text);
-        int wynik;
-
-        if(staraWartosc >= naszProg){
-          // To co w bazie było orginalnie większe niż próg
-          wynik = naszProg - nowaWartosc;
         }else{
-          // To co w bazie NIE było orginalnie większe niż próg
-          wynik = staraWartosc - nowaWartosc;
-        }
-        if(wynik < 0){wynik = wynik * (-1);}
+          // No zakup exists for this product so add a zakup
+          log("WE HAVE -- NOT -- FOUND THE ZAKUP !!!");
+          // Figure out the ammount to add
+          var ileKupic = widget.chosen_produkt.progAutoZakupu - int.parse(iloscController.text);
 
+          Grupa grupaZakupu = new Grupa(
+            nazwa_server: produktController.currentlyChosenGroupName,
+            kod_grupy: produktController.currentlyChosenGroupCode,
+          );
 
-        if(index == -1){// No produkt like this found in zakupy lista // create new zakup
-
-          ProduktZakupy zakupDodaj = new ProduktZakupy(
-
-            nazwaProduktu: widget.chosen_produkt.nazwaProduktu,
-            //miara: widget.chosen_produkt.miara,
-            //kategoriaZakupy: widget.chosen_produkt.kategorieZakupy,
-            ilosc: wynik,
-            objectIdProduktu : widget.chosen_produkt.objectId,
-
-            );
-          //produktController.addNewZakup(zakupDodaj);
+          ShoppingList listaZakupow = new ShoppingList(
+            objectId: uuid.v4(),
+            quantityToBuy: ileKupic,
+            produkt: widget.chosen_produkt,
+            grupa: grupaZakupu,
+          );
 
           onUpdatePressed(widget.chosen_produkt.objectId);
 
-        }else{// Produkt like this found in zakupy lista // get the Produkt
+          produktController.addNewZakup(listaZakupow);
 
-          ProduktZakupy zakup = produktController.getProduktFromZakupy(index);
-
-          if(zakup.ilosc + wynik + nowaWartosc < widget.chosen_produkt.progAutoZakupu){
-            zakup.ilosc = widget.chosen_produkt.progAutoZakupu - nowaWartosc;
-          }else{
-            zakup.ilosc += wynik;
-          }
-          //-------------------------------------------------------------------------------------------------------------------------------------------------------------//
-          //produktController.updateZakup(zakup.objectId, zakup); // update zakupy
-
-          onUpdatePressed(widget.chosen_produkt.objectId); // update produkty
-
-        }// Third else
-
-      }// Second else
-
-    }// First else
+        }
 
 
-
-    */
-
+      } else {
+        /*
+        * Here the new amount is still higher than progAutoZakupu
+        * so just update the product
+        * */
+        onUpdatePressed(widget.chosen_produkt.objectId);
+      }
 
     }
 
@@ -628,53 +590,52 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
 
-      body: Container(
-        padding: EdgeInsets.all(24),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(24),
 
-        child: Column(
-          children: [
+          child: Column(
+            children: [
 
-            Text(
+              Text(
                 "Nazwa produktu",
-                  style: TextStyle(
+                style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold
+                ),
               ),
-            ),
 
 
 
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(hintText: "Nazwa"),
-              textAlign: TextAlign.center,
-            ),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(hintText: "Nazwa"),
+                textAlign: TextAlign.center,
+              ),
 
 
-            SizedBox(
-              height: 10,
-            ),
+              SizedBox(
+                height: 10,
+              ),
 
-            Text(
+              Text(
                 "Ilość " + widget.chosen_produkt.miara.miara + " produktu:",
-                  style: TextStyle(
+                style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold
                 ),
-            ),
+              ),
 
-            SpinBox(
-              value: double.parse(iloscController.text),
-              min: 0,
-              max: 2048,
-              onChanged: (value)  {
-                print(value); // TODO remove debug
-                int val = value.toInt();
-                iloscController.text = val.toString();
-              },
-            ),
-
-
+              SpinBox(
+                value: double.parse(iloscController.text),
+                min: 0,
+                max: 2048,
+                onChanged: (value)  {
+                  print(value); // TODO remove debug
+                  int val = value.toInt();
+                  iloscController.text = val.toString();
+                },
+              ),
 
 
 
@@ -683,148 +644,150 @@ class _ProduktDetailState extends State<ProduktDetail> {
 
 
 
-            SizedBox(
-              height: 10,
-            ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Miara produktu: ",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
+
+              SizedBox(
+                height: 10,
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Miara produktu: ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                    ),
                   ),
-                ),
 
 //-------------------------------------------------------------------------------------
 
-                DropdownButton(
-                  value: miaraController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 15,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                  DropdownButton(
+                    value: miaraController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 15,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
 
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+
+                    onChanged: (String newValueX){
+                      setState(() {
+                        miaraController.text = newValueX;
+                        log("Miara Controller text: " + miaraController.text);
+                      });
+                    },
+
+                    items: produktController.displayMiary.map((miara) {
+                      return DropdownMenuItem(
+                        child: new Text(miara),
+                        value: miara,
+                      );
+                    }).toList(),
                   ),
-
-                  onChanged: (String newValueX){
-                    setState(() {
-                      miaraController.text = newValueX;
-                      log("Miara Controller text: " + miaraController.text);
-                    });
-                  },
-
-                  items: produktController.displayMiary.map((miara) {
-                    return DropdownMenuItem(
-                      child: new Text(miara),
-                      value: miara,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
+                ],
+              ),
 
 //-------------------------------------------------------------------------------------
 
-            SizedBox(
-              height: 10,
-            ),
+              SizedBox(
+                height: 10,
+              ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Kategoria produktu: ",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-
-                DropdownButton(
-                  value: kategoriaProduktyController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 15,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
-
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Kategoria produktu: ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                    ),
                   ),
 
-                  onChanged: (String newValueY){
-                    setState(() {
-                      kategoriaProduktyController.text = newValueY;
-                      log("Kategoria Produkty text: " + kategoriaProduktyController.text);
-                    });
-                  },
+                  DropdownButton(
+                    value: kategoriaProduktyController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 15,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
 
-                  items: produktController.displayKategorie.map((produkt) {
-                    return DropdownMenuItem(
-                      child: new Text(produkt),
-                      value: produkt,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
 
+                    onChanged: (String newValueY){
+                      setState(() {
+                        kategoriaProduktyController.text = newValueY;
+                        log("Kategoria Produkty text: " + kategoriaProduktyController.text);
+                      });
+                    },
 
-
-
-
-            SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Kategoria zakupu ",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
+                    items: produktController.displayKategorie.map((produkt) {
+                      return DropdownMenuItem(
+                        child: new Text(produkt),
+                        value: produkt,
+                      );
+                    }).toList(),
                   ),
-                ),
+                ],
+              ),
 
 
-                DropdownButton(
-                  value: kategoriaZakupyController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 15,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
 
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
+
+
+              SizedBox(
+                height: 10,
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Kategoria zakupu ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                    ),
                   ),
 
-                  onChanged: (String newValueZ){
-                    setState(() {
-                      kategoriaZakupyController.text = newValueZ;
-                      log("Kategoria zakupy text: " + kategoriaZakupyController.text);
-                    });
-                  },
 
-                  items: produktController.displayKategorieZakupy.map((produkt) {
-                    return DropdownMenuItem(
-                      child: new Text(produkt),
-                      value: produkt,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
+                  DropdownButton(
+                    value: kategoriaZakupyController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 15,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
+
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+
+                    onChanged: (String newValueZ){
+                      setState(() {
+                        kategoriaZakupyController.text = newValueZ;
+                        log("Kategoria zakupy text: " + kategoriaZakupyController.text);
+                      });
+                    },
+
+                    items: produktController.displayKategorieZakupy.map((produkt) {
+                      return DropdownMenuItem(
+                        child: new Text(produkt),
+                        value: produkt,
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
 
 
-            SizedBox(height: 10),
+              SizedBox(height: 10),
 
-            SwitchListTile(
+              SwitchListTile(
                 title: Text("Włącz auto zakup: (próg " + widget.chosen_produkt.progAutoZakupu.toString() + ")"),
                 value: _checkbox,
                 onChanged: (bool value) {
@@ -867,94 +830,95 @@ class _ProduktDetailState extends State<ProduktDetail> {
                   }
 
                 },
-            ),
+              ),
 
-            Text("Atrybuty produktu"),
+              Text("Atrybuty produktu"),
 
-            GetBuilder<ProduktController>(
+              GetBuilder<ProduktController>(
                 builder: (produktController) =>
 
                     SizedBox(
                       width: screenWidth,
-                      height: 100,
-                        child: ListView.separated(
+                      height: 200,
+                      child: ListView.separated(
 
-                          itemBuilder: (context, index) => Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                        itemBuilder: (context, index) => Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
 
-                            children: [
-                              IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: (){
-                                    onDeleteAttributePressed(widget.chosen_produkt.atrybuty[index].objectId);
-                                  }
-                              ),
+                          children: [
+                            IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: (){
+                                  onDeleteAttributePressed(widget.chosen_produkt.atrybuty[index].objectId);
+                                }
+                            ),
 
-                              Text(widget.chosen_produkt.atrybuty[index].nazwa),
-                            ],
+                            Text(widget.chosen_produkt.atrybuty[index].nazwa),
+                          ],
 
-                          ),
-
-
-                          separatorBuilder: (context, index) =>
-                              Divider(color: Colors.black),
-
-
-                          itemCount: widget.chosen_produkt.atrybuty.length,
                         ),
-                    ),
 
-            ),
 
-            Text("Daty ważności"),
+                        separatorBuilder: (context, index) =>
+                            Divider(color: Colors.black),
 
-            GetBuilder<ProduktController>(
-              builder: (produktController) =>
 
-                  SizedBox(
-                    width: screenWidth,
-                    height: 100,
-                    child: ListView.separated(
-
-                      itemBuilder: (context, index) => Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-
-                        children: [
-                          IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: (){
-                                onDeleteDatePressed(widget.chosen_produkt.daty_waznosci[index].id);
-                              }
-                          ),
-
-                          Text(widget.chosen_produkt.daty_waznosci[index].exp_date.toString()),
-                          //Text(myFormat.format(widget.chosen_produkt.daty_waznosci[index].exp_date)),
-                          Text("   "),
-                          Text(widget.chosen_produkt.daty_waznosci[index].nazwa),
-
-                        ],
-
+                        itemCount: widget.chosen_produkt.atrybuty.length,
                       ),
-
-
-                      separatorBuilder: (context, index) =>
-                          Divider(color: Colors.black),
-
-
-                      itemCount: widget.chosen_produkt.daty_waznosci.length,
                     ),
-                  ),
 
-            ),
+              ),
+
+              Text("Daty ważności"),
+
+              GetBuilder<ProduktController>(
+                builder: (produktController) =>
+
+                    SizedBox(
+                      width: screenWidth,
+                      height: 200,
+                      child: ListView.separated(
+
+                        itemBuilder: (context, index) => Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+
+                          children: [
+                            IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: (){
+                                  onDeleteDatePressed(widget.chosen_produkt.daty_waznosci[index].id);
+                                }
+                            ),
+
+                            Text(widget.chosen_produkt.daty_waznosci[index].exp_date.toString()),
+                            //Text(myFormat.format(widget.chosen_produkt.daty_waznosci[index].exp_date)),
+                            Text("   "),
+                            Text(widget.chosen_produkt.daty_waznosci[index].nazwa),
+
+                          ],
+
+                        ),
+
+
+                        separatorBuilder: (context, index) =>
+                            Divider(color: Colors.black),
+
+
+                        itemCount: widget.chosen_produkt.daty_waznosci.length,
+                      ),
+                    ),
+
+              ),
 
 
 
 
 
-          ],
+            ],
+
+          ),
 
         ),
-
       ),
 
     );

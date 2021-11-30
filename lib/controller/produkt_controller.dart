@@ -103,32 +103,22 @@ class ProduktController extends GetxController {
   // Produkty
 
   fetchAllProdukts() async {
-    /*
-    SharedPreferences sprefs = await SharedPreferences.getInstance();
-    //sprefs.setString('spidom_current_group', currentlyChosenGroupCode);
-    currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
-    */
+
     produkty = await produktRepository.fetchAllProdukts(currentlyChosenGroupCode);
 
     update();
   }
 
   refreshAllProdukts() async {
-    /*
-    SharedPreferences sprefs = await SharedPreferences.getInstance();
-    currentlyChosenGroupCode = sprefs.getString('spidom_default_group_code');
-    */
+
     produkty = await produktRepository.fetchAllProdukts(currentlyChosenGroupCode);
     update();
   }
 
-
   Future<Produkt> fetchProdukt(String id) async {
    return await produktRepository.fetchProdukt(id);
-   selectedProduct = await produktRepository.fetchProdukt(id);
+
   }
-
-
 
   addProdukt(Produkt produkt) async {
     produkty.add(await produktRepository.addProdukt(produkt));
@@ -137,7 +127,7 @@ class ProduktController extends GetxController {
 
 
   }
-
+/*
   deleteProdukt(String objectId) async {
     Response response = await produktRepository.deleteProdukt(objectId);
     if(response.data['code'] == null){
@@ -145,29 +135,12 @@ class ProduktController extends GetxController {
       update();
     }
   }
-/*
-  updateProdukt(String objectId, Produkt produkt) async {
-    Response response = await produktRepository.updateProdukt(objectId, produkt);
-    if(response.data['code'] == null){
-      int index = produkty.indexWhere((element) => element.objectId == objectId);
-      produkty[index] = Produkt.fromJson(response.data);
-      update();
-    }
-  }
 */
 
   updateProdukt(String objectId, Produkt produkt) async {
     Response response = await produktRepository.updateProdukt(produkt);
-    /*
-    if(response.data['code'] == null){
-      int index = produkty.indexWhere((element) => element.objectId == objectId);
-      produkty[index] = Produkt.fromJson(response.data);
-      update();
-    }
-    */
-    int index = produkty.indexWhere((element) => element.objectId == objectId);
 
-    //produkty[index] = Produkt.fromJson(response.data);
+    int index = produkty.indexWhere((element) => element.objectId == objectId);
 
     produkty[index] = produkt;
 
@@ -177,116 +150,61 @@ class ProduktController extends GetxController {
 
   // Kategorie
 
-  /* Obsolete
-  fetchAllKategorie() async {
-    kategorie = await produktRepository.fetchAllKategorie();
-    update();
-  }
-  */
-
-  //
   fetchKategorieProdukty() async {
     kategorie = await produktRepository.fetchKategorieProdukt(currentlyChosenGroupCode);
     update();
   }
 
-  //
   fetchKategorieZakupy() async {
     kategorieZakupy = await produktRepository.fetchKategorieZakup(currentlyChosenGroupCode);
     update();
   }
 
-  // *NEW*
   addKategoriaProdukty(Kategoria kategoria) async {
     kategorie.add(await produktRepository.addKategoriaProdukt(kategoria));
     update();
   }
 
-  // *NEW*
   addKategoriaZakupy(KategoriaZakupy kategoriaZakupy) async {
     kategorieZakupy.add(await produktRepository.addKategoriaZakup(kategoriaZakupy));
     update();
   }
 
+  deleteKategorieProdukty(String objectId) async {
+    Response response = await produktRepository.deleteKategoriaProduktu(objectId);
 
-
-
-  // Return produkty danej kategorii
-  fetchProduktyKategorii(String kategoria) async {
-    produktyKategorii = await produktRepository.fetchProduktFromCategorie(kategoria);
+    kategorie.removeWhere((element) => element.objectId == objectId);
     update();
   }
 
+  deleteKategorieZakupy(String objectId) async {
+    Response response = await produktRepository.deleteKategoriaZakupu(objectId);
 
-
-/*
-  addKategorie(Kategoria kategoria) async {
-    kategorie.add(await produktRepository.addKategoria(kategoria));
+    kategorieZakupy.removeWhere((element) => element.objectId == objectId);
     update();
   }
-*/
-
-  /*
-  deleteKategoria(String objectId) async {
-    Response response = await produktRepository.deleteKategoria(objectId);
-    if(response.data['code'] == null){
-      kategorie.removeWhere((element) => element.objectId == objectId);
-      update();
-    }
-  }
-  */
 
 
 
   // Zakupy
-/*
-  addNewZakup(ProduktZakupy produkt) async {
-    zakupy.add(await produktRepository.addZakupy(produkt));
-    update();
-  }
-*/
-  // *NEW*
+
   addNewZakup(ShoppingList listaZakupow) async {
     await produktRepository.addZakupy(listaZakupow);
     update();
   }
-
-/*
-  fetchZakupy() async {
-    zakupy = await produktRepository.fetchAllZakupy();
-    update();
-  }
-*/
 
   fetchZakupy() async {
     listaZakupow = await produktRepository.fetchAllZakupy(currentlyChosenGroupCode);
     update();
   }
 
-
-
-
-
-
   buyProdukts(String produktId, int quantity) async{
     return await produktRepository.buyProdukts(produktId, quantity);
     update();
   }
 
-
-
-
-
-
-
   updateZakup(String objectId, int quantity, ShoppingList zakup) async {
     Response response = await produktRepository.updateZakupy(objectId, quantity);
-    /*
-    if(response.data['code'] == null){
-      int index = zakupy.indexWhere((element) => element.objectId == objectId);
-      zakupy[index] = ProduktZakupy.fromJson(response.data);
-    }
-    */
 
     int index = listaZakupow.indexWhere((element) => element.objectId == objectId);
 
@@ -297,12 +215,7 @@ class ProduktController extends GetxController {
 
   deleteZakup(String objectId) async {
     Response response = await produktRepository.deleteZakup(objectId);
-    /*
-    if(response.data['code'] == null){
-      zakupy.removeWhere((element) => element.objectId == objectId);
-      update();
-    }
-    */
+
     zakupy.removeWhere((element) => element.objectId == objectId);
     listaZakupow.removeWhere((element) => element.objectId == objectId);
     update();
@@ -310,51 +223,23 @@ class ProduktController extends GetxController {
 
   // Atrybuty
 
-  fetchAtrybuty(String objectId) async {
-    atrybuty = await produktRepository.fetchAtrybuty(objectId);
-    update();
-  }
-/*
-  addAtrybut(String objectId, Atrybuty atrybut) async {
-    atrybuty.add(await produktRepository.addAtrybutToObject(objectId, atrybut));
-  }
-*/
   addAtrybut(String idProduktu, String nazwaAtrybutu) async {
 
     int index = produkty.indexWhere((element) => element.objectId == idProduktu);
     Produkt tenProdukt = produkty[index];
     tenProdukt.atrybuty.add(await produktRepository.addAtrybutToObject(idProduktu, nazwaAtrybutu));
 
-/*
-    Atrybuty nowyAtrybut = await produktRepository.addAtrybutToObject(idProduktu, nazwaAtrybutu);
-
-    int index = produkty.indexWhere((element) => element.objectId == idProduktu);
-    Produkt tenProdukt = produkty[index];
-    tenProdukt.atrybuty.add(nowyAtrybut);
-*/
-
-
     update();
   }
 
-
-
   deleteAtrybut(String produktId, String atrybutId) async {
     Response response = await produktRepository.deleteAtrybut(produktId, atrybutId);
-    /*
-    if(response.data['code'] == null){
-      atrybuty.removeWhere((element) => element.objectId == objectId);
-      update();
-    }
-    */
 
     int index = produkty.indexWhere((element) => element.objectId == produktId);
     Produkt tenProdukt = produkty[index];
     tenProdukt.atrybuty.removeWhere((element2) => element2.objectId == atrybutId);
 
-
     update();
-
   }
 
   // Miary
@@ -371,11 +256,9 @@ class ProduktController extends GetxController {
 
   deleteMiary(String objectId) async {
     Response response = await produktRepository.deleteMiara(objectId);
-    if(response.data['code'] == null){
-      miary.removeWhere((element) => element.objectId == objectId);
-      update();
-    }
 
+    miary.removeWhere((element) => element.objectId == objectId);
+    update();
   }
 
   // Grupy
@@ -402,45 +285,11 @@ class ProduktController extends GetxController {
     currentlyChosenGroupCode = (sprefs.getString('spidom_default_group_code') ?? "");
     currentlyChosenGroupName = (sprefs.getString('spidom_default_group_name') ?? "");
 
-    /*
-    currentlyChosenGroupCode = "fGI57";
-    currentlyChosenGroupName = "Spiżarniowa grupa";
-    */
-
     log("Defaultowo wybrana grupa: kod:");
     log(currentlyChosenGroupCode);
     log("Defaultowo wybrana grupa: nazwa:");
     log(currentlyChosenGroupName);
 
-
-    /* Forgo SharedPreferences for now
-
-    String encodedGroupString = sprefs.getString('spidom_group_list');
-    log("Encoded");
-    log(encodedGroupString);
-
-    Iterable l = json.decode(encodedGroupString);
-    listaGrup = RxList.from(l.map((model) => Grupa.fromJson(model)));
-
-    */
-
-    /*
-    Grupa hardcoded = new Grupa(
-      nazwa_server: currentlyChosenGroupName,
-      kod_grupy: currentlyChosenGroupCode
-    );
-
-    listaGrup.add(hardcoded);
-    */
-
-    /*
-    log("lista grup po MAGICZNYCH WIDZIMISIACH juz jako OBIEKTY");
-
-    listaGrup.forEach((Grupa grupa) {
-      log(grupa.nazwa_server);
-      log(grupa.kod_grupy);
-    });
-    */
 
     // We got the group, now get their data
     // HERE call all the functions that download the data from the server. DO NOT do that in initstate of main.dart or homemain.dart
@@ -452,7 +301,6 @@ class ProduktController extends GetxController {
     fetchZakupy();
     */
     fetchFromDatabse();
-
   }
 
   test_addTestGrupy() {
@@ -509,10 +357,6 @@ class ProduktController extends GetxController {
     currentlyChosenGroupCode = currentlyChosenGroup.kod_grupy;
     currentlyChosenGroupName = currentlyChosenGroup.nazwa_server;
 
-    /*
-    currentlyChosenGroupCode = YtUed;
-    currentlyChosenGroupName = Test_z_Apki_LOG;
-    */
 
     // Set the group as the current chosen group in persistent storage as default
     sprefs.setString('spidom_default_group_name', currentlyChosenGroupName);
@@ -523,15 +367,6 @@ class ProduktController extends GetxController {
     // IT WILL BE DECODED
     // The decoding function getDeviceGroupList() runs in main.dart
 
-    /*
-    String encGroupListString = (sprefs.getString('spidom_group_list') ?? "");
-
-    if(encGroupListString != "") {
-      Iterable l = json.decode(encGroupListString);
-      listaGrup = RxList<Grupa>.from(l.map((model) => Grupa.fromJson(model)));
-    }
-    //log(listaGrup.toString());
-    */
 
     listaGrup.add(currentlyChosenGroup);// Right after adding is just an instance of not a readable name and code
 
@@ -548,12 +383,6 @@ class ProduktController extends GetxController {
     fetchFromDatabse();
 
     update();
-    /*
-    * After receiving a response save the group to a list in Shared Preferences // done
-    * Also set the group as the current used one //done
-    * Also set the current group as the default one to be default in the code for all queries
-    * */
-
   }
 
   joinGrupyTest(String kod_grupy) async {

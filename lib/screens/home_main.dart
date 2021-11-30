@@ -31,6 +31,10 @@ import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import 'lista_grup.dart';
+import 'lista_zakupow.dart';
+import 'tryb_zakupow.dart';
+
 class HomeMain extends StatefulWidget{
 
 
@@ -56,27 +60,6 @@ class _HomeMainState extends State<HomeMain> {
     log("Aktualnie wybrana grupa KOD:");
     log(produktController.currentlyChosenGroupCode);
 
-    /*
-    Grupa g1 = new Grupa(
-      nazwa_server: "Grupa1",
-      kod_grupy: "11111"
-    );
-
-    Grupa g2 = new Grupa(
-      nazwa_server: "Grupa2",
-      kod_grupy: "22222"
-    );
-
-    produktController.listaGrupTest.add(g1);
-    produktController.listaGrupTest.add(g2);
-
-
-    SharedPreferences sprefs = await SharedPreferences.getInstance();
-
-    var encodedListaGrupTest = json.encode(produktController.listaGrupTest);
-
-    await sprefs.setString('spidom_group_list_test', encodedListaGrupTest);
-    */
 
     SharedPreferences sprefs = await SharedPreferences.getInstance();
 
@@ -96,18 +79,6 @@ class _HomeMainState extends State<HomeMain> {
     });
 
 
-    /*
-    produktController.listaGrupTest.forEach((Grupa grupa) {
-      log(grupa.nazwa_server);
-      log(grupa.kod_grupy);
-    });
-
-    Grupa app = new Grupa(
-      nazwa_server: "Test_z_Apki_LOG",
-      kod_grupy: "YtUed",
-    );
-    */
-    //produktController.listaGrup.add(app);
   }
 
   @override
@@ -131,24 +102,6 @@ class _HomeMainState extends State<HomeMain> {
 
         title: Text('Domowa spiżarnia'),
 
-        actions: <Widget>[
-          /*
-          IconButton(
-            icon: Icon(Icons.group_add),
-            onPressed: () => {
-              dodajGrupe()
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.group),
-            onPressed: () => {
-              pokazGrupy()
-            },
-          ),
-          */
-
-        ],
-
       ),
 
 //////////////////////////////////////////////////////////
@@ -159,11 +112,12 @@ class _HomeMainState extends State<HomeMain> {
         mainAxisSpacing: 10,
         crossAxisCount: 2,
         children: <Widget>[
+
           InkWell(
             onTap: () {
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => Home()))
-                  .then((value) => null);
+
+              Get.to(Home());
+
             },
             child: Container(
               padding: const EdgeInsets.all(10),
@@ -187,11 +141,16 @@ class _HomeMainState extends State<HomeMain> {
               ),
             ),
           ),
+
           InkWell(
             onTap: () {
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => ListaZakupow()))
-                  .then((value) => null);
+
+              /*
+              * Might need to set proper lists once we integrate tryb zakupowy to lista zakupow
+              * */
+
+              Get.to(ListaZakupow());
+
             },
             child: Container(
               padding: const EdgeInsets.all(10),
@@ -215,6 +174,7 @@ class _HomeMainState extends State<HomeMain> {
               ),
             ),
           ),
+
           InkWell(
             onTap: () {
 
@@ -229,9 +189,8 @@ class _HomeMainState extends State<HomeMain> {
                 
               }
 
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))
-                  .then((value) => null);// Navigator
+              Get.to(TrybZakupow());
+
 
             },
             child: Container(
@@ -256,18 +215,11 @@ class _HomeMainState extends State<HomeMain> {
               ),
             ),
           ),
+
           InkWell(
             onTap: () {
 
-              /*
-              produktController.listaGrupWyswietlaj = RxList.from(produktController.listaGrup);
-              log(produktController.listaGrup.toString());
-              log(produktController.listaGrupWyswietlaj.toString());
-              */
-
-              Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => ListaGrup()));
-                  //.then((value) => null);// Navigator
+              Get.to(ListaGrup());
 
             },
             child: Container(

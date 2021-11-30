@@ -24,6 +24,8 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:spizarnia_domowa_app/screens/home.dart';
 import 'package:spizarnia_domowa_app/screens/home_main.dart';
 
+import 'join_group.dart';
+
 class ListaGrup extends StatefulWidget {
 
   @override
@@ -37,6 +39,8 @@ class _ListaGrupState extends State<ListaGrup> {
 
   final ProduktController produktController = ProduktController.to;
 
+  String currentGroup;
+
 
   void swapGroup(Grupa wybranaGrupa){
     produktController.selectActiveGroup(wybranaGrupa.nazwa_server, wybranaGrupa.kod_grupy);
@@ -47,6 +51,8 @@ class _ListaGrupState extends State<ListaGrup> {
           duration: Duration(seconds: 2),
         )
     );
+
+
 
     // Clear displayKategorieZakupy
     produktController.displayKategorieZakupy.clear();
@@ -60,7 +66,7 @@ class _ListaGrupState extends State<ListaGrup> {
   @override
   void initState(){
 
-
+    currentGroup = produktController.currentlyChosenGroupName;
     super.initState();
   }
 
@@ -78,9 +84,20 @@ class _ListaGrupState extends State<ListaGrup> {
         child: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator
-                .push(context, MaterialPageRoute(builder: (context) => JoinGroup()))
-                .then((value) => null);// Navigator
+
+            navigator.push(
+              MaterialPageRoute(
+                builder: (_) {
+                  return JoinGroup();
+                },
+              ),
+            ).then((value) =>
+                setState(() {
+                  currentGroup = produktController.currentlyChosenGroupName;
+                })
+            );
+
+
           },
         ),
       ),
@@ -109,7 +126,7 @@ class _ListaGrupState extends State<ListaGrup> {
                       )
                   ),
                   child: new Center(
-                    child: new Text(produktController.currentlyChosenGroupName,
+                    child: new Text(currentGroup,
                       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white), ),
                   )
               ),
@@ -132,10 +149,13 @@ class _ListaGrupState extends State<ListaGrup> {
                                     onTap: () {
 
 
-                                      Navigator
-                                          .push(context, MaterialPageRoute(builder: (context) => GroupDetail(chosen_group: produktController.listaGrup[index])));
-
-
+                                      navigator.push(
+                                        MaterialPageRoute(
+                                          builder: (_) {
+                                            return GroupDetail(chosen_group: produktController.listaGrup[index],);
+                                          },
+                                        ),
+                                      );
 
                                     },
                                     child:Row(
@@ -151,7 +171,12 @@ class _ListaGrupState extends State<ListaGrup> {
                                         IconButton(
                                             icon: Icon(Icons.swap_vert_rounded),
                                             onPressed: () => {
-                                              swapGroup(produktController.listaGrup[index])
+                                              swapGroup(produktController.listaGrup[index]),
+
+                                              setState(() {
+                                                currentGroup = produktController.listaGrup[index].nazwa_server;
+                                              })
+
                                             }
                                         ),
                                       ],

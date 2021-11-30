@@ -34,13 +34,16 @@ import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 // Debug
 import 'package:logger/logger.dart';
 
+import '../model/produkt.dart';
+import 'produkt_detail.dart';
+
 
 
 class AddExistingProduct extends StatefulWidget{
 
-
   @override
   State<AddExistingProduct> createState() => _AddExistingProductState();
+
 }
 
 class _AddExistingProductState extends State<AddExistingProduct> {
@@ -77,7 +80,6 @@ class _AddExistingProductState extends State<AddExistingProduct> {
       daty_waznosci: chosen_produkt.daty_waznosci,
     );
 
-    //produktController.addProdukt(produkt);
     produktController.updateProdukt(produkt.objectId, produkt);
   }
 
@@ -125,95 +127,85 @@ class _AddExistingProductState extends State<AddExistingProduct> {
       // Make a list of all the barcodes of all the products
       // OR ALTERNATELY check inside the loop
 
-      //List<String> wszystkieBarcody = [];
 
+      bool foundProduct = false;
+      Produkt produktZkodu;
 
+        breaklabel:
         for (var i = 0; i < produktController.produkty.length; i++){
           for (var j = 0; j < produktController.produkty[i].kody_kreskowe.length; j++){
 
             if(produktController.produkty[i].kody_kreskowe[j].barcode_code == scanResult){
-
-              // Means this product exists
-              // So just popup that it exists
-
-              showDialog(context: context, builder: (_) =>
-                  AlertDialog(
-                    title: Text('Produkt z takim kodem już istnieje.'),
-                    //content: Text(''),
-
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: Text('OK')
-                      ),
-                    ],
-                  ),
-              );
-
-              // Try to go to the productDetail screen of the product with this code
-
-            }else{
-
-              // Means we didn't find this barcode
-              // So now remember the code
-              produktController.kod_kreskowy_nowego_produktu = scanResult;
-              // Take us to the add product screen
-              // Add a product AND right after add this barcode
-
-
-              showDialog(context: context, builder: (_) =>
-                  AlertDialog(
-                    title: Text('Kod nie powiązany z żadym produktem.'),
-                    content: Text('Czy chcesz utworzć nowy produkt?'),
-
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-
-                            Get.back();
-
-
-                            navigator.push(
-                              MaterialPageRoute(
-                                builder: (_) {
-                                  return AddProdukt();
-                                },
-                              ),
-                            ).then((value) =>
-                                Timer(Duration(milliseconds: 500), () {
-                                  produktController.fetchAllProdukts();
-                                })
-                            );
-
-
-                          },
-                          child: Text('Dodaj')
-                      ),
-                    ],
-
-                  ),
-              );
-
-
+              foundProduct = true;
+              produktZkodu = produktController.produkty[i];
+              break breaklabel;
             }
 
-          }
-        }
+          } // for j
+        } // for i
+
+      if(foundProduct){
+
+        // Try to go to the productDetail screen of the product with this code
+
+        navigator.push(
+          MaterialPageRoute(
+            builder: (_) {
+              return ProduktDetail(chosen_produkt: produktZkodu);
+            },
+          ),
+        ).then((value) =>
+            Timer(Duration(milliseconds: 500), () {
+              produktController.fetchAllProdukts();
+            })
+        );
+
+      }else{
+
+        // Means we didn't find this barcode
+        // So now remember the code
+        produktController.kod_kreskowy_nowego_produktu = scanResult;
+        // Take us to the add product screen
+        // Add a product AND right after add this barcode
 
 
+        showDialog(context: context, builder: (_) =>
+            AlertDialog(
+              title: Text('Kod nie powiązany z żadym produktem.'),
+              content: Text('Czy chcesz utworzć nowy produkt?'),
+
+              actions: [
+                TextButton(
+                    onPressed: () {
+
+                      Get.back();
 
 
+                      navigator.push(
+                        MaterialPageRoute(
+                          builder: (_) {
+                            return AddProdukt();
+                          },
+                        ),
+                      ).then((value) =>
+                          Timer(Duration(milliseconds: 500), () {
+                            produktController.fetchAllProdukts();
+                          })
+                      );
 
 
+                    },
+                    child: Text('Dodaj')
+                ),
+              ],
 
+            ),
+        );
+      } // else
 
+    } // scan result != '-1'
 
-    }
-
-
-  }
+  }// scanBarcode()
 
   @override
   Widget build(BuildContext context) {

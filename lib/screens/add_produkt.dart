@@ -230,85 +230,86 @@ class _AddProduktState extends State<AddProdukt> {
         ],
       ),
 
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
 
-        padding: EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
 
-        child: Column(
+          child: Column(
 
-          crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
 
-          children: <Widget>[
+            children: <Widget>[
 
-            Text(
-              "Nazwa produktu",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+              Text(
+                "Nazwa produktu",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
 
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(hintText: "nazwa"),
-              textAlign: TextAlign.center,
-            ),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(hintText: "nazwa"),
+                textAlign: TextAlign.center,
+              ),
 
-            SizedBox(height: 16),
+              SizedBox(height: 16),
 
-            Text(
-              "Ilość produktu",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+              Text(
+                "Ilość produktu",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
 
-            SpinBox(
-              value: 0,
-              min: 0,
-              max: 2048,
-              onChanged: (value) {
-                print(value);
-                int val = value.toInt();
-                iloscController.text = val.toString();
-              },
-            ),
+              SpinBox(
+                value: 0,
+                min: 0,
+                max: 2048,
+                onChanged: (value) {
+                  print(value);
+                  int val = value.toInt();
+                  iloscController.text = val.toString();
+                },
+              ),
 
-            SizedBox(height: 16),
+              SizedBox(height: 16),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Miara produktu",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-
-
-                DropdownButton<String>(
-                  value: miaraController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue),
-
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Miara produktu",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
 
-                  onChanged: (String newValue){
-                    setState(() {
-                      miaraController.text = newValue;
-                    });
-                  },
+
+                  DropdownButton<String>(
+                    value: miaraController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue),
+
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+
+                    onChanged: (String newValue){
+                      setState(() {
+                        miaraController.text = newValue;
+                      });
+                    },
 
 
 
-                  items: produktController.displayMiary.map((miara) {
-                    return DropdownMenuItem(
-                      child: new Text(miara),
-                      value: miara,
-                    );
-                  }).toList(), // Items
+                    items: produktController.displayMiary.map((miara) {
+                      return DropdownMenuItem(
+                        child: new Text(miara),
+                        value: miara,
+                      );
+                    }).toList(), // Items
 
 
-                  /*
+                    /*
                   items: produktController.displayMiary.map((miara) {
                     return DropdownMenuItem(
                       child: new Text(miara),
@@ -317,98 +318,99 @@ class _AddProduktState extends State<AddProdukt> {
                   }).toList(), // Items
                   */
 
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
 
 
-            SizedBox(height: 16),
+              SizedBox(height: 16),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Kategoria produktu",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-
-                DropdownButton<String>(
-                  value: kategoriaProduktyController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue),
-
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Kategoria produktu",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
 
-                  onChanged: (String newValue){
-                    setState(() {
-                      kategoriaProduktyController.text = newValue;
-                    });
-                  },
+                  DropdownButton<String>(
+                    value: kategoriaProduktyController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue),
 
-                  items: produktController.displayKategorie.map((produkt) {
-                    return DropdownMenuItem(
-                      child: new Text(produkt),
-                      value: produkt,
-                    );
-                  }).toList(),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
 
-                ),
-              ],
-            ),
+                    onChanged: (String newValue){
+                      setState(() {
+                        kategoriaProduktyController.text = newValue;
+                      });
+                    },
+
+                    items: produktController.displayKategorie.map((produkt) {
+                      return DropdownMenuItem(
+                        child: new Text(produkt),
+                        value: produkt,
+                      );
+                    }).toList(),
+
+                  ),
+                ],
+              ),
 
 
-            SizedBox(height: 16),
+              SizedBox(height: 16),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Kategoria zakupu",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-
-
-
-                DropdownButton<String>(
-                  value: kategoriaZakupyController.text,
-                  icon: Icon(Icons.arrow_downward_rounded),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.blue),
-
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Kategoria zakupu",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
 
-                  onChanged: (String newValue){
-                    setState(() {
-                      kategoriaZakupyController.text = newValue;
-                    });
-                  },
-
-                  items: produktController.displayKategorieZakupy.map((zakup) {
-                    return DropdownMenuItem(
-                      child: new Text(zakup),
-                      value: zakup,
-                    );
-                  }).toList(),
-
-                ),
-              ],
-            ),
 
 
+                  DropdownButton<String>(
+                    value: kategoriaZakupyController.text,
+                    icon: Icon(Icons.arrow_downward_rounded),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.blue),
 
-          ],
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+
+                    onChanged: (String newValue){
+                      setState(() {
+                        kategoriaZakupyController.text = newValue;
+                      });
+                    },
+
+                    items: produktController.displayKategorieZakupy.map((zakup) {
+                      return DropdownMenuItem(
+                        child: new Text(zakup),
+                        value: zakup,
+                      );
+                    }).toList(),
+
+                  ),
+                ],
+              ),
+
+
+
+            ],
+
+          ),
 
         ),
-
       ),
 
     );

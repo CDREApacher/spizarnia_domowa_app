@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
 
   onDeletePressed(String id) {
     onClearPressed();
-    produktController.deleteProdukt(id);
+    //produktController.deleteProdukt(id);
   }
 
   onUpdatePressed(String id) {
@@ -96,26 +96,51 @@ class _HomeState extends State<Home> {
     //logger.d(produktController.produkty);
   }
 
-  onKategoriePressed(String kategoria) {
-    produktController.fetchProduktyKategorii(kategoria);
-  }
 
   onAddZakupPressed(Produkt produkt){
-    Grupa grupaProduktu = new Grupa(
-      nazwa_server: produktController.currentlyChosenGroupName,
-      kod_grupy: produktController.currentlyChosenGroupCode
-    );
+    // First check if we have a Zakup for this product
 
-    ShoppingList listaZakupow = new ShoppingList(
-      objectId: uuid.v4(),
-      quantityToBuy: int.parse(iloscController.text),
-      produkt: produkt,
-      grupa: grupaProduktu,
-    );
+    bool foundZakup = false;
+    ShoppingList znalezionyZakup;
 
-    produktController.addNewZakup(listaZakupow);
+    breaklabel:
+    for (var i = 0 ; i < produktController.listaZakupow.length ; i++) {
+      if (produktController.listaZakupow[i].produkt.objectId == produkt.objectId) {
+        znalezionyZakup = produktController.listaZakupow[i];
+        foundZakup = true;
+        break breaklabel;
+      } // if
+    } // for
 
+    if (foundZakup) {
+      // We do have a Zakup for this Produkt
+      // Update an existing one
+      ShoppingList nowyZakup = new ShoppingList(
+        objectId: znalezionyZakup.objectId,
+        quantityToBuy: znalezionyZakup.quantityToBuy + int.parse(iloscController.text),
+        produkt: znalezionyZakup.produkt,
+        grupa: znalezionyZakup.grupa,
+      );
 
+      produktController.updateZakup(nowyZakup.objectId, nowyZakup.quantityToBuy, nowyZakup);
+
+    } else {
+      // We have no Zakup for this Produkt
+      // Create a new one
+      Grupa grupaProduktu = new Grupa(
+          nazwa_server: produktController.currentlyChosenGroupName,
+          kod_grupy: produktController.currentlyChosenGroupCode
+      );
+
+      ShoppingList listaZakupow = new ShoppingList(
+        objectId: uuid.v4(),
+        quantityToBuy: int.parse(iloscController.text),
+        produkt: produkt,
+        grupa: grupaProduktu,
+      );
+
+      produktController.addNewZakup(listaZakupow);
+    }
 
   }
 
@@ -145,7 +170,7 @@ class _HomeState extends State<Home> {
             tooltip: "Odśwież listę",
             onPressed: () => {
               onRefreshPressed(),
-              //onKategoriePressed("nabiał"),
+
             }
           ),
         ],

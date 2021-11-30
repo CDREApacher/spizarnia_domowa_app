@@ -27,6 +27,7 @@ import 'lista_kategorii.dart';
 import 'lista_miar.dart';
 
 class ListaZakupow extends StatefulWidget{
+
   @override
   _ListaZakupow createState() => _ListaZakupow();
 
@@ -34,7 +35,7 @@ class ListaZakupow extends StatefulWidget{
 
 class _ListaZakupow extends State<ListaZakupow>{
 
-  Logger logger = Logger(); // TODO remove debug
+  Logger logger = Logger();
 
   final ProduktController produktController = ProduktController.to;
 
@@ -44,8 +45,27 @@ class _ListaZakupow extends State<ListaZakupow>{
 
 
   onDeleteZakup(String objectId){
-    produktController.deleteZakup(objectId);
-    //Navigator.pop(context);
+
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text("Usunąć zakup?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Anuluj')
+            ),
+            TextButton(
+                onPressed: () {
+                  produktController.deleteZakup(objectId);
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Usuń')
+            ),
+          ],
+        ),
+    );
   }
 
 
@@ -142,11 +162,9 @@ class _ListaZakupow extends State<ListaZakupow>{
                             child: InkWell(
                               onTap: () {
 
-
                                 Navigator
                                   .push(context, MaterialPageRoute(builder: (context) => ZakupDetail(chosen_produkt: zakup)))
                                   .then((value) => onRefreshPressed());
-
 
                               },
 
@@ -157,9 +175,7 @@ class _ListaZakupow extends State<ListaZakupow>{
                                     icon: Icon(Icons.delete),
 
                                     onPressed: () {
-                                      // TODO add confirmation on delete
                                       onDeleteZakup(zakup.objectId);
-                                      //Navigator.pop(context);
                                     },
                                   ),
 
@@ -217,11 +233,6 @@ class _ListaZakupow extends State<ListaZakupow>{
               onTap: () {
                 Get.back();
                 Get.offAll(HomeMain()); // offAll to avoid the weird red bug screen
-                /*
-                Navigator
-                    .push(context, MaterialPageRoute(builder: (context) => HomeMain()))
-                    .then((value) => onRefreshPressed());
-                */
               },
             ),
 

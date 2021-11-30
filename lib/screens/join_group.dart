@@ -24,8 +24,7 @@ import 'dart:developer';
 
 class JoinGroup extends StatefulWidget {
 
-  //final Produkt chosen_produkt;
- // JoinGroup({Key key, @required this.chosen_produkt}) : super(key: key);
+
 
   @override
   _JoinGroupState createState() => _JoinGroupState();
@@ -172,7 +171,7 @@ class _JoinGroupState extends State<JoinGroup> {
                           onPressed: () {
 
                             dolaczDoGrupy();
-                            Navigator.pop(context);
+                            Get.back();
                           },
                           child: Text('Dołącz')
 
@@ -255,7 +254,7 @@ class _JoinGroupState extends State<JoinGroup> {
                           onPressed: () {
 
                             utworzGrupe();
-                            Navigator.pop(context);
+                            Get.back();
                           },
                           child: Text('Utwórz')),
 

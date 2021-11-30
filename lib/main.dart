@@ -35,17 +35,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
 
     //clearPreferences();
-    //produktController.test_addTestGrupy();
-    produktController.getDefaultDeviceGroup();
+    produktController.getDefaultDeviceGroup(); // also downloads all from DB
     produktController.getDeviceGroupList();
     super.initState();
 
-    //produktController.fetchAllProdukts();
-    //produktController.fetchKategorieProdukty();
-    //produktController.fetchKategorieZakupy();
-    //produktController.fetchMiary();
-    //produktController.fetchZakupy();
-    // Replece the above with this; Dont actually call here
+    //Dont actually call here
     //produktController.fetchFromDatabse();
 
   }

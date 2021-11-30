@@ -32,18 +32,6 @@ class _ListaKategorii extends State<ListaKategorii>{
     //listaController.clear();
   }
 
-
-  /*
-  onAddKategoriaPressed() {
-    Kategoria kategoria = new Kategoria (
-      nazwa: nameController.text,
-      lista: listaController.text,
-    );
-
-    produktController.addKategorie(kategoria);
-    onClearPressed();
-  }
-  */
   onAddKategoriaPressed() {
 
     Grupa grupaKategorii = new Grupa(
@@ -52,40 +40,110 @@ class _ListaKategorii extends State<ListaKategorii>{
     );
 
     if(listaController.text == "produkty"){
-      Kategoria kategoria = new Kategoria(
-        objectId: uuid.v4(),
-        nazwa: nameController.text,
-        grupa: grupaKategorii,
-      );
 
-      produktController.addKategoriaProdukty(kategoria);
+      List<String> kategoriaProduktyCheck = [];
+      produktController.kategorie.forEach((element) {kategoriaProduktyCheck.add(element.nazwa); } );
+
+      if(kategoriaProduktyCheck.contains(nameController.text)){
+
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Taka kategoria już istnieje!"),
+              duration: Duration(seconds: 2),
+            )
+        );
+        nameController.clear();
+
+      }else{
+
+        Kategoria kategoria = new Kategoria(
+          objectId: uuid.v4(),
+          nazwa: nameController.text,
+          grupa: grupaKategorii,
+        );
+        produktController.addKategoriaProdukty(kategoria);
+      }
     }
-
-
 
     if(listaController.text == "zakupy"){
-      KategoriaZakupy kategoriaZakupy = new KategoriaZakupy(
-        objectId: uuid.v4(),
-        nazwa: nameController.text,
-        grupa: grupaKategorii,
-      );
 
-      produktController.addKategoriaZakupy(kategoriaZakupy);
+      List<String> kategoriaZakupyCheck = [];
+      produktController.kategorieZakupy.forEach((element) {kategoriaZakupyCheck.add(element.nazwa); } );
+
+      if(kategoriaZakupyCheck.contains(nameController.text)){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Taka kategoria już istnieje!"),
+              duration: Duration(seconds: 2),
+            )
+        );
+        nameController.clear();
+
+      }else{
+
+        KategoriaZakupy kategoriaZakupy = new KategoriaZakupy(
+          objectId: uuid.v4(),
+          nazwa: nameController.text,
+          grupa: grupaKategorii,
+        );
+        produktController.addKategoriaZakupy(kategoriaZakupy);
+      }
     }
-
     onClearPressed();
-
   }
 
-/*
-  onDeleteKategoriaPressed(String objectId){
-    produktController.deleteKategoria(objectId);
+  onDeleteKategoriaProduktuPressed(String objectId){
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text('Czy na pewno usunąć kategorię produktu?'),
+
+          actions: [
+            TextButton(
+                onPressed: () {
+                  produktController.deleteKategorieProdukty(objectId);
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Usuń')
+            ),
+
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Anuluj')
+            ),
+          ],
+        ),
+    );
   }
-  */
+
+  onDeleteKategoriaZakupuPressed(String objectId){
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text('Czy na pewno usunąć kategorię zakupu?'),
+
+          actions: [
+            TextButton(
+                onPressed: () {
+                  produktController.deleteKategorieZakupy(objectId);
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Usuń')
+            ),
+
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);// close popup
+                },
+                child: Text('Anuluj')
+            ),
+          ],
+        ),
+    );
+  }
 
   @override
   void initState() {
-    //produktController.fetchAllKategorie();
     produktController.fetchKategorieProdukty();
     produktController.fetchKategorieZakupy();
     listaController.text = "produkty";
@@ -101,10 +159,6 @@ class _ListaKategorii extends State<ListaKategorii>{
         toolbarHeight: 42.5,
         title: Text('Spiżarnia Domowa'),
       ),
-
-
-
-
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -148,13 +202,13 @@ class _ListaKategorii extends State<ListaKategorii>{
                               ),
                               onChanged: (String newValue){
                                 setState(() {
-                                //dropdownButtonValue = newValue;
-                                listaController.text = newValue;
+                                  //dropdownButtonValue = newValue;
+                                  listaController.text = newValue;
                                 });
                               },
 
-                            items: <String>['produkty', 'zakupy']
-                              .map<DropdownMenuItem<String>>((String value) {
+                              items: <String>['produkty', 'zakupy']
+                                  .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(value),
@@ -185,172 +239,142 @@ class _ListaKategorii extends State<ListaKategorii>{
                 );
               } // showDialog builder
           );
-
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
 
-
-
-
-
-
       body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
 
-              Card(
-                elevation: 5.0,
-                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                //color: Colors.lightGreen,
+            Card(
+              elevation: 5.0,
+              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              //color: Colors.lightGreen,
 
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
-                  child: Text(
-                    "Kategorie Produktów",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
+                child: Text(
+                  "Kategorie Produktów",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-              ),
-
-              // Produkt category list
-              Expanded(
-                child: GetBuilder<ProduktController> (
-                    builder: (produktController) =>
-
-                        ListView.builder(
-                            itemCount: produktController.kategorie.length,
-                            itemBuilder: (context, index) =>
-                                Container(
-                                  height: 55,
-                                  child: Card(
-                                    elevation: 5,
-                                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
-                                          child: Text(
-                                            produktController.kategorie[index].nazwa
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                        )
-                ),
-              ),
-
-              Card(
-                elevation: 5.0,
-                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                //color: Colors.lightGreen,
-
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
-                  child: Text(
-                    "Kategorie Zakupów",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-
-              // Shopping category list
-              Expanded(
-                child: GetBuilder<ProduktController> (
-                    builder: (produktController) =>
-
-                        ListView.builder(
-                            itemCount: produktController.kategorieZakupy.length,
-                            itemBuilder: (context, index) =>
-                                Container(
-                                  height: 55,
-                                  child: Card(
-                                    elevation: 5,
-                                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
-                                          child: Text(
-                                              produktController.kategorieZakupy[index].nazwa
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                        )
-                ),
-              ),
-
-            ],
-          ),
-        ),
-      );
-
-
-      /*GetBuilder<ProduktController> (
-        builder: (produktController) =>
-
-          GroupedListView<Kategoria, String>(
-
-            elements: produktController.kategorie,
-
-            groupBy: (kategoriaLista) {
-              return kategoriaLista.lista;
-            },
-            useStickyGroupSeparators: true,
-
-            groupHeaderBuilder: (Kategoria kategoria) => Padding(
-              padding: const EdgeInsets.all(8.0),
-
-              child: Text(
-                'Kategorie w liście "' + kategoria.lista + '"',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
 
-            itemBuilder: (context, Kategoria kategoria) {
-                return Card(
-                  elevation: 5.0,
-                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+            // Produkt category list
+            Expanded(
+              child: GetBuilder<ProduktController> (
+                  builder: (produktController) =>
 
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      ListView.builder(
+                          itemCount: produktController.kategorie.length,
+                          itemBuilder: (context, index) =>
+                              Container(
+                                height: 55,
+                                child: Card(
+                                  elevation: 5,
+                                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
 
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(kategoria.nazwa),
-                      ),
+                                      if(produktController.kategorie[index].nazwa != 'Inne')
+                                        IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () => {
+                                              onDeleteKategoriaProduktuPressed(produktController.kategorie[index].objectId)
+                                            }),
 
-                      IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            onDeleteKategoriaPressed(kategoria.objectId);
-                            // TODO Add confirmation dialog before deleting
-                          },
-                      ),
-                    ],
-                  ),
-                );
-            },
-          ),
+                                      if(produktController.kategorie[index].nazwa == 'Inne')
+                                        Opacity(
+                                          opacity: 0.0,
+                                          child: IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () => {},
+                                          ),
+                                        ),
+
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
+                                        child: Text(
+                                            produktController.kategorie[index].nazwa
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                      )
+              ),
+            ),
+
+            Card(
+              elevation: 5.0,
+              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              //color: Colors.lightGreen,
+
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20 ,vertical: 6),
+                child: Text(
+                  "Kategorie Zakupów",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            // Shopping category list
+            Expanded(
+              child: GetBuilder<ProduktController> (
+                  builder: (produktController) =>
+
+                      ListView.builder(
+                          itemCount: produktController.kategorieZakupy.length,
+                          itemBuilder: (context, index) =>
+                              Container(
+                                height: 55,
+                                child: Card(
+                                  elevation: 5,
+                                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+
+                                      if(produktController.kategorieZakupy[index].nazwa != 'Inne')
+                                        IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () => {
+                                              onDeleteKategoriaZakupuPressed(produktController.kategorieZakupy[index].objectId)
+                                            }),
+
+                                      if(produktController.kategorieZakupy[index].nazwa == 'Inne')
+                                        Opacity(
+                                          opacity: 0.0,
+                                          child: IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () => {},
+                                          ),
+                                        ),
+
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10 ,vertical: 6),
+                                        child: Text(
+                                            produktController.kategorieZakupy[index].nazwa
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                      )
+              ),
+            ),
+
+          ],
+        ),
       ),
-      */
-
-
-
-
-
-
+      );
 
   } // Build
 
