@@ -195,9 +195,15 @@ class _HomeMainState extends State<HomeMain> {
               * */
               Get.snackbar(
                   "Dostępny z ekranu Listy Zakupów",
-                  "W tej wersji przejście dostępne z Listy Zakupów",
-              snackPosition: SnackPosition.BOTTOM,
-              duration: Duration(seconds: 5));
+                  "W tej wersji przejście do Trybu Zakupowego dostępne tylko z Listy Zakupów",
+                snackPosition: SnackPosition.BOTTOM,
+                duration: Duration(seconds: 5),
+                icon: Icon(Icons.label_important_outlined),
+                borderRadius: 10,
+                margin: EdgeInsets.all(10),
+                forwardAnimationCurve: Curves.easeOutBack,
+
+              );
 
             },
             child: Container(
