@@ -196,7 +196,8 @@ class _HomeMainState extends State<HomeMain> {
               Get.snackbar(
                   "Dostępny z ekranu Listy Zakupów",
                   "W tej wersji przejście dostępne z Listy Zakupów",
-              snackPosition: SnackPosition.BOTTOM);
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 5));
 
             },
             child: Container(
