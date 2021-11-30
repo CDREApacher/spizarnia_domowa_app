@@ -275,6 +275,7 @@ class _TrybZakupowState extends State<TrybZakupow> {
                                             produktController.doKupienia[index].produkt.nazwaProduktu
                                                 + " : "
                                                 + produktController.doKupienia[index].quantityToBuy.toString()
+                                                + " "
                                                 + produktController.doKupienia[index].produkt.miara.miara
                                         ,style: TextStyle(decoration: TextDecoration.lineThrough),
                                         ),
