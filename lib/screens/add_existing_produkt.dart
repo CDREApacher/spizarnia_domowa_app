@@ -35,6 +35,7 @@ import 'package:spizarnia_domowa_app/screens/add_produkt.dart';
 import 'package:logger/logger.dart';
 
 import '../model/produkt.dart';
+import 'add_produkt.dart';
 import 'produkt_detail.dart';
 
 
@@ -234,9 +235,11 @@ class _AddExistingProductState extends State<AddExistingProduct> {
         child: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator
-              .push(context, MaterialPageRoute(builder: (context) => AddProdukt()))
-              .then((value) => null);// Navigator
+
+
+          Get.to(AddProdukt());
+
+
         },
       ),
     ),

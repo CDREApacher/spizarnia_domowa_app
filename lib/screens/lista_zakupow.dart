@@ -25,6 +25,7 @@ import 'package:logger/logger.dart';
 
 import 'lista_kategorii.dart';
 import 'lista_miar.dart';
+import 'tryb_zakupow.dart';
 
 class ListaZakupow extends StatefulWidget{
 
@@ -52,14 +53,14 @@ class _ListaZakupow extends State<ListaZakupow>{
           actions: [
             TextButton(
                 onPressed: () {
-                  Navigator.pop(context);// close popup
+                  Get.back();// close popup
                 },
                 child: Text('Anuluj')
             ),
             TextButton(
                 onPressed: () {
                   produktController.deleteZakup(objectId);
-                  Navigator.pop(context);// close popup
+                  Get.back();// close popup
                 },
                 child: Text('Usuń')
             ),
@@ -98,9 +99,19 @@ class _ListaZakupow extends State<ListaZakupow>{
                 }
 
 
-                Navigator
-                  .push(context, MaterialPageRoute(builder: (context) => TrybZakupow()))
-                  .then((value) => onRefreshPressed());// Navigator
+
+                navigator.push(
+                  MaterialPageRoute(
+                    builder: (_) {
+                      return TrybZakupow();
+                    },
+                  ),
+                ).then((value) =>
+                    onRefreshPressed()
+                );
+
+
+
             },
           ),
         ],

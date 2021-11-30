@@ -178,19 +178,22 @@ class _HomeMainState extends State<HomeMain> {
           InkWell(
             onTap: () {
 
+              /*
               produktController.fetchZakupy();
 
               produktController.doKupienia.clear();
               produktController.zakupyWyswietlaj.clear();
               if(produktController.zakupyWyswietlaj.isEmpty){
-                //produktController.zakupyWyswietlaj = produktController.listaZakupow.map((v) => v).toList();
-                
                 produktController.zakupyWyswietlaj = RxList.from(produktController.listaZakupow);
-                
               }
+              */
 
-              Get.to(TrybZakupow());
+              //Get.to(TrybZakupow());
 
+              Get.snackbar(
+                  "Dostępny z ekranu Listy Zakupów",
+                  "W tej wersji przejście dostępne z Listy Zakupów",
+              snackPosition: SnackPosition.BOTTOM);
 
             },
             child: Container(

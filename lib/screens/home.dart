@@ -122,7 +122,10 @@ class _HomeState extends State<Home> {
         grupa: znalezionyZakup.grupa,
       );
 
+      log("FOUND ZAKUP ON LISTA ZAKUPOW");
+      log(znalezionyZakup.objectId);
       produktController.updateZakup(nowyZakup.objectId, nowyZakup.quantityToBuy, nowyZakup);
+      foundZakup = false;
 
     } else {
       // We have no Zakup for this Produkt
@@ -138,6 +141,8 @@ class _HomeState extends State<Home> {
         produkt: produkt,
         grupa: grupaProduktu,
       );
+      log("NOT FOUND ON LISTA ZAKUPOW");
+      log(listaZakupow.objectId);
 
       produktController.addNewZakup(listaZakupow);
     }
@@ -146,7 +151,8 @@ class _HomeState extends State<Home> {
 
   @override
   void initState(){
-    produktController.fetchAllProdukts();
+    //produktController.fetchAllProdukts();
+    produktController.fetchFromDatabse();
     super.initState();
   }
 
@@ -247,7 +253,7 @@ class _HomeState extends State<Home> {
                                     TextButton(
                                         onPressed: () {
                                           onAddZakupPressed(produkt);
-                                          Navigator.pop(context);
+                                          Get.back();
                                         },
                                         child: Text('Dodaj')
                                     ),

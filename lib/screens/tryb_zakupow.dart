@@ -33,59 +33,19 @@ class _TrybZakupowState extends State<TrybZakupow> {
     produktController.update();
   }
 
-
-
-
   onEndZakupy(){
     for(var i = 0; i < produktController.doKupienia.length; i++){
-      /*
-      // Get the index of the produkt we want to update
-      int produktIndex = produktController.produkty.indexWhere((element) => element.objectId == produktController.doKupienia[i].produkt.objectId);
 
-      // Get the produkt by the index
-      Produkt ref = produktController.produkty[produktIndex];
-
-      String id = ref.objectId;
-      */
       produktController.buyProdukts(produktController.doKupienia[i].objectId, produktController.doKupienia[i].quantityToBuy);
-
-
-      /*
-      // Create the updated object
-      Produkt produkt = new Produkt(
-        objectId: produktController.doKupienia[i].objectId,
-        nazwaProduktu: produktController.doKupienia[i].produkt.nazwaProduktu,
-        ilosc: ref.ilosc + produktController.doKupienia[i].quantityToBuy, // Increase from what is in ref
-        miara: produktController.doKupienia[i].produkt.miara,
-        progAutoZakupu: ref.progAutoZakupu, // get from produkt ref
-        autoZakup: ref.autoZakup, // get from produkt ref
-        kategorieProdukty: ref.kategorieProdukty, // get from produkt ref
-        kategorieZakupy: ref.kategorieZakupy, //get from produkt ref
-
-      );
-      */
-
-      /*
-      // Update in the database
-      produktController.updateProdukt(id, produkt);
-      */
-
-      /*
-      int zakupIndex = produktController.zakupy.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectId);
-      ProduktZakupy zakupRef = produktController.zakupy[zakupIndex];
-      */
-
-      /*
-      int zakupIndex = produktController.listaZakupow.indexWhere((element) => element.objectId == produktController.doKupienia[i].objectId);
-      ShoppingList zakupRef = produktController.listaZakupow[zakupIndex];
-        */
-      // Remove from database
-      //produktController.deleteZakup(zakupRef.objectId);
-
-
 
     } // for
 
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Dodano produkty do listy"),
+          duration: Duration(seconds: 2),
+        )
+    );
 
     // Remove all items from doKupienia
     produktController.doKupienia.clear();
@@ -94,17 +54,13 @@ class _TrybZakupowState extends State<TrybZakupow> {
     // Update the view
     produktController.update();
 
-    produktController.fetchZakupy();
+    //produktController.fetchZakupy();
 
+    produktController.fetchFromDatabse();
 
-    //Navigator.pop(context);
     Get.offAll(() => HomeMain());
 
-
-
-
   } // onEndZakupy()
-
 
 
   @override
@@ -112,8 +68,6 @@ class _TrybZakupowState extends State<TrybZakupow> {
     //produktController.doKupienia.clear();
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +83,33 @@ class _TrybZakupowState extends State<TrybZakupow> {
             icon: Icon(Icons.check),
             tooltip: "Zakończ zakupy",
             onPressed: () {
-              onEndZakupy();
+
+
+
+              showDialog(context: context, builder: (_) =>
+                  AlertDialog(
+                    title: Text('Czy chcesz zakończyć zakupy i dodać produkty do listy produktów?'),
+
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text('Anuluj')
+                      ),
+
+                      TextButton(
+                          onPressed: () {
+                            Get.back();
+                            onEndZakupy();
+                          },
+                          child: Text('Zakończ')
+                      ),
+                    ],
+
+                  ),
+              );
+
             },
           ),
         ],
