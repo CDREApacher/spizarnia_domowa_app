@@ -176,6 +176,7 @@ class _HomeMainState extends State<HomeMain> {
             ),
           ),
 
+          /*
           InkWell(
             onTap: () {
               /*
@@ -228,6 +229,7 @@ class _HomeMainState extends State<HomeMain> {
               ),
             ),
           ),
+          */
 
           InkWell(
             onTap: () {

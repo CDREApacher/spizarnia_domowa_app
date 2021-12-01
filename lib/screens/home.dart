@@ -151,8 +151,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState(){
-    //produktController.fetchAllProdukts();
-    produktController.fetchFromDatabse();
+    //produktController.fetchFromDatabse();
+    produktController.fetchAllProdukts();
+    produktController.fetchZakupy();
     super.initState();
   }
 

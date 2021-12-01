@@ -6,10 +6,11 @@ import 'package:spizarnia_domowa_app/controller/produkt_controller.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
 
-
+import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:spizarnia_domowa_app/model/grupa.dart';
+import 'package:spizarnia_domowa_app/screens/home_main.dart';
 
 
 import 'dart:developer';
@@ -72,11 +73,11 @@ class _WitajState extends State<Witaj> {
     if(scanResult != "-1"){
       kodController.text = scanResult;
       dolaczDoGrupy();
+
+      // Go to main menu
+      Get.offAll(HomeMain());
     }
-
-
-  }
-
+  }// Scanner
 
 
   void utworzGrupe() {
@@ -85,27 +86,29 @@ class _WitajState extends State<Witaj> {
     produktController.addGrupy(nameController.text);
     nameController.clear();
 
-    log(produktController.currentlyChosenGroupName);
-    log(produktController.currentlyChosenGroupCode);
+    //log(produktController.currentlyChosenGroupName);
+    //log(produktController.currentlyChosenGroupCode);
+
+    // Go to main menu
+    Get.offAll(HomeMain());
   }
 
   void dolaczDoGrupy(){
-
 
     log(kodController.text);
     produktController.joinGrupy(kodController.text);
     kodController.clear();
 
-
-
-
+    /*
     produktController.listaGrup.forEach((Grupa grupa) {
       log("Lista zapisana");
       log(grupa.nazwa_server);
       log(grupa.kod_grupy);
     });
+    */
 
-
+    // Go to main menu
+    Get.offAll(HomeMain());
   }
 
   @override
@@ -137,25 +140,17 @@ class _WitajState extends State<Witaj> {
                     content: TextField(
                       controller: kodController,
                       decoration: InputDecoration(hintText: "kod grupy"),
-
                     ),
 
                     actions: [
 
-
                       TextButton(
                           onPressed: () {
-
                             dolaczDoGrupy();
-                            Navigator.pop(context);
+                            Get.back();
                           },
                           child: Text('Dołącz')
-
-
                       ),
-
-
-
                     ],
                   ),
               );
@@ -220,21 +215,16 @@ class _WitajState extends State<Witaj> {
                     content: TextField(
                       controller: nameController,
                       decoration: InputDecoration(hintText: "Nazwa grupy"),
-
                     ),
 
                     actions: [
 
-
                       TextButton(
                           onPressed: () {
-
                             utworzGrupe();
-                            Navigator.pop(context);
+                            Get.back();
                           },
                           child: Text('Utwórz')),
-
-
 
                     ],
                   ),

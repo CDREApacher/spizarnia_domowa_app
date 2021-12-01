@@ -35,14 +35,29 @@ class _MyAppState extends State<MyApp> {
   void initState() {
 
     //clearPreferences();
-    produktController.getDefaultDeviceGroup(); // also downloads all from DB
-    produktController.getDeviceGroupList();
-    super.initState();
 
+    super.initState();
     //Dont actually call here
     //produktController.fetchFromDatabse();
 
   }
+
+
+  Future<Widget> decideHomeScreen() async {
+
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+    String code = sprefs.getString('spidom_default_group_code') ?? 'none';
+
+
+    if(code != 'none'){
+      produktController.getDefaultDeviceGroup(); // also downloads all from DB
+      produktController.getDeviceGroupList();
+      return HomeMain();
+    } else {
+      return Witaj();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +66,26 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: Colors.blue),
       ),
-      home: HomeMain(),
+
+      home: FutureBuilder(
+        future: decideHomeScreen(),
+        builder: (BuildContext context, AsyncSnapshot<Widget> widget) {
+
+          if(widget.connectionState == ConnectionState.done){
+            if (!widget.hasData) {
+              return Center(
+                  child: Text('Wystąpił Błąd')
+              );
+            }
+            return widget.data;
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+
+        }, // builder
+      ),
+
     );
   }// Widget build
 }
