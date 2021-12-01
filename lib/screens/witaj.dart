@@ -122,139 +122,177 @@ class _WitajState extends State<Witaj> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: GridView.count(
-        primary: false,
-        padding: const EdgeInsets.only(left: 10.0, top:60.0, right: 10.0),
-        crossAxisSpacing: 15,
-        mainAxisSpacing: 15,
-        crossAxisCount: 2,
-        children: <Widget>[
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              stops: [
+                0.1,
+                0.4,
+                0.6,
+                0.9,
+              ],
+              colors: [
+                Colors.blue,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+              ],
+            )
+        ),
+
+        child:GridView.count(
+          primary: false,
+          padding: const EdgeInsets.only(left: 10.0, top:60.0, right: 10.0),
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          crossAxisCount: 2,
+          children: <Widget>[
+
+            Container(
+
+              child:Column(
+                children: [
+                  Text("Zaczynamy,",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue, ),
+                  ),
+                  Text("na początek musisz dołączyć do grupy lub stworzyć nową grupę",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+                  ),
+                ],
+              ),
+            ),
 
 
-          InkWell(
-            onTap: () {
-              showDialog(context: context, builder: (_) =>
-                  AlertDialog(
-                    title: Text('Dołącz do grupy:'),
+            InkWell(
+              onTap: () {
+                showDialog(context: context, builder: (_) =>
+                    AlertDialog(
+                      title: Text('Dołącz do grupy:'),
 
-                    content: TextField(
-                      controller: kodController,
-                      decoration: InputDecoration(hintText: "kod grupy"),
-                    ),
-
-                    actions: [
-
-                      TextButton(
-                          onPressed: () {
-                            dolaczDoGrupy();
-                            Get.back();
-                          },
-                          child: Text('Dołącz')
+                      content: TextField(
+                        controller: kodController,
+                        decoration: InputDecoration(hintText: "kod grupy"),
                       ),
-                    ],
-                  ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
 
-                children: [
-                  Icon(Icons.group_rounded, size: 80, color: Colors.white),
-                  Text("Dołącz do grupy",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Colors.blue, Colors.blueAccent],
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
+                      actions: [
 
-          InkWell(
-            onTap: () {
-
-              scanBarcode();
-
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.qr_code_scanner_rounded, size: 80, color: Colors.white),
-                  Text("Dołącz z QR",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Colors.blue, Colors.blueAccent],
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-
-          InkWell(
-            onTap: () {
-              showDialog(context: context, builder: (_) =>
-                  AlertDialog(
-                    title: Text('Utwórz grupę:'),
-
-                    content: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(hintText: "Nazwa grupy"),
+                        TextButton(
+                            onPressed: () {
+                              dolaczDoGrupy();
+                              Get.back();
+                            },
+                            child: Text('Dołącz')
+                        ),
+                      ],
                     ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
 
-                    actions: [
-
-                      TextButton(
-                          onPressed: () {
-                            utworzGrupe();
-                            Get.back();
-                          },
-                          child: Text('Utwórz')),
-
-                    ],
-                  ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.group_add_rounded, size: 80, color: Colors.white),
-                  Text("Utwórz grupę",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Colors.blue, Colors.blueAccent],
+                  children: [
+                    Icon(Icons.group_rounded, size: 80, color: Colors.white),
+                    Text("Dołącz do grupy",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ],
                 ),
-                shape: BoxShape.circle,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.blue, Colors.blueAccent],
+                  ),
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
+
+            InkWell(
+              onTap: () {
+
+                scanBarcode();
+
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.qr_code_scanner_rounded, size: 80, color: Colors.white),
+                    Text("Dołącz z QR",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.blue, Colors.blueAccent],
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+
+            InkWell(
+              onTap: () {
+                showDialog(context: context, builder: (_) =>
+                    AlertDialog(
+                      title: Text('Utwórz grupę:'),
+
+                      content: TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(hintText: "Nazwa grupy"),
+                      ),
+
+                      actions: [
+
+                        TextButton(
+                            onPressed: () {
+                              utworzGrupe();
+                              Get.back();
+                            },
+                            child: Text('Utwórz')),
+
+                      ],
+                    ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.group_add_rounded, size: 80, color: Colors.white),
+                    Text("Utwórz grupę",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.blue, Colors.blueAccent],
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
 
 
 
-        ],
+          ],
+        ),
       ),
+
     );
   }}// class HomeMain
