@@ -90,6 +90,7 @@ class _JoinGroupState extends State<JoinGroup> {
     if(scanResult != "-1"){
       kodController.text = scanResult;
       dolaczDoGrupy();
+      Get.back();
     }
 
 
@@ -171,6 +172,7 @@ class _JoinGroupState extends State<JoinGroup> {
                           onPressed: () {
 
                             dolaczDoGrupy();
+                            Get.back();
                             Get.back();
                           },
                           child: Text('Dołącz')
@@ -254,6 +256,7 @@ class _JoinGroupState extends State<JoinGroup> {
                           onPressed: () {
 
                             utworzGrupe();
+                            Get.back();
                             Get.back();
                           },
                           child: Text('Utwórz')),
