@@ -209,6 +209,7 @@ class _AddProduktState extends State<AddProdukt> {
     else
       {miaraController.text = produktController.displayMiary.first;}
 
+    iloscController.text = "0";
     super.initState();
   }
 

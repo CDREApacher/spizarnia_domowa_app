@@ -68,8 +68,39 @@ class _HomeState extends State<Home> {
   }
 
   onDeletePressed(String id) {
-    onClearPressed();
-    //produktController.deleteProdukt(id);
+
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text("Usunąć produkt?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Get.back();// close popup
+                },
+                child: Text('Anuluj')
+            ),
+            TextButton(
+                onPressed: () {
+
+                  produktController.deleteProdukt(id);
+
+                  Get.back();// close popup
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Usunięto Produkt"),
+                        duration: Duration(seconds: 2),
+                      )
+                  );
+                  produktController.update();
+
+                },
+                child: Text('Usuń')
+            ),
+          ],
+        ),
+    );
+
   }
 
   onUpdatePressed(String id) {
@@ -224,7 +255,10 @@ class _HomeState extends State<Home> {
               ),
 
               itemBuilder: (context, Produkt produkt) {
-                return Card(
+                if (produkt.ilosc == 0) return SizedBox(
+                  height: 0,
+                );
+                else return Card(
                   elevation: 5.0,
                   margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
 
@@ -282,11 +316,27 @@ class _HomeState extends State<Home> {
                             );
                           },
 
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(produkt.nazwaProduktu + ' : ' + produkt.ilosc.toString() + ' ' + produkt.miara.miara),
-                              Icon(Icons.arrow_forward_ios_rounded),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.arrow_forward_ios_rounded),
+                                  SizedBox(
+                                    height: 1,
+                                    width: 10,
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.delete_rounded, color: Colors.red,),
+                                      onPressed: () => onDeletePressed(produkt.objectId)
+                                  ),
+                                ],
+                              ),
+
                             ],
                           ),
 

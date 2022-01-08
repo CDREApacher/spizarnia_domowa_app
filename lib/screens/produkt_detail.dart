@@ -536,12 +536,14 @@ class _ProduktDetailState extends State<ProduktDetail> {
               closeMenuBackgroundColor: Colors.white),
           floatingActionButtonWidgetChildren: <FloatingActionButton>[
             FloatingActionButton(
+              heroTag: "btnDate",
               mini: true,
               child: Icon(Icons.date_range_rounded),
               onPressed: () => _selectDate(context),
               backgroundColor: Colors.grey,
             ),
             FloatingActionButton(
+              heroTag: "btnCode",
               mini: true,
               child: Icon(Icons.addchart_rounded), // Wtf is wrong with the Icon name between this and Co-contributor versions? add_chart_rounded vs addchart_rounded
               onPressed: () {
@@ -550,6 +552,7 @@ class _ProduktDetailState extends State<ProduktDetail> {
               backgroundColor: Colors.grey,
             ),
             FloatingActionButton(
+              heroTag: "btnNote",
               mini: true,
               child: Icon(Icons.add_comment_rounded),
               onPressed: () {

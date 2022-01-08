@@ -40,6 +40,7 @@ class _ListaGrupState extends State<ListaGrup> {
   final ProduktController produktController = ProduktController.to;
 
   String currentGroup;
+  String currentGroupCode;
 
 
   void swapGroup(Grupa wybranaGrupa){
@@ -63,9 +64,47 @@ class _ListaGrupState extends State<ListaGrup> {
 
   }
 
+
+  void removeGroup(String kod_grupy){
+
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(
+          title: Text("Usunąć grupę?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Get.back();// close popup
+                },
+                child: Text('Anuluj')
+            ),
+            TextButton(
+                onPressed: () {
+
+                  produktController.removeGrupy(kod_grupy);
+
+                  Get.back();// close popup
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Usunięto grupę"),
+                        duration: Duration(seconds: 2),
+                      )
+                  );
+                  produktController.update();
+
+                },
+                child: Text('Usuń')
+            ),
+          ],
+        ),
+    );
+
+  }
+
+
   @override
   void initState(){
-
+    currentGroupCode = produktController.currentlyChosenGroupCode;
     currentGroup = produktController.currentlyChosenGroupName;
     super.initState();
   }
@@ -168,17 +207,37 @@ class _ListaGrupState extends State<ListaGrup> {
                                           ),
                                         ),
                                         //Icon(Icons.add_rounded),
-                                        IconButton(
-                                            icon: Icon(Icons.swap_vert_rounded),
-                                            onPressed: () => {
-                                              swapGroup(produktController.listaGrup[index]),
 
-                                              setState(() {
-                                                currentGroup = produktController.listaGrup[index].nazwa_server;
-                                              })
 
-                                            }
+
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            IconButton(
+                                                icon: Icon(Icons.swap_vert_rounded),
+                                                onPressed: () => {
+                                                  swapGroup(produktController.listaGrup[index]),
+
+                                                  setState(() {
+                                                    currentGroup = produktController.listaGrup[index].nazwa_server;
+                                                    currentGroupCode = produktController.listaGrup[index].kod_grupy;
+                                                  })
+
+                                                }
+                                            ),
+                                            if (produktController.listaGrup[index].kod_grupy != currentGroupCode)
+                                              IconButton(
+                                                  icon: Icon(Icons.delete_rounded),
+                                                  color: Colors.red,
+                                                  onPressed: () => {
+
+                                                    removeGroup(produktController.listaGrup[index].kod_grupy)
+
+                                                  }
+                                              ),
+                                          ],
                                         ),
+
                                       ],
                                     ),
                                   ),

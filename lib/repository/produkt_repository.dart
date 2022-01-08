@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -56,6 +59,10 @@ class ProduktRepository{
 
   Future<Response> updateProdukt(Produkt produkt) async {
     return await update(apiClient, produkt.toJson());
+  }
+
+  Future<Response> deleteProdukty(String objectId) async {
+    return await deleteProdukt(apiClient, objectId);
   }
 
   // Kategorie
@@ -163,8 +170,8 @@ class ProduktRepository{
 
   Future<Grupa> joinGrupa(String kod_grupy) async {
     Response response = await joinGrupy(apiClient, kod_grupy);
-
     return Grupa.fromJson(response.data);
+
   }
 
   // Barcody

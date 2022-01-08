@@ -22,6 +22,10 @@ Future<Response> update(Dio dio, Map<String, dynamic> dane){
   return dio.put("/products/update", data: dane);
 }
 
+Future<Response> deleteProdukt(Dio dio, String objectId){
+  return dio.delete("/products?id=$objectId");
+}
+
 // Kategorie
 
 Future<Response> fetchKategorie(Dio dio){

@@ -136,6 +136,12 @@ class ProduktController extends GetxController {
     }
   }
 */
+  deleteProdukt(String objectId) async {
+    Response response = await produktRepository.deleteProdukty(objectId);
+
+    produkty.removeWhere((element) => element.objectId == objectId);
+    update();
+  }
 
   updateProdukt(String objectId, Produkt produkt) async {
     Response response = await produktRepository.updateProdukt(produkt);
@@ -405,30 +411,61 @@ class ProduktController extends GetxController {
 
     // Set the newly made group as the active one
     // This will make all queries be done on this group
-    pobranaGrupa = await produktRepository.joinGrupa(kod_grupy);
-    currentlyChosenGroup = pobranaGrupa;
-    currentlyChosenGroupName = pobranaGrupa.nazwa_server;
-    currentlyChosenGroupCode = pobranaGrupa.kod_grupy;
+    try{
+      pobranaGrupa = await produktRepository.joinGrupa(kod_grupy);
+    } on Exception catch (ee){
+      log(ee.toString());
+      log("MAMY EXCEPTION");
+    }
+    catch (e){
+      log(e.toString());
+      log("MAMY ERROR");
+    }
 
-    // Set the group as the current chosen group in persistent storage as default
-    sprefs.setString('spidom_default_group_code', currentlyChosenGroupCode);
-    sprefs.setString('spidom_default_group_name', currentlyChosenGroupName);
 
-    listaGrup.add(pobranaGrupa);// Right after adding is just an instance of not a readable name and code
+      currentlyChosenGroup = pobranaGrupa;
+      currentlyChosenGroupName = pobranaGrupa.nazwa_server;
+      currentlyChosenGroupCode = pobranaGrupa.kod_grupy;
 
-    var encodedListaGrup = json.encode(listaGrup);// Encode to a string
+      // Set the group as the current chosen group in persistent storage as default
+      sprefs.setString('spidom_default_group_code', currentlyChosenGroupCode);
+      sprefs.setString('spidom_default_group_name', currentlyChosenGroupName);
 
-    await sprefs.setString('spidom_group_list', encodedListaGrup);// Save string in persistent storage
-    String groupListString = sprefs.getString('spidom_group_list');// Read the string
+      listaGrup.add(pobranaGrupa);// Right after adding is just an instance of not a readable name and code
 
-    // Recover the group list from the encoded string
+      var encodedListaGrup = json.encode(listaGrup);// Encode to a string
+
+      await sprefs.setString('spidom_group_list', encodedListaGrup);// Save string in persistent storage
+      String groupListString = sprefs.getString('spidom_group_list');// Read the string
+
+      // Recover the group list from the encoded string
+      Iterable glist = json.decode(groupListString);
+      listaGrup = RxList.from(glist.map((model) => Grupa.fromJson(model)));
+
+      // Fetch all the data for this group
+      fetchFromDatabse();
+
+      //selectActiveGroup(pobranaGrupa.nazwa_server, pobranaGrupa.kod_grupy);
+
+      update();
+
+
+
+  }
+
+  removeGrupy(String kod_grupy) async {
+    SharedPreferences sprefs = await SharedPreferences.getInstance();
+
+    listaGrup.removeWhere((element) => element.kod_grupy == kod_grupy);
+
+    var encodedListaGrup = json.encode(listaGrup);
+
+    await sprefs.setString('spidom_group_list', encodedListaGrup);
+    String groupListString = sprefs.getString('spidom_group_list');
+
     Iterable glist = json.decode(groupListString);
     listaGrup = RxList.from(glist.map((model) => Grupa.fromJson(model)));
 
-    // Fetch all the data for this group
-    fetchFromDatabse();
-
-    update();
   }
 
   selectActiveGroup(String nazwa, String kod_grupy) async {

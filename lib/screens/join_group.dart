@@ -112,17 +112,21 @@ class _JoinGroupState extends State<JoinGroup> {
 
 
     log(kodController.text);
+
     produktController.joinGrupy(kodController.text);
+
+
     kodController.clear();
-
-
-
 
     produktController.listaGrup.forEach((Grupa grupa) {
       log("Lista zapisana");
       log(grupa.nazwa_server);
       log(grupa.kod_grupy);
     });
+
+    Get.back();
+    Get.back();
+
 
 
   }
@@ -172,8 +176,8 @@ class _JoinGroupState extends State<JoinGroup> {
                           onPressed: () {
 
                             dolaczDoGrupy();
-                            Get.back();
-                            Get.back();
+
+
                           },
                           child: Text('Dołącz')
 
