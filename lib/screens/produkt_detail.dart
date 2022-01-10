@@ -323,24 +323,24 @@ class _ProduktDetailState extends State<ProduktDetail> {
         ScanMode.BARCODE,
       );
     } on PlatformException {
-      scanResult = 'Błąd skanowania';
+      /*  scanResult = 'Błąd skanowania';
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("$scanResult"),
             duration: Duration(seconds: 2),
           )
-      );
+      );*/
 
     }
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
+   /* ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("$scanResult"),
           duration: Duration(seconds: 2),
         )
-    );
+    );*/
 
     setState(() => this.scanResult = scanResult);
     if(scanResult != "-1"){
